@@ -1,0 +1,3 @@
+[submodule "ThirdParty/ORSSerialPort"]
+	path = ThirdParty/ORSSerialPort
+	url = https://github.com/armadsen/ORSSerialPort.git
