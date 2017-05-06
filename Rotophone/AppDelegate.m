@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "MainViewController.h"
+//#import <ORSSerial/ORSSerial.h>
 
 @interface AppDelegate ()
 @property (retain) NSWindow* window;
@@ -32,6 +33,10 @@
                                                                  bundle:nil];
     
     _window.contentView = _rootViewController.view;
+    
+    
+    NSArray *ports = [[ORSSerialPortManager sharedSerialPortManager] availablePorts];
+    NSLog(@"Ports are %@", ports);
 }
 
 
