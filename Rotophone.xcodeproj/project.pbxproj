@@ -11,6 +11,10 @@
 		4B60BA2A1EBD84DC000FC8A5 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B60BA291EBD84DC000FC8A5 /* MainMenu.xib */; };
 		4B60BA2E1EBD87B7000FC8A5 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BA2C1EBD87B7000FC8A5 /* MainViewController.m */; };
 		4B60BA2F1EBD87B7000FC8A5 /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B60BA2D1EBD87B7000FC8A5 /* MainViewController.xib */; };
+		4B60BA4E1EBD9DCF000FC8A5 /* ORSSerialPort.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BA491EBD9DCF000FC8A5 /* ORSSerialPort.m */; };
+		4B60BA4F1EBD9DCF000FC8A5 /* ORSSerialPortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BA4B1EBD9DCF000FC8A5 /* ORSSerialPortManager.m */; };
+		4B60BA501EBD9DCF000FC8A5 /* ORSSerialRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BA4D1EBD9DCF000FC8A5 /* ORSSerialRequest.m */; };
+		4B60BA521EBD9EAD000FC8A5 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B60BA511EBD9EAD000FC8A5 /* IOKit.framework */; };
 		4BBE45F01EBC473000276A8A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BBE45EF1EBC473000276A8A /* AppDelegate.m */; };
 		4BBE45F31EBC473000276A8A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BBE45F21EBC473000276A8A /* main.m */; };
 		4BBE45F61EBC473000276A8A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BBE45F51EBC473000276A8A /* ViewController.m */; };
@@ -27,6 +31,13 @@
 		4B60BA2B1EBD87B7000FC8A5 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		4B60BA2C1EBD87B7000FC8A5 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		4B60BA2D1EBD87B7000FC8A5 /* MainViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainViewController.xib; sourceTree = "<group>"; };
+		4B60BA481EBD9DCF000FC8A5 /* ORSSerialPort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORSSerialPort.h; sourceTree = "<group>"; };
+		4B60BA491EBD9DCF000FC8A5 /* ORSSerialPort.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ORSSerialPort.m; sourceTree = "<group>"; };
+		4B60BA4A1EBD9DCF000FC8A5 /* ORSSerialPortManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORSSerialPortManager.h; sourceTree = "<group>"; };
+		4B60BA4B1EBD9DCF000FC8A5 /* ORSSerialPortManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ORSSerialPortManager.m; sourceTree = "<group>"; };
+		4B60BA4C1EBD9DCF000FC8A5 /* ORSSerialRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORSSerialRequest.h; sourceTree = "<group>"; };
+		4B60BA4D1EBD9DCF000FC8A5 /* ORSSerialRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ORSSerialRequest.m; sourceTree = "<group>"; };
+		4B60BA511EBD9EAD000FC8A5 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/IOKit.framework; sourceTree = DEVELOPER_DIR; };
 		4BBE45EB1EBC473000276A8A /* Rotophone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Rotophone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BBE45EE1EBC473000276A8A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		4BBE45EF1EBC473000276A8A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -49,6 +60,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B60BA521EBD9EAD000FC8A5 /* IOKit.framework in Frameworks */,
 				4BCDE0441EBD767E005764A7 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -76,6 +88,12 @@
 		4BBE45ED1EBC473000276A8A /* Rotophone */ = {
 			isa = PBXGroup;
 			children = (
+				4B60BA481EBD9DCF000FC8A5 /* ORSSerialPort.h */,
+				4B60BA491EBD9DCF000FC8A5 /* ORSSerialPort.m */,
+				4B60BA4A1EBD9DCF000FC8A5 /* ORSSerialPortManager.h */,
+				4B60BA4B1EBD9DCF000FC8A5 /* ORSSerialPortManager.m */,
+				4B60BA4C1EBD9DCF000FC8A5 /* ORSSerialRequest.h */,
+				4B60BA4D1EBD9DCF000FC8A5 /* ORSSerialRequest.m */,
 				4B2567051EBCC0D000BCE2B8 /* Resources */,
 				4BBE45EE1EBC473000276A8A /* AppDelegate.h */,
 				4BBE45EF1EBC473000276A8A /* AppDelegate.m */,
@@ -108,6 +126,7 @@
 		4BCDE0421EBD767E005764A7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4B60BA511EBD9EAD000FC8A5 /* IOKit.framework */,
 				4BCDE0451EBD76C7005764A7 /* AppKit.framework */,
 				4BCDE0431EBD767E005764A7 /* Cocoa.framework */,
 			);
@@ -189,6 +208,9 @@
 				4BBE45F91EBC473000276A8A /* Document.m in Sources */,
 				4BBE45F61EBC473000276A8A /* ViewController.m in Sources */,
 				4B60BA2E1EBD87B7000FC8A5 /* MainViewController.m in Sources */,
+				4B60BA4F1EBD9DCF000FC8A5 /* ORSSerialPortManager.m in Sources */,
+				4B60BA501EBD9DCF000FC8A5 /* ORSSerialRequest.m in Sources */,
+				4B60BA4E1EBD9DCF000FC8A5 /* ORSSerialPort.m in Sources */,
 				4BBE460F1EBC497100276A8A /* RootViewController.m in Sources */,
 				4BBE45F31EBC473000276A8A /* main.m in Sources */,
 				4BBE45FC1EBC473000276A8A /* Document.xcdatamodeld in Sources */,
