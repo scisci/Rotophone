@@ -10,8 +10,8 @@
 
 @implementation ViewController
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
+- (void)loadView {
+    [super loadView];
 
     // Do any additional setup after loading the view.
 }

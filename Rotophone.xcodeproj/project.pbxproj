@@ -7,16 +7,26 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4B2567061EBCC0D000BCE2B8 /* Resources in Resources */ = {isa = PBXBuildFile; fileRef = 4B2567051EBCC0D000BCE2B8 /* Resources */; };
+		4B60BA2A1EBD84DC000FC8A5 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B60BA291EBD84DC000FC8A5 /* MainMenu.xib */; };
+		4B60BA2E1EBD87B7000FC8A5 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BA2C1EBD87B7000FC8A5 /* MainViewController.m */; };
+		4B60BA2F1EBD87B7000FC8A5 /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B60BA2D1EBD87B7000FC8A5 /* MainViewController.xib */; };
 		4BBE45F01EBC473000276A8A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BBE45EF1EBC473000276A8A /* AppDelegate.m */; };
 		4BBE45F31EBC473000276A8A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BBE45F21EBC473000276A8A /* main.m */; };
 		4BBE45F61EBC473000276A8A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BBE45F51EBC473000276A8A /* ViewController.m */; };
 		4BBE45F91EBC473000276A8A /* Document.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BBE45F81EBC473000276A8A /* Document.m */; };
 		4BBE45FC1EBC473000276A8A /* Document.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4BBE45FA1EBC473000276A8A /* Document.xcdatamodeld */; };
 		4BBE45FE1EBC473000276A8A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4BBE45FD1EBC473000276A8A /* Assets.xcassets */; };
-		4BBE46011EBC473000276A8A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4BBE45FF1EBC473000276A8A /* Main.storyboard */; };
+		4BBE460F1EBC497100276A8A /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BBE460D1EBC497100276A8A /* RootViewController.m */; };
+		4BCDE0441EBD767E005764A7 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BCDE0431EBD767E005764A7 /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4B2567051EBCC0D000BCE2B8 /* Resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources; sourceTree = "<group>"; };
+		4B60BA291EBD84DC000FC8A5 /* MainMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
+		4B60BA2B1EBD87B7000FC8A5 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		4B60BA2C1EBD87B7000FC8A5 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		4B60BA2D1EBD87B7000FC8A5 /* MainViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainViewController.xib; sourceTree = "<group>"; };
 		4BBE45EB1EBC473000276A8A /* Rotophone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Rotophone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BBE45EE1EBC473000276A8A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		4BBE45EF1EBC473000276A8A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -27,8 +37,11 @@
 		4BBE45F81EBC473000276A8A /* Document.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Document.m; sourceTree = "<group>"; };
 		4BBE45FB1EBC473000276A8A /* Document.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Document.xcdatamodel; sourceTree = "<group>"; };
 		4BBE45FD1EBC473000276A8A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		4BBE46001EBC473000276A8A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		4BBE46021EBC473000276A8A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4BBE460C1EBC497100276A8A /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
+		4BBE460D1EBC497100276A8A /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
+		4BCDE0431EBD767E005764A7 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		4BCDE0451EBD76C7005764A7 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks/AppKit.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,6 +49,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BCDE0441EBD767E005764A7 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -47,6 +61,7 @@
 			children = (
 				4BBE45ED1EBC473000276A8A /* Rotophone */,
 				4BBE45EC1EBC473000276A8A /* Products */,
+				4BCDE0421EBD767E005764A7 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -61,6 +76,7 @@
 		4BBE45ED1EBC473000276A8A /* Rotophone */ = {
 			isa = PBXGroup;
 			children = (
+				4B2567051EBCC0D000BCE2B8 /* Resources */,
 				4BBE45EE1EBC473000276A8A /* AppDelegate.h */,
 				4BBE45EF1EBC473000276A8A /* AppDelegate.m */,
 				4BBE45F41EBC473000276A8A /* ViewController.h */,
@@ -68,10 +84,15 @@
 				4BBE45F71EBC473000276A8A /* Document.h */,
 				4BBE45F81EBC473000276A8A /* Document.m */,
 				4BBE45FD1EBC473000276A8A /* Assets.xcassets */,
-				4BBE45FF1EBC473000276A8A /* Main.storyboard */,
 				4BBE46021EBC473000276A8A /* Info.plist */,
 				4BBE45FA1EBC473000276A8A /* Document.xcdatamodeld */,
 				4BBE45F11EBC473000276A8A /* Supporting Files */,
+				4BBE460C1EBC497100276A8A /* RootViewController.h */,
+				4BBE460D1EBC497100276A8A /* RootViewController.m */,
+				4B60BA2B1EBD87B7000FC8A5 /* MainViewController.h */,
+				4B60BA2C1EBD87B7000FC8A5 /* MainViewController.m */,
+				4B60BA2D1EBD87B7000FC8A5 /* MainViewController.xib */,
+				4B60BA291EBD84DC000FC8A5 /* MainMenu.xib */,
 			);
 			path = Rotophone;
 			sourceTree = "<group>";
@@ -82,6 +103,15 @@
 				4BBE45F21EBC473000276A8A /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4BCDE0421EBD767E005764A7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4BCDE0451EBD76C7005764A7 /* AppKit.framework */,
+				4BCDE0431EBD767E005764A7 /* Cocoa.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -143,7 +173,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BBE45FE1EBC473000276A8A /* Assets.xcassets in Resources */,
-				4BBE46011EBC473000276A8A /* Main.storyboard in Resources */,
+				4B2567061EBCC0D000BCE2B8 /* Resources in Resources */,
+				4B60BA2A1EBD84DC000FC8A5 /* MainMenu.xib in Resources */,
+				4B60BA2F1EBD87B7000FC8A5 /* MainViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -156,6 +188,8 @@
 			files = (
 				4BBE45F91EBC473000276A8A /* Document.m in Sources */,
 				4BBE45F61EBC473000276A8A /* ViewController.m in Sources */,
+				4B60BA2E1EBD87B7000FC8A5 /* MainViewController.m in Sources */,
+				4BBE460F1EBC497100276A8A /* RootViewController.m in Sources */,
 				4BBE45F31EBC473000276A8A /* main.m in Sources */,
 				4BBE45FC1EBC473000276A8A /* Document.xcdatamodeld in Sources */,
 				4BBE45F01EBC473000276A8A /* AppDelegate.m in Sources */,
@@ -163,17 +197,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		4BBE45FF1EBC473000276A8A /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				4BBE46001EBC473000276A8A /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		4BBE46031EBC473000276A8A /* Debug */ = {
@@ -186,6 +209,7 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_LINK_OBJC_RUNTIME = NO;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
@@ -220,6 +244,8 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -234,6 +260,7 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_LINK_OBJC_RUNTIME = NO;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
@@ -261,6 +288,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -269,11 +298,22 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_LINK_OBJC_RUNTIME = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = Rotophone/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-Xlinker",
+					"-U",
+					"-Xlinker",
+					_objc_readClassPair,
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.SciSci.Rotophone;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx10.7;
 			};
 			name = Debug;
 		};
@@ -281,11 +321,22 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_LINK_OBJC_RUNTIME = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = Rotophone/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-Xlinker",
+					"-U",
+					"-Xlinker",
+					_objc_readClassPair,
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.SciSci.Rotophone;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx10.7;
 			};
 			name = Release;
 		};
@@ -308,6 +359,7 @@
 				4BBE46071EBC473000276A8A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
