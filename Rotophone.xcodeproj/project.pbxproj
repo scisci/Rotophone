@@ -8,6 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		4B2567061EBCC0D000BCE2B8 /* Resources in Resources */ = {isa = PBXBuildFile; fileRef = 4B2567051EBCC0D000BCE2B8 /* Resources */; };
+		4B3B91431EC3545A005C0A1A /* SerialPortHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B3B91421EC3545A005C0A1A /* SerialPortHandler.m */; };
+		4B3B91471EC362DB005C0A1A /* SceneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B3B91451EC362DB005C0A1A /* SceneViewController.m */; };
+		4B3B91481EC362DB005C0A1A /* SceneViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B3B91461EC362DB005C0A1A /* SceneViewController.xib */; };
+		4B3B914C1EC4056C005C0A1A /* ToolViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B3B914A1EC4056C005C0A1A /* ToolViewController.m */; };
+		4B3B914D1EC4056C005C0A1A /* ToolViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B3B914B1EC4056C005C0A1A /* ToolViewController.xib */; };
+		4B3B91511EC4058F005C0A1A /* SideBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B3B914F1EC4058F005C0A1A /* SideBarViewController.m */; };
+		4B3B91521EC4058F005C0A1A /* SideBarViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B3B91501EC4058F005C0A1A /* SideBarViewController.xib */; };
 		4B60BA2A1EBD84DC000FC8A5 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B60BA291EBD84DC000FC8A5 /* MainMenu.xib */; };
 		4B60BA2E1EBD87B7000FC8A5 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BA2C1EBD87B7000FC8A5 /* MainViewController.m */; };
 		4B60BA2F1EBD87B7000FC8A5 /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B60BA2D1EBD87B7000FC8A5 /* MainViewController.xib */; };
@@ -21,12 +28,23 @@
 		4BBE45F91EBC473000276A8A /* Document.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BBE45F81EBC473000276A8A /* Document.m */; };
 		4BBE45FC1EBC473000276A8A /* Document.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4BBE45FA1EBC473000276A8A /* Document.xcdatamodeld */; };
 		4BBE45FE1EBC473000276A8A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4BBE45FD1EBC473000276A8A /* Assets.xcassets */; };
-		4BBE460F1EBC497100276A8A /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BBE460D1EBC497100276A8A /* RootViewController.m */; };
+		4BBE460F1EBC497100276A8A /* RootView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BBE460D1EBC497100276A8A /* RootView.m */; };
 		4BCDE0441EBD767E005764A7 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BCDE0431EBD767E005764A7 /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		4B2567051EBCC0D000BCE2B8 /* Resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources; sourceTree = "<group>"; };
+		4B3B91411EC3545A005C0A1A /* SerialPortHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SerialPortHandler.h; sourceTree = "<group>"; };
+		4B3B91421EC3545A005C0A1A /* SerialPortHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SerialPortHandler.m; sourceTree = "<group>"; };
+		4B3B91441EC362DB005C0A1A /* SceneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneViewController.h; sourceTree = "<group>"; };
+		4B3B91451EC362DB005C0A1A /* SceneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SceneViewController.m; sourceTree = "<group>"; };
+		4B3B91461EC362DB005C0A1A /* SceneViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SceneViewController.xib; sourceTree = "<group>"; };
+		4B3B91491EC4056C005C0A1A /* ToolViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolViewController.h; sourceTree = "<group>"; };
+		4B3B914A1EC4056C005C0A1A /* ToolViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolViewController.m; sourceTree = "<group>"; };
+		4B3B914B1EC4056C005C0A1A /* ToolViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ToolViewController.xib; sourceTree = "<group>"; };
+		4B3B914E1EC4058F005C0A1A /* SideBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SideBarViewController.h; sourceTree = "<group>"; };
+		4B3B914F1EC4058F005C0A1A /* SideBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SideBarViewController.m; sourceTree = "<group>"; };
+		4B3B91501EC4058F005C0A1A /* SideBarViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SideBarViewController.xib; sourceTree = "<group>"; };
 		4B60BA291EBD84DC000FC8A5 /* MainMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
 		4B60BA2B1EBD87B7000FC8A5 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		4B60BA2C1EBD87B7000FC8A5 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
@@ -49,8 +67,8 @@
 		4BBE45FB1EBC473000276A8A /* Document.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Document.xcdatamodel; sourceTree = "<group>"; };
 		4BBE45FD1EBC473000276A8A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4BBE46021EBC473000276A8A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4BBE460C1EBC497100276A8A /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
-		4BBE460D1EBC497100276A8A /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
+		4BBE460C1EBC497100276A8A /* RootView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootView.h; sourceTree = "<group>"; };
+		4BBE460D1EBC497100276A8A /* RootView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootView.m; sourceTree = "<group>"; };
 		4BCDE0431EBD767E005764A7 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		4BCDE0451EBD76C7005764A7 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks/AppKit.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
@@ -105,11 +123,22 @@
 				4BBE46021EBC473000276A8A /* Info.plist */,
 				4BBE45FA1EBC473000276A8A /* Document.xcdatamodeld */,
 				4BBE45F11EBC473000276A8A /* Supporting Files */,
-				4BBE460C1EBC497100276A8A /* RootViewController.h */,
-				4BBE460D1EBC497100276A8A /* RootViewController.m */,
+				4B3B91411EC3545A005C0A1A /* SerialPortHandler.h */,
+				4B3B91421EC3545A005C0A1A /* SerialPortHandler.m */,
+				4BBE460C1EBC497100276A8A /* RootView.h */,
+				4BBE460D1EBC497100276A8A /* RootView.m */,
+				4B3B91491EC4056C005C0A1A /* ToolViewController.h */,
+				4B3B914A1EC4056C005C0A1A /* ToolViewController.m */,
+				4B3B914E1EC4058F005C0A1A /* SideBarViewController.h */,
+				4B3B914F1EC4058F005C0A1A /* SideBarViewController.m */,
+				4B3B91441EC362DB005C0A1A /* SceneViewController.h */,
+				4B3B91451EC362DB005C0A1A /* SceneViewController.m */,
 				4B60BA2B1EBD87B7000FC8A5 /* MainViewController.h */,
 				4B60BA2C1EBD87B7000FC8A5 /* MainViewController.m */,
+				4B3B91501EC4058F005C0A1A /* SideBarViewController.xib */,
+				4B3B914B1EC4056C005C0A1A /* ToolViewController.xib */,
 				4B60BA2D1EBD87B7000FC8A5 /* MainViewController.xib */,
+				4B3B91461EC362DB005C0A1A /* SceneViewController.xib */,
 				4B60BA291EBD84DC000FC8A5 /* MainMenu.xib */,
 			);
 			path = Rotophone;
@@ -192,7 +221,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BBE45FE1EBC473000276A8A /* Assets.xcassets in Resources */,
+				4B3B91481EC362DB005C0A1A /* SceneViewController.xib in Resources */,
+				4B3B914D1EC4056C005C0A1A /* ToolViewController.xib in Resources */,
 				4B2567061EBCC0D000BCE2B8 /* Resources in Resources */,
+				4B3B91521EC4058F005C0A1A /* SideBarViewController.xib in Resources */,
 				4B60BA2A1EBD84DC000FC8A5 /* MainMenu.xib in Resources */,
 				4B60BA2F1EBD87B7000FC8A5 /* MainViewController.xib in Resources */,
 			);
@@ -211,9 +243,13 @@
 				4B60BA4F1EBD9DCF000FC8A5 /* ORSSerialPortManager.m in Sources */,
 				4B60BA501EBD9DCF000FC8A5 /* ORSSerialRequest.m in Sources */,
 				4B60BA4E1EBD9DCF000FC8A5 /* ORSSerialPort.m in Sources */,
-				4BBE460F1EBC497100276A8A /* RootViewController.m in Sources */,
+				4BBE460F1EBC497100276A8A /* RootView.m in Sources */,
+				4B3B91511EC4058F005C0A1A /* SideBarViewController.m in Sources */,
 				4BBE45F31EBC473000276A8A /* main.m in Sources */,
 				4BBE45FC1EBC473000276A8A /* Document.xcdatamodeld in Sources */,
+				4B3B91471EC362DB005C0A1A /* SceneViewController.m in Sources */,
+				4B3B91431EC3545A005C0A1A /* SerialPortHandler.m in Sources */,
+				4B3B914C1EC4056C005C0A1A /* ToolViewController.m in Sources */,
 				4BBE45F01EBC473000276A8A /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

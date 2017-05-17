@@ -10,12 +10,31 @@
 #import "MainViewController.h"
 #import "ORSSerialPortManager.h"
 #import "ORSSerialPort.h"
+#import "SerialPortHandler.h"
+
+@interface SerialPortMenuItem : NSObject
+@property NSMenuItem *menuItem;
+@property ORSSerialPort *serialPort;
+-(id) initWithSerialPort:(ORSSerialPort*)serialPort AndMenuItem:(NSMenuItem*)menuItem;
+@end
+
+@implementation SerialPortMenuItem
+- (id) initWithSerialPort:(ORSSerialPort *)serialPort AndMenuItem:(NSMenuItem *)menuItem {
+    self = [super init];
+    if (self) {
+        self.menuItem = menuItem;
+        self.serialPort = serialPort;
+    }
+    return self;
+}
+@end
 
 @interface AppDelegate ()
 @property (retain) NSWindow* window;
 @property (retain) MainViewController* rootViewController;
 
 @property (retain) ORSSerialPortManager* serialPortManager;
+@property (retain) SerialPortHandler* serialPortHandler;
 @property (retain) NSMutableArray* serialMenuItems;
 @property (unsafe_unretained) IBOutlet NSMenuItem *availablePortStartSeparator;
 @property (unsafe_unretained) IBOutlet NSMenuItem *noAvailablePortsMenuItem;
@@ -37,12 +56,12 @@ static void *PersonAccountBalanceContext = &PersonAccountBalanceContext;
     [_window setBackgroundColor:[NSColor blueColor]];
     [_window makeKeyAndOrderFront:NSApp];
     
-    _rootViewController = [[MainViewController alloc] initWithNibName:@"MainViewController"
-                                                                 bundle:nil];
+    self.rootViewController = [[MainViewController alloc] initWithNibName:@"MainViewController" bundle:nil];
     
     _window.contentView = _rootViewController.view;
     
-    _serialPortManager = [ORSSerialPortManager sharedSerialPortManager];
+    self.serialPortManager = [ORSSerialPortManager sharedSerialPortManager];
+    self.serialPortHandler = [[SerialPortHandler alloc] init];
     
     [_serialPortManager addObserver:self forKeyPath:@"availablePorts" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:PersonAccountBalanceContext];
     
@@ -58,11 +77,9 @@ static void *PersonAccountBalanceContext = &PersonAccountBalanceContext;
 
 - (void)handlePortsChanged {
     NSArray *ports = _serialPortManager.availablePorts;
-    NSLog(@"Ports are %@", ports);
-    NSLog(@"ports changed");
-    
-    for (NSMenuItem *menuItem in _serialMenuItems) {
-        [menuItem.menu removeItem:menuItem];
+
+    for (SerialPortMenuItem *item in _serialMenuItems) {
+        [item.menuItem.menu removeItem:item.menuItem];
     }
     
     NSMenu *menu = _availablePortStartSeparator.menu;
@@ -74,8 +91,9 @@ static void *PersonAccountBalanceContext = &PersonAccountBalanceContext;
         [_noAvailablePortsMenuItem setHidden:TRUE];
         for (ORSSerialPort* port in ports) {
             NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:port.name action:@selector(selectPort:) keyEquivalent:@""];
+            SerialPortMenuItem *item = [[SerialPortMenuItem alloc] initWithSerialPort:port AndMenuItem:menuItem];
             [menu insertItem:menuItem atIndex:nextIndex++];
-            [_serialMenuItems addObject:menuItem];
+            [_serialMenuItems addObject:item];
         }
     }
     
@@ -84,10 +102,23 @@ static void *PersonAccountBalanceContext = &PersonAccountBalanceContext;
 - (void)selectPort:(id)sender {
     NSMenuItem *menuItem = (NSMenuItem *)sender;
     NSLog(@"Select port %@", menuItem.title);
-    for (NSMenuItem *menuItem in _serialMenuItems) {
-        [menuItem setState:NSOffState];
+    
+    
+    
+    for (SerialPortMenuItem *item in _serialMenuItems) {
+        if (item.menuItem == menuItem) {
+            // Select the port
+            [_serialPortHandler setSelectedPort:item.serialPort];
+        }
     }
-    [menuItem setState:NSOnState];
+    
+    for (SerialPortMenuItem *item in _serialMenuItems) {
+        if (item.serialPort == _serialPortHandler.selectedPort) {
+            [item.menuItem setState:NSOnState];
+        } else {
+            [item.menuItem setState:NSOffState];
+        }
+    }
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath

@@ -10,9 +10,10 @@
 
 
 @interface RootView : NSView
+@property (unsafe_unretained) NSView *sceneView;
+@property (unsafe_unretained) NSView *sideBarView;
+@property (unsafe_unretained) NSView *toolView;
+
 
 @end
 
-@interface RootViewController : NSViewController
-
-@end
