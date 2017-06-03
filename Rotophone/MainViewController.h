@@ -7,7 +7,18 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "Document.h"
+
+#import "SceneViewController.h"
+#import "ToolViewController.h"
+#import "SideBarViewController.h"
 
 @interface MainViewController : NSViewController
 
+@property (retain) SceneViewController *sceneViewController;
+@property (retain) SideBarViewController *sideBarViewController;
+@property (retain) ToolViewController *toolViewController;
+
+
+@property (unsafe_unretained) Document* document;
 @end

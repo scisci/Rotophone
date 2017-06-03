@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "Event.h"
 
-@interface Document : NSPersistentDocument
+@interface Document : NSPersistentDocument<RotoEventHandler, RotoEventVisitor>
 @end

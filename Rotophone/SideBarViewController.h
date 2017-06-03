@@ -7,11 +7,11 @@
 //
 
 #import <Cocoa/Cocoa.h>
-
+#import "SerialPortHandler.h"
 
 @interface SideBarView : NSView
 @end
 
-@interface SideBarViewController : NSViewController
+@interface SideBarViewController : NSViewController<RawStreamHandler>
 
 @end

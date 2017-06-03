@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4B0FC7F61EDFD06A003CACD5 /* MicrophoneController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B0FC7F51EDFD06A003CACD5 /* MicrophoneController.m */; };
+		4B0FC7F91EE1CC6A003CACD5 /* MicrophoneKeepAlive.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B0FC7F81EE1CC6A003CACD5 /* MicrophoneKeepAlive.m */; };
 		4B2567061EBCC0D000BCE2B8 /* Resources in Resources */ = {isa = PBXBuildFile; fileRef = 4B2567051EBCC0D000BCE2B8 /* Resources */; };
 		4B3B91431EC3545A005C0A1A /* SerialPortHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B3B91421EC3545A005C0A1A /* SerialPortHandler.m */; };
 		4B3B91471EC362DB005C0A1A /* SceneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B3B91451EC362DB005C0A1A /* SceneViewController.m */; };
@@ -29,10 +31,46 @@
 		4BBE45FC1EBC473000276A8A /* Document.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4BBE45FA1EBC473000276A8A /* Document.xcdatamodeld */; };
 		4BBE45FE1EBC473000276A8A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4BBE45FD1EBC473000276A8A /* Assets.xcassets */; };
 		4BBE460F1EBC497100276A8A /* RootView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BBE460D1EBC497100276A8A /* RootView.m */; };
+		4BCC701C1ECBF83600E2BB37 /* libpd-osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BCC701B1ECBF7E300E2BB37 /* libpd-osx.a */; };
+		4BCC70221ECC02FC00E2BB37 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BCC70211ECC02FC00E2BB37 /* AudioUnit.framework */; };
+		4BCC702D1ECC0C1100E2BB37 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BCC702C1ECC0C1100E2BB37 /* AudioToolbox.framework */; };
 		4BCDE0441EBD767E005764A7 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BCDE0431EBD767E005764A7 /* Cocoa.framework */; };
+		4BCF703D1EDD032B001E1971 /* Protocol.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BCF703B1EDD032B001E1971 /* Protocol.c */; };
+		4BCF70401EDD0BDD001E1971 /* Entities.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCF703F1EDD0BDD001E1971 /* Entities.m */; };
+		4BCF708C1EDD217C001E1971 /* MainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCF708B1EDD217C001E1971 /* MainWindowController.m */; };
+		4BCF708F1EDE59CC001E1971 /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCF708E1EDE59CC001E1971 /* Event.m */; };
+		4BCF70931EDE723B001E1971 /* MicrophoneShapeAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCF70921EDE723B001E1971 /* MicrophoneShapeAdapter.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		4BCC70181ECBF7E300E2BB37 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4BCC70131ECBF7E300E2BB37 /* libpd.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC07E0554694100DB518D;
+			remoteInfo = "libpd-ios";
+		};
+		4BCC701A1ECBF7E300E2BB37 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4BCC70131ECBF7E300E2BB37 /* libpd.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 119013AB1486450C00086F19;
+			remoteInfo = "libpd-osx";
+		};
+		4BCC701D1ECBF87000E2BB37 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4BCC70131ECBF7E300E2BB37 /* libpd.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1190134E1486450C00086F19;
+			remoteInfo = "libpd-osx";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		4B0FC7F41EDFD06A003CACD5 /* MicrophoneController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MicrophoneController.h; sourceTree = "<group>"; };
+		4B0FC7F51EDFD06A003CACD5 /* MicrophoneController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MicrophoneController.m; sourceTree = "<group>"; };
+		4B0FC7F71EE1CC6A003CACD5 /* MicrophoneKeepAlive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MicrophoneKeepAlive.h; sourceTree = "<group>"; };
+		4B0FC7F81EE1CC6A003CACD5 /* MicrophoneKeepAlive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MicrophoneKeepAlive.m; sourceTree = "<group>"; };
 		4B2567051EBCC0D000BCE2B8 /* Resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources; sourceTree = "<group>"; };
 		4B3B91411EC3545A005C0A1A /* SerialPortHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SerialPortHandler.h; sourceTree = "<group>"; };
 		4B3B91421EC3545A005C0A1A /* SerialPortHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SerialPortHandler.m; sourceTree = "<group>"; };
@@ -69,8 +107,23 @@
 		4BBE46021EBC473000276A8A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4BBE460C1EBC497100276A8A /* RootView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootView.h; sourceTree = "<group>"; };
 		4BBE460D1EBC497100276A8A /* RootView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootView.m; sourceTree = "<group>"; };
+		4BCC70131ECBF7E300E2BB37 /* libpd.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libpd.xcodeproj; path = libpd/libpd.xcodeproj; sourceTree = "<group>"; };
+		4BCC701F1ECC020700E2BB37 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/AVFoundation.framework; sourceTree = DEVELOPER_DIR; };
+		4BCC70211ECC02FC00E2BB37 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/AudioUnit.framework; sourceTree = DEVELOPER_DIR; };
+		4BCC702C1ECC0C1100E2BB37 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = DEVELOPER_DIR; };
 		4BCDE0431EBD767E005764A7 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		4BCDE0451EBD76C7005764A7 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks/AppKit.framework; sourceTree = DEVELOPER_DIR; };
+		4BCF703B1EDD032B001E1971 /* Protocol.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Protocol.c; sourceTree = "<group>"; };
+		4BCF703C1EDD032B001E1971 /* Protocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Protocol.h; sourceTree = "<group>"; };
+		4BCF703E1EDD0AEB001E1971 /* Entities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Entities.h; sourceTree = "<group>"; };
+		4BCF703F1EDD0BDD001E1971 /* Entities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Entities.m; sourceTree = "<group>"; };
+		4BCF708A1EDD217C001E1971 /* MainWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainWindowController.h; sourceTree = "<group>"; };
+		4BCF708B1EDD217C001E1971 /* MainWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainWindowController.m; sourceTree = "<group>"; };
+		4BCF708D1EDE5024001E1971 /* Event.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
+		4BCF708E1EDE59CC001E1971 /* Event.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Event.m; sourceTree = "<group>"; };
+		4BCF70901EDE7162001E1971 /* Shape.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Shape.h; sourceTree = "<group>"; };
+		4BCF70911EDE7197001E1971 /* MicrophoneShapeAdapter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MicrophoneShapeAdapter.h; sourceTree = "<group>"; };
+		4BCF70921EDE723B001E1971 /* MicrophoneShapeAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MicrophoneShapeAdapter.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +131,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BCC702D1ECC0C1100E2BB37 /* AudioToolbox.framework in Frameworks */,
+				4BCC70221ECC02FC00E2BB37 /* AudioUnit.framework in Frameworks */,
+				4BCC701C1ECBF83600E2BB37 /* libpd-osx.a in Frameworks */,
 				4B60BA521EBD9EAD000FC8A5 /* IOKit.framework in Frameworks */,
 				4BCDE0441EBD767E005764A7 /* Cocoa.framework in Frameworks */,
 			);
@@ -89,6 +145,7 @@
 		4BBE45E21EBC473000276A8A = {
 			isa = PBXGroup;
 			children = (
+				4BCC70131ECBF7E300E2BB37 /* libpd.xcodeproj */,
 				4BBE45ED1EBC473000276A8A /* Rotophone */,
 				4BBE45EC1EBC473000276A8A /* Products */,
 				4BCDE0421EBD767E005764A7 /* Frameworks */,
@@ -106,6 +163,16 @@
 		4BBE45ED1EBC473000276A8A /* Rotophone */ = {
 			isa = PBXGroup;
 			children = (
+				4B0FC7F41EDFD06A003CACD5 /* MicrophoneController.h */,
+				4B0FC7F51EDFD06A003CACD5 /* MicrophoneController.m */,
+				4B0FC7F71EE1CC6A003CACD5 /* MicrophoneKeepAlive.h */,
+				4B0FC7F81EE1CC6A003CACD5 /* MicrophoneKeepAlive.m */,
+				4BCF703B1EDD032B001E1971 /* Protocol.c */,
+				4BCF703C1EDD032B001E1971 /* Protocol.h */,
+				4BCF70911EDE7197001E1971 /* MicrophoneShapeAdapter.h */,
+				4BCF70921EDE723B001E1971 /* MicrophoneShapeAdapter.m */,
+				4BCF703E1EDD0AEB001E1971 /* Entities.h */,
+				4BCF703F1EDD0BDD001E1971 /* Entities.m */,
 				4B60BA481EBD9DCF000FC8A5 /* ORSSerialPort.h */,
 				4B60BA491EBD9DCF000FC8A5 /* ORSSerialPort.m */,
 				4B60BA4A1EBD9DCF000FC8A5 /* ORSSerialPortManager.h */,
@@ -119,12 +186,16 @@
 				4BBE45F51EBC473000276A8A /* ViewController.m */,
 				4BBE45F71EBC473000276A8A /* Document.h */,
 				4BBE45F81EBC473000276A8A /* Document.m */,
+				4BCF708A1EDD217C001E1971 /* MainWindowController.h */,
+				4BCF708B1EDD217C001E1971 /* MainWindowController.m */,
 				4BBE45FD1EBC473000276A8A /* Assets.xcassets */,
 				4BBE46021EBC473000276A8A /* Info.plist */,
 				4BBE45FA1EBC473000276A8A /* Document.xcdatamodeld */,
 				4BBE45F11EBC473000276A8A /* Supporting Files */,
 				4B3B91411EC3545A005C0A1A /* SerialPortHandler.h */,
 				4B3B91421EC3545A005C0A1A /* SerialPortHandler.m */,
+				4BCF708D1EDE5024001E1971 /* Event.h */,
+				4BCF708E1EDE59CC001E1971 /* Event.m */,
 				4BBE460C1EBC497100276A8A /* RootView.h */,
 				4BBE460D1EBC497100276A8A /* RootView.m */,
 				4B3B91491EC4056C005C0A1A /* ToolViewController.h */,
@@ -133,6 +204,7 @@
 				4B3B914F1EC4058F005C0A1A /* SideBarViewController.m */,
 				4B3B91441EC362DB005C0A1A /* SceneViewController.h */,
 				4B3B91451EC362DB005C0A1A /* SceneViewController.m */,
+				4BCF70901EDE7162001E1971 /* Shape.h */,
 				4B60BA2B1EBD87B7000FC8A5 /* MainViewController.h */,
 				4B60BA2C1EBD87B7000FC8A5 /* MainViewController.m */,
 				4B3B91501EC4058F005C0A1A /* SideBarViewController.xib */,
@@ -152,9 +224,21 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		4BCC70141ECBF7E300E2BB37 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4BCC70191ECBF7E300E2BB37 /* libpd-ios.a */,
+				4BCC701B1ECBF7E300E2BB37 /* libpd-osx.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		4BCDE0421EBD767E005764A7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4BCC702C1ECC0C1100E2BB37 /* AudioToolbox.framework */,
+				4BCC70211ECC02FC00E2BB37 /* AudioUnit.framework */,
+				4BCC701F1ECC020700E2BB37 /* AVFoundation.framework */,
 				4B60BA511EBD9EAD000FC8A5 /* IOKit.framework */,
 				4BCDE0451EBD76C7005764A7 /* AppKit.framework */,
 				4BCDE0431EBD767E005764A7 /* Cocoa.framework */,
@@ -169,6 +253,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4BBE46051EBC473000276A8A /* Build configuration list for PBXNativeTarget "Rotophone" */;
 			buildPhases = (
+				4BCF70381EDBAF96001E1971 /* ShellScript */,
 				4BBE45E71EBC473000276A8A /* Sources */,
 				4BBE45E81EBC473000276A8A /* Frameworks */,
 				4BBE45E91EBC473000276A8A /* Resources */,
@@ -176,6 +261,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				4BCC701E1ECBF87000E2BB37 /* PBXTargetDependency */,
 			);
 			name = Rotophone;
 			productName = Rotophone;
@@ -208,12 +294,35 @@
 			mainGroup = 4BBE45E21EBC473000276A8A;
 			productRefGroup = 4BBE45EC1EBC473000276A8A /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 4BCC70141ECBF7E300E2BB37 /* Products */;
+					ProjectRef = 4BCC70131ECBF7E300E2BB37 /* libpd.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				4BBE45EA1EBC473000276A8A /* Rotophone */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		4BCC70191ECBF7E300E2BB37 /* libpd-ios.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libpd-ios.a";
+			remoteRef = 4BCC70181ECBF7E300E2BB37 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4BCC701B1ECBF7E300E2BB37 /* libpd-osx.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libpd-osx.a";
+			remoteRef = 4BCC701A1ECBF7E300E2BB37 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		4BBE45E91EBC473000276A8A /* Resources */ = {
@@ -232,20 +341,44 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		4BCF70381EDBAF96001E1971 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cp \"$SRCROOT\"/Arduino/rotophone/Protocol.h \"$SRCROOT\"/Rotophone/Protocol.h\ncp \"$SRCROOT\"/Arduino/rotophone/Protocol.c \"$SRCROOT\"/Rotophone/Protocol.c";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		4BBE45E71EBC473000276A8A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BCF703D1EDD032B001E1971 /* Protocol.c in Sources */,
 				4BBE45F91EBC473000276A8A /* Document.m in Sources */,
 				4BBE45F61EBC473000276A8A /* ViewController.m in Sources */,
 				4B60BA2E1EBD87B7000FC8A5 /* MainViewController.m in Sources */,
 				4B60BA4F1EBD9DCF000FC8A5 /* ORSSerialPortManager.m in Sources */,
 				4B60BA501EBD9DCF000FC8A5 /* ORSSerialRequest.m in Sources */,
+				4B0FC7F91EE1CC6A003CACD5 /* MicrophoneKeepAlive.m in Sources */,
 				4B60BA4E1EBD9DCF000FC8A5 /* ORSSerialPort.m in Sources */,
 				4BBE460F1EBC497100276A8A /* RootView.m in Sources */,
 				4B3B91511EC4058F005C0A1A /* SideBarViewController.m in Sources */,
+				4BCF708C1EDD217C001E1971 /* MainWindowController.m in Sources */,
 				4BBE45F31EBC473000276A8A /* main.m in Sources */,
+				4BCF70401EDD0BDD001E1971 /* Entities.m in Sources */,
+				4BCF708F1EDE59CC001E1971 /* Event.m in Sources */,
+				4B0FC7F61EDFD06A003CACD5 /* MicrophoneController.m in Sources */,
+				4BCF70931EDE723B001E1971 /* MicrophoneShapeAdapter.m in Sources */,
 				4BBE45FC1EBC473000276A8A /* Document.xcdatamodeld in Sources */,
 				4B3B91471EC362DB005C0A1A /* SceneViewController.m in Sources */,
 				4B3B91431EC3545A005C0A1A /* SerialPortHandler.m in Sources */,
@@ -255,6 +388,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4BCC701E1ECBF87000E2BB37 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "libpd-osx";
+			targetProxy = 4BCC701D1ECBF87000E2BB37 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		4BBE46031EBC473000276A8A /* Debug */ = {
@@ -359,6 +500,7 @@
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_LINK_OBJC_RUNTIME = NO;
 				COMBINE_HIDPI_IMAGES = YES;
+				HEADER_SEARCH_PATHS = "libpd/**";
 				INFOPLIST_FILE = Rotophone/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
@@ -383,6 +525,7 @@
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_LINK_OBJC_RUNTIME = NO;
 				COMBINE_HIDPI_IMAGES = YES;
+				HEADER_SEARCH_PATHS = "libpd/**";
 				INFOPLIST_FILE = Rotophone/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "";

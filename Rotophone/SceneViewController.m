@@ -8,10 +8,11 @@
 
 #import "SceneViewController.h"
 
+static void* ShapeChangedKVOContext = &ShapeChangedKVOContext;
 
 @implementation ConcreteMicrophone
 
-@synthesize anchor, origin, rotation;
+@synthesize anchor, origin, rotation, shapeChanged;
 
 CGFloat _microphoneRotation;
 
@@ -43,7 +44,7 @@ CGFloat _microphoneRotation;
 
 @implementation ConcreteRectangle
 
-@synthesize anchor, origin, rotation;
+@synthesize anchor, origin, rotation, shapeChanged;
 
 
 - (id)init {
@@ -80,20 +81,45 @@ CGFloat scale;
 - (void)awakeFromNib {
     [super awakeFromNib];
     self.shapes = [[NSMutableArray alloc] init];
-    [self addShape:[[ConcreteMicrophone alloc] init]];
+    //[self addShape:[[ConcreteMicrophone alloc] init]];
     [self addShape:[[ConcreteRectangle alloc] init]];
     scale = 6.0;
 }
 
-- (void)addShape:(id<Shape>)shape {
+- (void)addShape:(NSObject<Shape>*)shape {
     [_shapes addObject:shape];
+    
+    // Listen to the shape
+    [shape addObserver:self forKeyPath:@"shapeChanged" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:ShapeChangedKVOContext];
+
     [self setNeedsDisplay:YES];
 }
 
-- (void)removeShape:(id<Shape>)shape {
+- (void)removeShape:(NSObject<Shape>*)shape {
     [_shapes removeObject:shape];
+    
+    [shape removeObserver:self forKeyPath:@"shapeChanged"];
+    
     [self setNeedsDisplay:YES];
 }
+
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary *)change
+                       context:(void *)context {
+    
+    if (context == ShapeChangedKVOContext) {
+        // Notify
+        [self setNeedsDisplay:YES];
+    } else {
+        // Any unrecognized context must belong to super
+        [super observeValueForKeyPath:keyPath
+                             ofObject:object
+                               change:change
+                              context:context];
+    }
+}
+
 
 - (void)visitMicrophoneShape:(id<MicrophoneShape>)shape {
     NSBezierPath *path = [NSBezierPath bezierPath];
@@ -108,7 +134,7 @@ CGFloat scale;
     
     NSAffineTransform* transform = [NSAffineTransform transform];
     [transform translateXBy:7 yBy:7.5];
-    [transform rotateByDegrees:shape.microphoneRotation];
+    [transform rotateByRadians:shape.microphoneRotation];
     mic = [transform transformBezierPath:mic];
     [[NSColor greenColor] set];
     [mic fill];

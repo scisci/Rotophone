@@ -8,9 +8,10 @@
 
 #import "AppDelegate.h"
 #import "MainViewController.h"
-#import "ORSSerialPortManager.h"
+
 #import "ORSSerialPort.h"
-#import "SerialPortHandler.h"
+#import "Document.h"
+#import "objc/PdAudioUnit.h"
 
 @interface SerialPortMenuItem : NSObject
 @property NSMenuItem *menuItem;
@@ -30,11 +31,10 @@
 @end
 
 @interface AppDelegate ()
-@property (retain) NSWindow* window;
-@property (retain) MainViewController* rootViewController;
+@property (retain) PdAudioUnit *pdAudioUnit;
+@property (readwrite) BOOL appStarted;
+@property (unsafe_unretained) IBOutlet NSApplication *application;
 
-@property (retain) ORSSerialPortManager* serialPortManager;
-@property (retain) SerialPortHandler* serialPortHandler;
 @property (retain) NSMutableArray* serialMenuItems;
 @property (unsafe_unretained) IBOutlet NSMenuItem *availablePortStartSeparator;
 @property (unsafe_unretained) IBOutlet NSMenuItem *noAvailablePortsMenuItem;
@@ -43,37 +43,85 @@
 @implementation AppDelegate
 
 static void *PersonAccountBalanceContext = &PersonAccountBalanceContext;
+static void *SelectedPortKVOContext = &SelectedPortKVOContext;
+
+- (id)init {
+    if (self = [super init]) {
+        self.appStarted = false;
+        self.serialPortManager = [ORSSerialPortManager sharedSerialPortManager];
+        self.serialPortHandler = [[SerialPortHandler alloc] init];
+        self.pdAudioUnit = [[PdAudioUnit alloc] init];
+        int result = [_pdAudioUnit configureWithSampleRate:44100.0 numberChannels:2 inputEnabled:NO];
+    }
+    return self;
+}
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     // Insert code here to initialize your application
+
+    _serialMenuItems = [[NSMutableArray alloc] initWithCapacity:0];
     
-    // Create a window
-    NSRect frame = NSMakeRect(0, 0, 200, 200);
-    _window  = [[NSWindow alloc] initWithContentRect:frame
-                                                     styleMask:NSTitledWindowMask | NSResizableWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask
-                                                       backing:NSBackingStoreBuffered
-                                                         defer:NO];
-    [_window setBackgroundColor:[NSColor blueColor]];
-    [_window makeKeyAndOrderFront:NSApp];
     
-    self.rootViewController = [[MainViewController alloc] initWithNibName:@"MainViewController" bundle:nil];
-    
-    _window.contentView = _rootViewController.view;
-    
-    self.serialPortManager = [ORSSerialPortManager sharedSerialPortManager];
-    self.serialPortHandler = [[SerialPortHandler alloc] init];
     
     [_serialPortManager addObserver:self forKeyPath:@"availablePorts" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:PersonAccountBalanceContext];
-    
-    _serialMenuItems = [[NSMutableArray alloc] initWithCapacity:0];
- 
     [self handlePortsChanged];
+    
+    
+    
+    [_serialPortHandler addObserver:self
+                         forKeyPath:@"selectedPort"
+                            options:(NSKeyValueObservingOptionNew |
+                                     NSKeyValueObservingOptionOld)
+                            context:SelectedPortKVOContext];
+
+    [self handleSelectedSerialPort];
+    
+    
+    
+    _pdAudioUnit.active = YES;
+    _appStarted = true;
+    
+}
+
+- (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender
+{
+    // On startup, when asked to open an untitled file, open the last opened
+    // file instead
+    if (!_appStarted)
+    {
+        // Get the recent documents
+        NSDocumentController *controller =
+        [NSDocumentController sharedDocumentController];
+        NSArray *documents = [controller recentDocumentURLs];
+        
+        // If there is a recent document, try to open it.
+        if ([documents count] > 0)
+        {
+            NSError *error = nil;
+            // point to last document saved
+            NSInteger index = 0;
+            [controller
+             openDocumentWithContentsOfURL:[documents objectAtIndex:index]
+             display:YES error:&error];
+            
+            // If there was no error, then prevent untitled from appearing.
+            if (error == nil)
+            {
+                return NO;
+            }
+        }
+    }
+    
+    return YES;
 }
 
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
     // Insert code here to tear down your application
 }
+
+
+
 
 - (void)handlePortsChanged {
     NSArray *ports = _serialPortManager.availablePorts;
@@ -112,6 +160,10 @@ static void *PersonAccountBalanceContext = &PersonAccountBalanceContext;
         }
     }
     
+    
+}
+
+- (void)handleSelectedSerialPort {
     for (SerialPortMenuItem *item in _serialMenuItems) {
         if (item.serialPort == _serialPortHandler.selectedPort) {
             [item.menuItem setState:NSOnState];
@@ -129,7 +181,9 @@ static void *PersonAccountBalanceContext = &PersonAccountBalanceContext;
     if (context == PersonAccountBalanceContext) {
         // Do something with the balance…
         [self handlePortsChanged];
-    } else {
+    } else if (context == SelectedPortKVOContext) {
+        [self handleSelectedSerialPort];
+    }else {
         // Any unrecognized context must belong to super
         [super observeValueForKeyPath:keyPath
                              ofObject:object

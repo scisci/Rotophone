@@ -32,6 +32,10 @@
 #define NS_ASSUME_NONNULL_END
 #define nullable
 #define nonnullable
+//#define __nullable
+#endif
+
+#ifndef __nullable
 #define __nullable
 #endif
 

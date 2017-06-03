@@ -25,7 +25,7 @@
 @end
 
 @interface SideBarViewController ()
-
+@property (retain) NSTextView* rawView;
 @end
 
 @implementation SideBarViewController
@@ -33,6 +33,16 @@
 - (void)loadView {
     [super loadView];
     // Do view setup here.
+    self.rawView = [[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, 200, 200)];
+    [self.view addSubview:_rawView];
+}
+
+- (void)handleRawData:(NSData *)rawData {
+    // Append it to the text field
+    NSString *text = [[NSString alloc] initWithData:rawData encoding:NSUTF8StringEncoding];
+    if (text != nil) {
+        [_rawView insertText:text];
+    }
 }
 
 @end

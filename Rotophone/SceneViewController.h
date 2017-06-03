@@ -7,30 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-
-@protocol MicrophoneShape;
-@protocol RectangleShape;
-
-@protocol ShapeVisitor<NSObject>
-- (void)visitMicrophoneShape:(id<MicrophoneShape>)shape;
-- (void)visitRectangleShape:(id<RectangleShape>)shape;
-@end
-
-
-@protocol Shape<NSObject>
-- (void)acceptShapeVisitor:(id<ShapeVisitor>)visitor;
-@required @property (readonly) NSSize size;
-@required @property CGPoint anchor;
-@required @property CGFloat rotation;
-@required @property CGPoint origin;
-@end
-
-@protocol MicrophoneShape<Shape>
-@property (readonly) CGFloat microphoneRotation;
-@end
-
-@protocol RectangleShape<Shape>
-@end
+#import "Shape.h"
 
 @interface ConcreteMicrophone : NSObject<MicrophoneShape>
 @end
@@ -40,8 +17,8 @@
 
 
 @interface SceneView : NSView<ShapeVisitor>
-- (void)addShape:(id<Shape>)shape;
-- (void)removeShape:(id<Shape>)shape;
+- (void)addShape:(NSObject<Shape> *)shape;
+- (void)removeShape:(NSObject<Shape> *)shape;
 @end
 
 
