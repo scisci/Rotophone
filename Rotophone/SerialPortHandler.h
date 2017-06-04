@@ -17,6 +17,7 @@
 
 @protocol CommandWriter<NSObject>
 - (void)setPosition:(float)position;
+- (void)setMode:(ModeType)mode;
 - (void)sendHandshake:(unsigned char)handshakeID;
 - (void)setZero;
 - (void)loadData:(NSData *)data;

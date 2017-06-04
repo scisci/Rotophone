@@ -13,6 +13,7 @@ static void* AnchorKVOContext = &AnchorKVOContext;
 static void* RotationKVOContext = &RotationKVOContext;
 static void* OriginKVOContext = &OriginKVOContext;
 static void* RotoPositionKVOContext = &RotoPositionKVOContext;
+static void* RotoTargetKVOContext = &RotoTargetKVOContext;
 
 @interface MicrophoneShapeAdapter () {
 }
@@ -22,6 +23,7 @@ static void* RotoPositionKVOContext = &RotoPositionKVOContext;
 @implementation MicrophoneShapeAdapter
 
 @synthesize microphoneRotation = _microphoneRotation;
+@synthesize microphoneTarget =_microphoneTarget;
 @synthesize rotation = _rotation;
 @synthesize origin = _origin;
 @synthesize anchor = _anchor;
@@ -39,8 +41,10 @@ static void* RotoPositionKVOContext = &RotoPositionKVOContext;
         [model addObserver:self forKeyPath:@"originX" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:OriginKVOContext];
         [model addObserver:self forKeyPath:@"originY" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:OriginKVOContext];
         [model addObserver:self forKeyPath:@"rotoPosition" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:RotoPositionKVOContext];
+        [model addObserver:self forKeyPath:@"rotoTarget" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:RotoPositionKVOContext];
 
          _microphoneRotation = [_model.rotoPosition floatValue];
+        _microphoneTarget = [_model.rotoTarget floatValue];
         _rotation = [_model.rotation floatValue];
         _origin = CGPointMake([_model.originX floatValue], [_model.originY floatValue]);
         _anchor = CGPointMake([_model.anchorX floatValue], [_model.anchorY floatValue]);
@@ -55,6 +59,7 @@ static void* RotoPositionKVOContext = &RotoPositionKVOContext;
     [_model removeObserver:self forKeyPath:@"originX"];
     [_model removeObserver:self forKeyPath:@"originY"];
     [_model removeObserver:self forKeyPath:@"rotoPosition"];
+    [_model removeObserver:self forKeyPath:@"rotoTarget"];
 }
 
 + (BOOL)automaticallyNotifiesObserversForKey:(NSString *)theKey {
@@ -63,7 +68,8 @@ static void* RotoPositionKVOContext = &RotoPositionKVOContext;
     if ([theKey isEqualToString:@"anchor"] ||
         [theKey isEqualToString:@"rotation"] ||
         [theKey isEqualToString:@"origin"] ||
-        [theKey isEqualToString:@"microphoneRotation"]) {
+        [theKey isEqualToString:@"microphoneRotation"] ||
+        [theKey isEqualToString:@"microphoneTarget"]) {
         automatic = NO;
     }
     else {
@@ -78,7 +84,7 @@ static void* RotoPositionKVOContext = &RotoPositionKVOContext;
     NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
     
     if ([key isEqualToString:@"shapeChanged"]) {
-        NSArray *affectingKeys = @[@"anchor", @"origin", @"rotation", @"microphoneRotation"];
+        NSArray *affectingKeys = @[@"anchor", @"origin", @"rotation", @"microphoneRotation", @"microphoneTarget"];
         keyPaths = [keyPaths setByAddingObjectsFromArray:affectingKeys];
     }
     return keyPaths;
@@ -99,6 +105,10 @@ static void* RotoPositionKVOContext = &RotoPositionKVOContext;
         [self willChangeValueForKey:@"rotation"];
         _rotation = [_model.rotation floatValue];
          [self didChangeValueForKey:@"rotation"];
+    } else if (context == RotoTargetKVOContext) {
+        [self willChangeValueForKey:@"microphoneTarget"];
+        _microphoneTarget = [_model.rotoTarget floatValue];
+        [self didChangeValueForKey:@"microphoneTarget"];
     } else if (context == OriginKVOContext) {
         [self willChangeValueForKey:@"origin"];
         _origin = CGPointMake([_model.originX floatValue], [_model.originY floatValue]);
@@ -129,6 +139,10 @@ static void* RotoPositionKVOContext = &RotoPositionKVOContext;
     // TODO:
 }
 
+- (void)setMicrophoneTarget:(CGFloat)microphoneTarget {
+    
+}
+
 
 - (void)setAnchor:(CGPoint)anchor {
     // TODO:
@@ -136,6 +150,8 @@ static void* RotoPositionKVOContext = &RotoPositionKVOContext;
 
 - (void)setOrigin:(CGPoint)origin {
     // TODO:
+    _model.originX = [NSNumber numberWithFloat:origin.x];
+    _model.originY = [NSNumber numberWithFloat:origin.y];
 }
 
 - (void)setRotation:(CGFloat)rotation {

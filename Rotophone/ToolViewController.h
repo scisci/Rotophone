@@ -8,8 +8,12 @@
 
 #import <Cocoa/Cocoa.h>
 
+@interface ToolbarView : NSView
+
+@end
 
 @interface ToolView : NSView
+@property (unsafe_unretained) IBOutlet NSView *toolbarView;
 @end
 
 @interface ToolViewController : NSViewController

@@ -35,6 +35,7 @@
 @property (/*nullable,*/ nonatomic, retain) NSData *embeddedData;
 @property (/*nullable,*/ nonatomic, retain) NSString *name;
 @property (/*nullable,*/ nonatomic, retain) NSNumber *rotoPosition;
+@property (/*nullable,*/ nonatomic, retain) NSNumber *rotoTarget;
 @property (/*nullable,*/ nonatomic, retain) NSNumber *rotoID;
 
 @property (/*nullable,*/ nonatomic, retain) NSNumber *anchorX;

@@ -9,14 +9,14 @@
 #import <Cocoa/Cocoa.h>
 #import "Shape.h"
 
-@interface ConcreteMicrophone : NSObject<MicrophoneShape>
-@end
 
 @interface ConcreteRectangle : NSObject<RectangleShape>
 @end
 
 
 @interface SceneView : NSView<ShapeVisitor>
+
+@property (retain) NSObject<Shape> *selection;
 - (void)addShape:(NSObject<Shape> *)shape;
 - (void)removeShape:(NSObject<Shape> *)shape;
 @end

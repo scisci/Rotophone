@@ -31,6 +31,7 @@
 
 @protocol MicrophoneShape<Shape>
 @property CGFloat microphoneRotation;
+@property CGFloat microphoneTarget;
 @end
 
 @protocol RectangleShape<Shape>

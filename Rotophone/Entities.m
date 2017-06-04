@@ -30,6 +30,7 @@
 @dynamic name;
 @dynamic rotoID;
 @dynamic rotoPosition;
+@dynamic rotoTarget;
 
 @dynamic anchorX;
 @dynamic anchorY;

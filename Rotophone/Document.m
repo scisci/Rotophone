@@ -44,11 +44,9 @@ static void *MicrophoneStatusKVOContext = &MicrophoneStatusKVOContext;
     }
     if (results.count == 0) {
         MicrophoneEntity* microphone = [[MicrophoneEntity alloc] initWithName:@"azxyz" andContext:self.managedObjectContext];
-        unsigned char fakeData[3];
-        fakeData[0] = 0;
-        fakeData[1] = 1;
-        fakeData[2] = 2;
-        microphone.embeddedData = [[NSData alloc] initWithBytes:&fakeData[0] length:3];
+        microphone.originX  = [NSNumber numberWithFloat:20.0];
+        microphone.originY = [NSNumber numberWithFloat:40.0];
+        microphone.rotation = [NSNumber numberWithFloat:45.0];
         return microphone;
 
     }

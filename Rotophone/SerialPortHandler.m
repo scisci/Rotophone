@@ -331,6 +331,12 @@
     [self send];
 }
 
+- (void)setMode:(ModeType)mode {
+    [self start:kSetModeCmd];
+    [self writeByte:mode];
+    [self send];
+}
+
 - (void)sendHandshake:(unsigned char)handshakeID {
     [self start:kHandshakeCmd];
     [self writeByte:handshakeID];
@@ -338,7 +344,8 @@
 }
 
 - (void)setZero {
-    
+    [self start:kZeroCmd];
+    [self send];
 }
 
 - (void)loadData:(NSData *)data {
