@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4B0FC7F61EDFD06A003CACD5 /* MicrophoneController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B0FC7F51EDFD06A003CACD5 /* MicrophoneController.m */; };
 		4B0FC7F91EE1CC6A003CACD5 /* MicrophoneKeepAlive.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B0FC7F81EE1CC6A003CACD5 /* MicrophoneKeepAlive.m */; };
+		4B0FC7FF1EE5E365003CACD5 /* SerialPortDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B0FC7FE1EE5E365003CACD5 /* SerialPortDevice.m */; };
 		4B2567061EBCC0D000BCE2B8 /* Resources in Resources */ = {isa = PBXBuildFile; fileRef = 4B2567051EBCC0D000BCE2B8 /* Resources */; };
 		4B3B91431EC3545A005C0A1A /* SerialPortHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B3B91421EC3545A005C0A1A /* SerialPortHandler.m */; };
 		4B3B91471EC362DB005C0A1A /* SceneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B3B91451EC362DB005C0A1A /* SceneViewController.m */; };
@@ -71,6 +72,8 @@
 		4B0FC7F51EDFD06A003CACD5 /* MicrophoneController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MicrophoneController.m; sourceTree = "<group>"; };
 		4B0FC7F71EE1CC6A003CACD5 /* MicrophoneKeepAlive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MicrophoneKeepAlive.h; sourceTree = "<group>"; };
 		4B0FC7F81EE1CC6A003CACD5 /* MicrophoneKeepAlive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MicrophoneKeepAlive.m; sourceTree = "<group>"; };
+		4B0FC7FD1EE5E365003CACD5 /* SerialPortDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SerialPortDevice.h; sourceTree = "<group>"; };
+		4B0FC7FE1EE5E365003CACD5 /* SerialPortDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SerialPortDevice.m; sourceTree = "<group>"; };
 		4B2567051EBCC0D000BCE2B8 /* Resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources; sourceTree = "<group>"; };
 		4B3B91411EC3545A005C0A1A /* SerialPortHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SerialPortHandler.h; sourceTree = "<group>"; };
 		4B3B91421EC3545A005C0A1A /* SerialPortHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SerialPortHandler.m; sourceTree = "<group>"; };
@@ -192,6 +195,8 @@
 				4BBE46021EBC473000276A8A /* Info.plist */,
 				4BBE45FA1EBC473000276A8A /* Document.xcdatamodeld */,
 				4BBE45F11EBC473000276A8A /* Supporting Files */,
+				4B0FC7FD1EE5E365003CACD5 /* SerialPortDevice.h */,
+				4B0FC7FE1EE5E365003CACD5 /* SerialPortDevice.m */,
 				4B3B91411EC3545A005C0A1A /* SerialPortHandler.h */,
 				4B3B91421EC3545A005C0A1A /* SerialPortHandler.m */,
 				4BCF708D1EDE5024001E1971 /* Event.h */,
@@ -371,6 +376,7 @@
 				4B60BA501EBD9DCF000FC8A5 /* ORSSerialRequest.m in Sources */,
 				4B0FC7F91EE1CC6A003CACD5 /* MicrophoneKeepAlive.m in Sources */,
 				4B60BA4E1EBD9DCF000FC8A5 /* ORSSerialPort.m in Sources */,
+				4B0FC7FF1EE5E365003CACD5 /* SerialPortDevice.m in Sources */,
 				4BBE460F1EBC497100276A8A /* RootView.m in Sources */,
 				4B3B91511EC4058F005C0A1A /* SideBarViewController.m in Sources */,
 				4BCF708C1EDD217C001E1971 /* MainWindowController.m in Sources */,

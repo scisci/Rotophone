@@ -61,12 +61,49 @@
     - (void)handleEvent:(id<RotoEvent>)event;
 @end
 
-@interface RotoEventStream : NSObject<RotoEventHandler> {
+@protocol RotoCommandWriter<NSObject>
+- (void)setPosition:(float)position;
+- (void)setMode:(ModeType)mode;
+- (void)sendHandshake:(unsigned char)handshakeID;
+- (void)setZero;
+- (void)loadData:(NSData *)data;
+- (void)saveData;
+@end
+
+@protocol RotoCommandWriterDelegate
+- (void)sendData:(NSData *)data;
+@end
+
+@protocol RotoEventSource<NSObject>
+- (void)addHandler:(id<RotoEventHandler>)handler;
+- (void)removeHandler:(id<RotoEventHandler>)handler;
+@end
+
+@protocol RawStreamHandler<NSObject>
+- (void)handleRawData:(NSData *)rawData;
+@end
+
+
+@protocol Device
+
+@property (readonly) id<RotoCommandWriter> deviceWriter;
+@property (readonly) id<RotoEventSource> deviceReader;
+
+@end
+
+@protocol DeviceProvider<NSObject>
+@property id<Device> device;
+@end
+
+@interface RotoEventStream : NSObject<RotoEventSource, RotoEventHandler> {
 
 }
 
 - (void)addHandler:(id<RotoEventHandler>)handler;
 - (void)removeHandler:(id<RotoEventHandler>)handler;
 @end
+
+
+
 
 #endif /* Event_h */

@@ -10,10 +10,11 @@
 
 #import "Entities.h"
 
-static void *SelectedPortKVOContext = &SelectedPortKVOContext;
+static void* DeviceKVOContext = &DeviceKVOContext;
 
 @interface MicrophoneController () {
    MicrophoneEntity *_entity;
+    NSObject<DeviceProvider> *_deviceProvider;
     BOOL _needsLoadData;
 }
 
@@ -23,9 +24,7 @@ static void *SelectedPortKVOContext = &SelectedPortKVOContext;
 
 @implementation MicrophoneController
 
-@synthesize serialPortHandler = _serialPortHandler;
-
-- (id)initWithEntity:(MicrophoneEntity *)entity {
+- (id)initWithEntity:(MicrophoneEntity *)entity andDeviceProvider:(NSObject<DeviceProvider> *)deviceProvider {
     if (self = [super init]) {
         self.keepAlive = [[MicrophoneKeepAlive alloc] init];
         _keepAlive.delegate = self;
@@ -34,41 +33,26 @@ static void *SelectedPortKVOContext = &SelectedPortKVOContext;
         _isConnected = false;
         _entity = entity;
         _needsLoadData = false;
+        
+        // Listen to changes in the device
+        _deviceProvider = deviceProvider;
+        [_deviceProvider addObserver:self forKeyPath:@"device" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:DeviceKVOContext];
+    
     }
     
     return self;
 }
 
-
-- (SerialPortHandler *)serialPortHandler {
-    return _serialPortHandler;
-}
-
-- (void)setSerialPortHandler:(SerialPortHandler *)serialPortHandler {
-    if (serialPortHandler == _serialPortHandler) {
-        return;
-    }
-    
-    if (_serialPortHandler != nil) {
-        [_serialPortHandler removeObserver:self forKeyPath:@"selectedPort"];
-    }
-    
-    _serialPortHandler = serialPortHandler;
-    if (_serialPortHandler != nil ) {
-        [_serialPortHandler addObserver:self forKeyPath:@"selectedPort" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:SelectedPortKVOContext];
-    }
-    
-    [self handlePortChanged];
-}
-
-
-
-- (id<CommandWriter>)commandWriter {
-    return _serialPortHandler.commandWriter;
+- (id<Device>)device {
+    return _deviceProvider.device;
 }
 
 - (void)handleEvent:(id<RotoEvent>)event {
     [event accept:self];
+}
+
+- (void)visitUpdatePosEvent:(id<UpdatePosEvent>)event {
+    _entity.rotoPosition = [NSNumber numberWithFloat:event.position];
 }
 
 - (void)visitErrorEvent:(id<ErrorEvent>)event {
@@ -79,6 +63,18 @@ static void *SelectedPortKVOContext = &SelectedPortKVOContext;
     
     _lastError = event.errorCode;
 }
+
+- (void)loadDataIfNecessary {
+    if (_isConnected && _needsLoadData /*&& (_currentMode == kModeIdle || _currentMode == kModeRun)*/) {
+        // Save data
+        _needsLoadData = false;
+        if (_entity.embeddedData != nil && self.device != nil) {
+            [self.device.deviceWriter loadData:_entity.embeddedData];
+            [self.device.deviceWriter saveData];
+        }
+    }
+}
+
 
 - (void)visitUpdateModeEvent:(id<UpdateModeEvent>)event {
     NSLog(@"Changed modes to %d", event.mode);
@@ -102,18 +98,21 @@ static void *SelectedPortKVOContext = &SelectedPortKVOContext;
 
 }
 
-- (void)handlePortChanged {
+- (void)handleDeviceChangedFrom:(id<Device>)prev ToDevice:(id<Device>)next {
     
     [_keepAlive stop];
     _keepAlive.commandWriter = nil;
-    [_serialPortHandler.eventStream removeHandler:self];
-    [_serialPortHandler.eventStream removeHandler:_keepAlive];
     
-    if (_serialPortHandler != nil && _serialPortHandler.selectedPort != nil) {
-        _keepAlive.commandWriter = _serialPortHandler.commandWriter;
+    if (prev != nil) {
+        [prev.deviceReader removeHandler:self];
+        [prev.deviceReader removeHandler:_keepAlive];
+    }
+    
+    if (next != nil) {
+        _keepAlive.commandWriter = next.deviceWriter;
         [_keepAlive start];
-        [_serialPortHandler.eventStream addHandler:self];
-        [_serialPortHandler.eventStream addHandler:_keepAlive];
+        [next.deviceReader addHandler:self];
+        [next.deviceReader addHandler:_keepAlive];
     }
 }
 
@@ -157,23 +156,24 @@ static void *SelectedPortKVOContext = &SelectedPortKVOContext;
     [self loadDataIfNecessary];
 }
 
-- (void)loadDataIfNecessary {
-    if (_isConnected && _needsLoadData /*&& (_currentMode == kModeIdle || _currentMode == kModeRun)*/) {
-        // Save data
-        _needsLoadData = false;
-        if (_entity.embeddedData != nil) {
-            [self.commandWriter loadData:_entity.embeddedData];
-            [self.commandWriter saveData];
-        }
-    }
-}
 
 - (void)communicationDidEnd {
     [self willChangeValueForKey:@"isConnected"];
     _isConnected = false;
     [self didChangeValueForKey:@"isConnected"];
     NSLog(@"communication ended");
-    [self handlePortChanged];
+
+    // Attempt to reconnect?
+    [self attemptReconnect];
+}
+
+- (void)attemptReconnect {
+    if (self.device == nil) {
+        return;
+    }
+    
+    [_keepAlive stop];
+    [_keepAlive start];
 }
 
 
@@ -182,9 +182,10 @@ static void *SelectedPortKVOContext = &SelectedPortKVOContext;
                         change:(NSDictionary *)change
                        context:(void *)context {
     
-    if (context == SelectedPortKVOContext) {
-        // Do something with the balance…
-        [self handlePortChanged];
+    if (context == DeviceKVOContext) {
+        id<Device> prevDevice = [change objectForKey:NSKeyValueChangeOldKey];
+        id<Device> nextDevice = [change objectForKey:NSKeyValueChangeNewKey];
+        [self handleDeviceChangedFrom:prevDevice ToDevice:nextDevice];
     } else {
         // Any unrecognized context must belong to super
         [super observeValueForKeyPath:keyPath

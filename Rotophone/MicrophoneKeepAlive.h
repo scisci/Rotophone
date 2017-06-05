@@ -31,6 +31,6 @@
 - (BOOL)isAlive;
 
 @property (unsafe_unretained) id<MicrophoneKeepAliveDelegate> delegate;
-@property (retain) id<CommandWriter> commandWriter;
+@property (retain) id<RotoCommandWriter> commandWriter;
 @end
 

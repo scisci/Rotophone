@@ -89,12 +89,6 @@ static void *MicrophoneStatusKVOContext = &MicrophoneStatusKVOContext;
 
 
 - (void)setupSerialPort {
-    [_serialPortHandler addObserver:self
-                         forKeyPath:@"selectedPort"
-                         options:(NSKeyValueObservingOptionNew |
-                         NSKeyValueObservingOptionOld)
-                         context:SelectedPortKVOContext];
-    
     // If no serial port is selected, then try to pull one from
     // the saved state.
     if (_serialPortHandler.selectedPort == nil) {
@@ -128,8 +122,7 @@ static void *MicrophoneStatusKVOContext = &MicrophoneStatusKVOContext;
     wc.mainViewController.document = self;
     [self addWindowController:wc];
     
-    self.microphoneController = [[MicrophoneController alloc] initWithEntity:_microphone];
-    _microphoneController.serialPortHandler = _serialPortHandler;
+    self.microphoneController = [[MicrophoneController alloc] initWithEntity:_microphone andDeviceProvider:_serialPortHandler];
     
     [_microphoneController addObserver:self
                          forKeyPath:@"status"
@@ -145,38 +138,28 @@ static void *MicrophoneStatusKVOContext = &MicrophoneStatusKVOContext;
     [sceneView addShape:microphoneShape];
     
     _serialPortHandler.rawStreamHandler =  wc.mainViewController.sideBarViewController;
-    
-    // Stream
-    [_serialPortHandler.eventStream addHandler:self];
 }
 
 - (void)dealloc {
     [_serialPortHandler removeObserver:self forKeyPath:@"selectedPort"];
-    [_serialPortHandler.eventStream removeHandler:self];
     _serialPortHandler.rawStreamHandler = nil;
 }
 
 
--(void)handleEvent:(id<RotoEvent>)event {
-    [event accept:self];
-}
 
-- (void)visitUpdatePosEvent:(id<UpdatePosEvent>)event {
-    _microphone.rotoPosition = [NSNumber numberWithFloat:event.position];
-}
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
                       ofObject:(id)object
                         change:(NSDictionary *)change
                        context:(void *)context {
     
-    if (context == SelectedPortKVOContext) {
-        if (_serialPortHandler.selectedPort != nil) {
+    if (context == MicrophoneConnectedKVOContext) {
+        NSLog(@"Microphone status changed connected %d, mode %d.", _microphoneController.isConnected, _microphoneController.currentMode);
+        
+        if (_microphoneController.isConnected && _serialPortHandler.selectedPort != nil) {
             _serialPortSettings.path = _serialPortHandler.selectedPort.path;
             _serialPortSettings.name = _serialPortHandler.selectedPort.name;
         }
-    } else if (context == MicrophoneConnectedKVOContext) {
-        NSLog(@"Microphone status changed connected %d, mode %d.", _microphoneController.isConnected, _microphoneController.currentMode);
     }   else {
         // Any unrecognized context must belong to super
         [super observeValueForKeyPath:keyPath
