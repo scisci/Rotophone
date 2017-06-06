@@ -16,7 +16,7 @@
 @implementation MainWindowController
 
 - (id)init {
-    NSRect frame = NSMakeRect(0, 0, 200, 200);
+    NSRect frame = NSMakeRect(0, 0, 600, 600);
     NSWindow *window  = [[NSWindow alloc] initWithContentRect:frame
                                                     styleMask:NSTitledWindowMask | NSResizableWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask
                                                       backing:NSBackingStoreBuffered

@@ -37,6 +37,10 @@ static void* DeviceKVOContext = &DeviceKVOContext;
         // Listen to changes in the device
         _deviceProvider = deviceProvider;
         [_deviceProvider addObserver:self forKeyPath:@"device" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:DeviceKVOContext];
+        
+        if (_deviceProvider.device != nil) {
+            [self handleDeviceChangedFrom:nil ToDevice:_deviceProvider.device];
+        }
     
     }
     

@@ -106,4 +106,58 @@
 
 
 
+
+@interface ConcreteUpdatePosEvent : NSObject<UpdatePosEvent> {
+}
+
+- (id)initWithTimestamp:(double)timestamp rotoID:(int)rotoID andPosition:(float)position;
+
+@end
+
+
+@interface ConcreteDataEvent : NSObject<DataEvent> {
+}
+
+- (id)initWithTimestamp:(double)timestamp rotoID:(int)rotoID Type:(TxEvent)type andData:(NSData *)data;
+
+@end
+
+
+
+@interface ConcreteHandshakeEvent : NSObject<HandshakeEvent> {
+}
+
+- (id)initWithTimestamp:(double)timestamp rotoID:(int)rotoID HandshakeID:(int)handshakeID Mode:(ModeType)mode;
+
+@end
+
+
+@interface ConcreteUpdateModeEvent : NSObject<UpdateModeEvent> {
+}
+
+- (id)initWithTimestamp:(double)timestamp rotoID:(int)rotoID Mode:(ModeType)mode;
+
+@end
+
+
+
+
+@interface ConcreteErrorEvent : NSObject<ErrorEvent> {
+}
+
+- (id)initWithTimestamp:(double)timestamp rotoID:(int)rotoID ErrorCode:(ErrCode)errorCode;
+
+@end
+
+@interface ConcreteGenericEvent : NSObject<GenericEvent> {
+}
+- (id)initWithTimestamp:(double)timestamp rotoID:(int)rotoID EventType:(TxEvent)eventType;
+
+@end
+
+
+
+
+
+
 #endif /* Event_h */

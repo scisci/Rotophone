@@ -14,6 +14,7 @@
 #import "SerialPortHandler.h"
 #import "MicrophoneShapeAdapter.h"
 #import "MicrophoneController.h"
+#import "MockDevice.h"
 
 static void *SelectedPortKVOContext = &SelectedPortKVOContext;
 static void *MicrophoneConnectedKVOContext = &MicrophoneConnectedKVOContext;
@@ -122,7 +123,10 @@ static void *MicrophoneStatusKVOContext = &MicrophoneStatusKVOContext;
     wc.mainViewController.document = self;
     [self addWindowController:wc];
     
-    self.microphoneController = [[MicrophoneController alloc] initWithEntity:_microphone andDeviceProvider:_serialPortHandler];
+    MockDevice* mockDevice = [[MockDevice alloc] init];
+    
+    [mockDevice setPosition: 0.3];
+    self.microphoneController = [[MicrophoneController alloc] initWithEntity:_microphone andDeviceProvider:mockDevice];
     
     [_microphoneController addObserver:self
                          forKeyPath:@"status"
