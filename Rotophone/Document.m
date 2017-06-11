@@ -18,7 +18,6 @@
 
 static void *SelectedPortKVOContext = &SelectedPortKVOContext;
 static void *MicrophoneConnectedKVOContext = &MicrophoneConnectedKVOContext;
-static void *MicrophoneStatusKVOContext = &MicrophoneStatusKVOContext;
 
 
 @interface Document ()
@@ -146,8 +145,15 @@ static void *MicrophoneStatusKVOContext = &MicrophoneStatusKVOContext;
     // Create a shape for the microphone
     MicrophoneShapeAdapter* microphoneShape = [[MicrophoneShapeAdapter alloc] initWithProxy:_microphoneController];
     SceneView *sceneView = (SceneView *)_mainWindowController.mainViewController.sceneViewController.view;
+    
+    
     [sceneView addShape:microphoneShape];
     
+    SideBarView *sideBarView = (SideBarView *)_mainWindowController.mainViewController.sideBarViewController.view;
+    sideBarView.statusView.status = _microphoneController.status;
+    
+    sideBarView.transportView.transport = _microphoneController.transport;
+ 
     
     _serialPortHandler.rawStreamHandler =  _mainWindowController.mainViewController.sideBarViewController;
 }
@@ -167,6 +173,11 @@ static void *MicrophoneStatusKVOContext = &MicrophoneStatusKVOContext;
     
     if (context == MicrophoneConnectedKVOContext) {
         NSLog(@"Microphone status changed connected %d, mode %d.", _microphoneController.isConnected, _microphoneController.currentMode);
+        
+        SideBarView *sideBarView = (SideBarView *)_mainWindowController.mainViewController.sideBarViewController.view;
+        sideBarView.statusView.status = _microphoneController.status;
+        
+
         
         if (_microphoneController.isConnected && _serialPortHandler.selectedPort != nil) {
             _serialPortSettings.path = _serialPortHandler.selectedPort.path;

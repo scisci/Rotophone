@@ -142,6 +142,7 @@ public:
       return;
     }
 
+/*
     if (stepper_.isRunning()) {
       Serial.println("\nCan't change mode, stepper is still running.");
       // Need to wait for stepper to stop before handling any commands
@@ -149,9 +150,12 @@ public:
       eventQueue_.addErrorEvent(kErrCodeNotReady);
       return;
     }
+    */
 
-    if (curMode_ == &lowPowerMode_ && mode != kModeStartup) {
-      // Error
+    // Low Power Must be followed by startup
+    // Startup must be preceded by low power
+    if ((curMode_ == &lowPowerMode_ && mode != kModeStartup) ||
+        (curMode_ != NULL && curMode_ != &lowPowerMode_ && mode == kModeStartup)) {
       eventQueue_.addErrorEvent(kErrCodeStartupAfterLowPower);
       return;
     }
@@ -187,9 +191,11 @@ public:
 
   void loop() {
     unsigned long now = millis();
-    
+
+    // Run the current mode
     curMode_->loop();
 
+    // Dispatch the handshake signal if we have a host
     if (handshakeID_ > -1 && now - lastHeartBeat_ > HEART_BEAT_INTERVAL) {
       lastHeartBeat_ = now;
       eventQueue_.addHeartBeatEvent();

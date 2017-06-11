@@ -20,6 +20,7 @@ enum CalibrationStatus {
   kCalibrationStatusStopAfterProx,
   kCalibrationStatusMoveBackToProx,
   kCalibrationStatusCalibrate,
+  kCalibrationStatusError,
   kCalibrationStatusDone
 };
 
@@ -56,22 +57,35 @@ public:
     calibrationFailed_ = false;
     stepper_->useScanSpeed();
     statusIndicator_->push(kStatusTypeShortMediumBlink);
+#ifdef CALIB_DEBUG
     Serial.println("\nBegin Calibration.");
+#endif
   }
 
   virtual void end() {
     statusIndicator_->pop();
     stepper_->useRunSpeed();
+#ifdef CALIB_DEBUG
     Serial.println("\nEnd Calibration.");
+#endif
   }
   
   virtual void loop() {
+    
     // Starting point for calibrating from the beginning with no history.
     // Reset all counting vars.
     if (status_ == kCalibrationStatusInit) {
+      // Wait for stepper to stop
+      if (stepper_->isRunning()) {
+        stepper_->run();
+        return;
+      }
+      
 #ifdef CALIB_DEBUG
       Serial.println("\nInit calibration.");
 #endif
+      
+    
       testCalibrationStep_ = 0;
       verifyCycle_ = 0;
       scanCount_ = 0;
@@ -110,6 +124,10 @@ public:
 #endif
           proxScanStarted_ = true;
           stepper_->scan(-1.0);
+        } else if (!stepper_->isRunning()) {
+          proxScanStarted_ = false;
+          // Error getting off sensor
+          status_ = kCalibrationStatusError;
         }
       } else if (proxDebounce_++ > 80) {
         if (proxScanStarted_) { 
@@ -167,17 +185,8 @@ public:
 #ifdef CALIB_DEBUG
           Serial.println("\nFailed to find step after full revolution, retrying...");
 #endif
-          if (++attempts_ == 2) { 
-            // Failed
-            status_ = kCalibrationStatusDone;
-            calibrationFailed_ = true;
-            errorLog_->addCalibrationError();
-            eventQueue_->addErrorEvent(kErrCodeCalibrationFailed);
-            // We're done so change mode
-            dispatcher_->dispatchGenericCommand(kModeCompleteCmd);
-          } else {
-            status_ = kCalibrationStatusInit;
-          }
+          status_ = kCalibrationStatusError;
+          
         }
        
       }
@@ -289,6 +298,20 @@ public:
       verifyCycle_++;
       scanCount_ = 0;
       status_ = kCalibrationStatusFind;
+    }
+
+    if (status_ == kCalibrationStatusError) {
+      if (++attempts_ == 2) { 
+          // Failed
+          status_ = kCalibrationStatusDone;
+          calibrationFailed_ = true;
+          errorLog_->addCalibrationError();
+          eventQueue_->addErrorEvent(kErrCodeCalibrationFailed);
+          // We're done so change mode
+          dispatcher_->dispatchGenericCommand(kModeCompleteCmd);
+        } else {
+          status_ = kCalibrationStatusInit;
+        }
     }
 
     

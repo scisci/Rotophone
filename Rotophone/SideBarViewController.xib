@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12120"/>
@@ -16,6 +16,62 @@
         <customView id="Hz6-mo-xeY" customClass="SideBarView">
             <rect key="frame" x="0.0" y="0.0" width="480" height="272"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <customView misplaced="YES" id="FQ9-Ds-aqY" customClass="StatusView">
+                    <rect key="frame" x="-1" y="10" width="480" height="96"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <subviews>
+                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" id="tfh-s7-hP8">
+                            <rect key="frame" x="25" y="30" width="249" height="36"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" title="Label" id="YUd-wb-gMb">
+                                <font key="font" metaFont="system" size="30"/>
+                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                            </textFieldCell>
+                        </textField>
+                    </subviews>
+                    <connections>
+                        <outlet property="statusLabel" destination="tfh-s7-hP8" id="KQW-d4-ubG"/>
+                    </connections>
+                </customView>
+                <customView misplaced="YES" id="Tp6-Ge-sVn" customClass="TransportView">
+                    <rect key="frame" x="29" y="170" width="313" height="75"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <subviews>
+                        <button verticalHuggingPriority="750" misplaced="YES" id="l8T-PW-XAm">
+                            <rect key="frame" x="5" y="34" width="81" height="32"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <buttonCell key="cell" type="push" title="Stop" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="tMb-Gh-NQc">
+                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                <font key="font" metaFont="system"/>
+                            </buttonCell>
+                            <connections>
+                                <action selector="handleStartStopButton:" target="Tp6-Ge-sVn" id="7VA-72-ZlN"/>
+                            </connections>
+                        </button>
+                        <button verticalHuggingPriority="750" misplaced="YES" id="xMU-NX-O8O">
+                            <rect key="frame" x="116" y="34" width="81" height="32"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <buttonCell key="cell" type="push" title="Calibrate" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="fbp-3B-Vqg">
+                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                <font key="font" metaFont="system"/>
+                            </buttonCell>
+                            <connections>
+                                <action selector="handleCalibrateButton:" target="Tp6-Ge-sVn" id="j5D-in-AoK"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <connections>
+                        <outlet property="calibrateButton" destination="xMU-NX-O8O" id="Vuo-BP-scW"/>
+                        <outlet property="startStopButton" destination="l8T-PW-XAm" id="32j-an-gxu"/>
+                    </connections>
+                </customView>
+            </subviews>
+            <connections>
+                <outlet property="statusView" destination="FQ9-Ds-aqY" id="7Iq-s9-dap"/>
+                <outlet property="transportView" destination="Tp6-Ge-sVn" id="asM-w9-oe1"/>
+            </connections>
         </customView>
     </objects>
 </document>

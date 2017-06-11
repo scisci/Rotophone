@@ -47,6 +47,10 @@ static void* DeviceKVOContext = &DeviceKVOContext;
     return self;
 }
 
+- (id<MicrophoneTransport>)transport {
+    return nil;
+}
+
 - (id<Device>)device {
     return _deviceProvider.device;
 }

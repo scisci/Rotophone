@@ -4,6 +4,13 @@
 #include "Mode.h"
 
 
+enum LowPowerStatus {
+  kLowPowerStatusInit,
+  kLowPowerStatusDisableMotor,
+  kLowPowerStatusDisablePower,
+  kLowPowerStatusDone
+};
+
 class LowPowerMode : public Mode {
 public:
   LowPowerMode()
@@ -28,6 +35,7 @@ public:
     // We clear all errors
     errorLog_->clear();
     startTime_ = millis();
+    status_ = kLowPowerStatusInit;
   }
 
   virtual void end() {
@@ -37,25 +45,31 @@ public:
     if (stepper_->isRunning()) {
       stepper_->run();
       return;
+    } else if (status_ == kLowPowerStatusInit) {
+      status_ = kLowPowerStatusDisableMotor;
     }
 
     unsigned long elapsed = millis() - startTime_;
 
-    if (status_ == 0 && elapsed > 1000) {
-      status_ = 1;
+    if (status_ == kLowPowerStatusDisableMotor && elapsed > 1000) {
+      status_ = kLowPowerStatusDisablePower;
       // Disable motor
       digitalWrite(SERVO_ENABLE_PIN, HIGH);
     }
 
-    if (status_ == 1 && elapsed > 2000) {
-      status_ = 2;
+    if (status_ == kLowPowerStatusDisablePower && elapsed > 2000) {
+      status_ = kLowPowerStatusDone;
       // Disable 24V
       digitalWrite(LOW_POWER_MODE_PIN, HIGH);
     }
   }
 
+  bool isComplete() {
+    return status_ == kLowPowerStatusDone;
+  }
+
   virtual int handleCommand(Command *cmd) {
-    if (stepper_->isRunning()) {
+    if (status_ != kLowPowerStatusDone) {
       // Need to wait for stepper to stop before handling any commands
       // this will even prevent changing of modes and everything.
       eventQueue_->addErrorEvent(kErrCodeNotReady);

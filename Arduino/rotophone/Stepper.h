@@ -105,7 +105,7 @@ public:
 
 
   void setPosition(uint16_t pos) {
-    // Position is 0-65535, which maps to a single circle
+    // Position is [0-kSetPositionBound), which maps to a single circle
     // where 0 is some agreed upon starting position
     
     // Convert from revolutions to steps

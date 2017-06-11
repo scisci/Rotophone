@@ -15,12 +15,21 @@
 @class MicrophoneEntity;
 
 
+@protocol MicrophoneTransport
+- (BOOL)isStopped;
+- (void)stop;
+- (void)start;
+- (void)calibrate;
+@end
+
+
 @protocol MicrophoneProxy
 - (void)setZero;
 - (void)setRotoTarget:(float)target;
 - (void)setOrigin:(NSPoint)origin;
 - (void)setBaseAnchor:(NSPoint)anchor;
 - (void)setBaseRotation:(float)rotation;
+- (id<MicrophoneTransport>)transport;
 - (MicrophoneEntity *)entity;
 @end
 
