@@ -23,6 +23,5 @@
 
 
 @interface SceneViewController : NSViewController
-
 @end
 

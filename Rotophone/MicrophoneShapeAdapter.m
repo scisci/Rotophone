@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "MicrophoneShapeAdapter.h"
+#import "MicrophoneControlPanelViewController.h"
+#import "Entities.h"
 
 static void* AnchorKVOContext = &AnchorKVOContext;
 static void* RotationKVOContext = &RotationKVOContext;
@@ -29,10 +31,11 @@ static void* RotoTargetKVOContext = &RotoTargetKVOContext;
 @synthesize anchor = _anchor;
 @synthesize shapeChanged = _shapeChanged;
 
-- (id)initWithModel:(MicrophoneEntity *)model {
+- (id)initWithProxy:(id<MicrophoneProxy>)proxy {
     self = [super init];
     if (self != nil) {
-        self.model = model;
+        self.proxy = proxy;
+        MicrophoneEntity* model = proxy.entity;
         
         // Listen to changes to the model and notify anyone else
         [model addObserver:self forKeyPath:@"anchorX" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:AnchorKVOContext];
@@ -41,25 +44,26 @@ static void* RotoTargetKVOContext = &RotoTargetKVOContext;
         [model addObserver:self forKeyPath:@"originX" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:OriginKVOContext];
         [model addObserver:self forKeyPath:@"originY" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:OriginKVOContext];
         [model addObserver:self forKeyPath:@"rotoPosition" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:RotoPositionKVOContext];
-        [model addObserver:self forKeyPath:@"rotoTarget" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:RotoPositionKVOContext];
+        [model addObserver:self forKeyPath:@"rotoTarget" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:RotoTargetKVOContext];
 
-         _microphoneRotation = [_model.rotoPosition floatValue];
-        _microphoneTarget = [_model.rotoTarget floatValue];
-        _rotation = [_model.rotation floatValue];
-        _origin = CGPointMake([_model.originX floatValue], [_model.originY floatValue]);
-        _anchor = CGPointMake([_model.anchorX floatValue], [_model.anchorY floatValue]);
+         _microphoneRotation = [model.rotoPosition floatValue];
+        _microphoneTarget = [model.rotoTarget floatValue];
+        _rotation = [model.rotation floatValue];
+        _origin = CGPointMake([model.originX floatValue], [model.originY floatValue]);
+        _anchor = CGPointMake([model.anchorX floatValue], [model.anchorY floatValue]);
     }
     return self;
 }
 
 - (void)dealloc {
-    [_model removeObserver:self forKeyPath:@"anchorX"];
-    [_model removeObserver:self forKeyPath:@"anchorY"];
-    [_model removeObserver:self forKeyPath:@"rotation"];
-    [_model removeObserver:self forKeyPath:@"originX"];
-    [_model removeObserver:self forKeyPath:@"originY"];
-    [_model removeObserver:self forKeyPath:@"rotoPosition"];
-    [_model removeObserver:self forKeyPath:@"rotoTarget"];
+    MicrophoneEntity* model = _proxy.entity;
+    [model removeObserver:self forKeyPath:@"anchorX"];
+    [model removeObserver:self forKeyPath:@"anchorY"];
+    [model removeObserver:self forKeyPath:@"rotation"];
+    [model removeObserver:self forKeyPath:@"originX"];
+    [model removeObserver:self forKeyPath:@"originY"];
+    [model removeObserver:self forKeyPath:@"rotoPosition"];
+    [model removeObserver:self forKeyPath:@"rotoTarget"];
 }
 
 + (BOOL)automaticallyNotifiesObserversForKey:(NSString *)theKey {
@@ -84,38 +88,45 @@ static void* RotoTargetKVOContext = &RotoTargetKVOContext;
     NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
     
     if ([key isEqualToString:@"shapeChanged"]) {
-        NSArray *affectingKeys = @[@"anchor", @"origin", @"rotation", @"microphoneRotation", @"microphoneTarget"];
-        keyPaths = [keyPaths setByAddingObjectsFromArray:affectingKeys];
+        keyPaths = [keyPaths setByAddingObjectsFromArray:[ShapeHelper shapeChangedKeyPaths]];
+        keyPaths = [keyPaths setByAddingObjectsFromArray:@[@"microphoneRotation", @"microphoneTarget"]];
     }
     return keyPaths;
 }
 
 
+- (NSViewController *)createControlPanel {
+    MicrophoneControlPanelViewController* vc = [[MicrophoneControlPanelViewController alloc] initWithNibName:@"MicrophoneControlPanel" bundle:nil];
+    vc.microphone = _proxy;
+    return vc;
+}
+
 - (void)observeValueForKeyPath:(NSString *)keyPath
                       ofObject:(id)object
                         change:(NSDictionary *)change
                        context:(void *)context {
-    
+    MicrophoneEntity* model = _proxy.entity;
     if (context == RotoPositionKVOContext) {
+        
         // Notify
         [self willChangeValueForKey:@"microphoneRotation"];
-        _microphoneRotation = [_model.rotoPosition floatValue];
+        _microphoneRotation = [model.rotoPosition floatValue];
         [self didChangeValueForKey:@"microphoneRotation"];
     } else if (context == RotationKVOContext) {
         [self willChangeValueForKey:@"rotation"];
-        _rotation = [_model.rotation floatValue];
+        _rotation = [model.rotation floatValue];
          [self didChangeValueForKey:@"rotation"];
     } else if (context == RotoTargetKVOContext) {
         [self willChangeValueForKey:@"microphoneTarget"];
-        _microphoneTarget = [_model.rotoTarget floatValue];
+        _microphoneTarget = [model.rotoTarget floatValue];
         [self didChangeValueForKey:@"microphoneTarget"];
     } else if (context == OriginKVOContext) {
         [self willChangeValueForKey:@"origin"];
-        _origin = CGPointMake([_model.originX floatValue], [_model.originY floatValue]);
+        _origin = CGPointMake([model.originX floatValue], [model.originY floatValue]);
         [self didChangeValueForKey:@"origin"];
     } else if (context == AnchorKVOContext) {
         [self willChangeValueForKey:@"anchor"];
-        _anchor = CGPointMake([_model.anchorX floatValue], [_model.anchorY floatValue]);
+        _anchor = CGPointMake([model.anchorX floatValue], [model.anchorY floatValue]);
         [self didChangeValueForKey:@"anchor"];
     } else {
         // Any unrecognized context must belong to super
@@ -145,20 +156,20 @@ static void* RotoTargetKVOContext = &RotoTargetKVOContext;
 
 
 - (void)setAnchor:(CGPoint)anchor {
-    // TODO:
+    [_proxy setBaseAnchor:anchor];
 }
 
 - (void)setOrigin:(CGPoint)origin {
-    // TODO:
-    _model.originX = [NSNumber numberWithFloat:origin.x];
-    _model.originY = [NSNumber numberWithFloat:origin.y];
+    [_proxy setOrigin:origin];
+    
 }
 
 - (void)setRotation:(CGFloat)rotation {
-    // TODO:
+    [_proxy setBaseRotation:rotation];
 }
 
 - (CGPoint)anchor {
+    return CGPointMake(self.size.width/2, self.size.height/2);
     return _anchor;
 }
 

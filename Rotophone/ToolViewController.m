@@ -25,7 +25,7 @@
 @end
 
 @interface ToolView ()
-
+@property (retain) NSView *controlPanelView;
 @end
 
 @implementation ToolView
@@ -35,6 +35,10 @@
     // [super resizeSubviewsWithOldSize:oldSize];
     CGFloat height = 40.0;
     _toolbarView.frame = CGRectMake(0, _frame.size.height - height, _frame.size.width, height);
+    
+    if (_controlPanelView != nil) {
+        _controlPanelView.frame = CGRectMake(0, 0, _frame.size.width, _frame.size.height - height);
+    }
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
@@ -52,11 +56,38 @@
 
 @implementation ToolViewController
 
+@synthesize controlPanel = _controlPanel;
+
 - (void)loadView {
     [super loadView];
     // Do view setup here.
     
+    
+    
+}
+
+- (NSViewController *)controlPanel {
+    return _controlPanel;
+}
+
+- (void)setControlPanel:(NSViewController *)controlPanel {
     ToolView *toolView = (ToolView *)self.view;
+    
+    if (controlPanel == _controlPanel) {
+        return;
+    }
+    
+    if (_controlPanel != nil) {
+        [_controlPanel.view removeFromSuperview];
+        toolView.controlPanelView = nil;
+    }
+    _controlPanel = controlPanel;
+    
+    if (_controlPanel != nil) {
+        [toolView addSubview:_controlPanel.view];
+        toolView.controlPanelView = _controlPanel.view;
+    }
+    [toolView resizeSubviewsWithOldSize:toolView.frame.size];
     
 }
 

@@ -72,11 +72,10 @@
 }
 
 - (void)startRotationIfNecessary {
-    if (_rotationTimer != nil) {
-        return;
+    if (_rotationTimer == nil) {
+    _rotationTimer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval:0.1 target:self selector:@selector(updatePosition:) userInfo:nil repeats:YES];
+        [[NSRunLoop currentRunLoop] addTimer:_rotationTimer forMode:NSRunLoopCommonModes];
     }
-    
-    _rotationTimer = [NSTimer scheduledTimerWithTimeInterval:0.2 target:self selector:@selector(updatePosition:) userInfo:nil repeats:YES];
 }
 
 - (void)updatePosition:(id)sender {
@@ -89,6 +88,12 @@
         dif += 2 * M_PI;
     }
     
+    if (fabs(dif) < 0.000001) {
+        [_rotationTimer invalidate];
+        _rotationTimer = nil;
+        return;
+    }
+    
     _rotation += dif * 0.1;
     if (_rotation > 2 * M_PI) {
         _rotation -= 2 * M_PI;
@@ -97,6 +102,9 @@
     }
     
     [_eventStream handleEvent:[[ConcreteUpdatePosEvent alloc] initWithTimestamp:0.0 rotoID:0 andPosition:_rotation]];
+    
+    
+    
 }
 
 - (void)setMode:(ModeType)mode {
@@ -114,7 +122,7 @@
 }
 
 - (void)setZero {
-    
+    NSLog(@"MockDevice::setZero");
 }
 
 - (void)loadData:(NSData *)data {

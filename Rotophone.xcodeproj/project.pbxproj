@@ -19,6 +19,9 @@
 		4B3B91511EC4058F005C0A1A /* SideBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B3B914F1EC4058F005C0A1A /* SideBarViewController.m */; };
 		4B3B91521EC4058F005C0A1A /* SideBarViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B3B91501EC4058F005C0A1A /* SideBarViewController.xib */; };
 		4B4DE56C1EE66D3F000C9635 /* MockDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B4DE56B1EE66D3F000C9635 /* MockDevice.m */; };
+		4B4DE5721EECB54E000C9635 /* Shape.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B4DE5711EECB3F6000C9635 /* Shape.m */; };
+		4B4DE5741EECB73D000C9635 /* MicrophoneControlPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B4DE5731EECB73D000C9635 /* MicrophoneControlPanel.xib */; };
+		4B4DE5771EECB781000C9635 /* MicrophoneControlPanelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B4DE5761EECB781000C9635 /* MicrophoneControlPanelViewController.m */; };
 		4B60BA2A1EBD84DC000FC8A5 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B60BA291EBD84DC000FC8A5 /* MainMenu.xib */; };
 		4B60BA2E1EBD87B7000FC8A5 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BA2C1EBD87B7000FC8A5 /* MainViewController.m */; };
 		4B60BA2F1EBD87B7000FC8A5 /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B60BA2D1EBD87B7000FC8A5 /* MainViewController.xib */; };
@@ -89,6 +92,10 @@
 		4B3B91501EC4058F005C0A1A /* SideBarViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SideBarViewController.xib; sourceTree = "<group>"; };
 		4B4DE56A1EE66D3F000C9635 /* MockDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockDevice.h; sourceTree = "<group>"; };
 		4B4DE56B1EE66D3F000C9635 /* MockDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockDevice.m; sourceTree = "<group>"; };
+		4B4DE5711EECB3F6000C9635 /* Shape.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Shape.m; sourceTree = "<group>"; };
+		4B4DE5731EECB73D000C9635 /* MicrophoneControlPanel.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MicrophoneControlPanel.xib; sourceTree = "<group>"; };
+		4B4DE5751EECB781000C9635 /* MicrophoneControlPanelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MicrophoneControlPanelViewController.h; sourceTree = "<group>"; };
+		4B4DE5761EECB781000C9635 /* MicrophoneControlPanelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MicrophoneControlPanelViewController.m; sourceTree = "<group>"; };
 		4B60BA291EBD84DC000FC8A5 /* MainMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
 		4B60BA2B1EBD87B7000FC8A5 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		4B60BA2C1EBD87B7000FC8A5 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
@@ -215,8 +222,12 @@
 				4B3B91441EC362DB005C0A1A /* SceneViewController.h */,
 				4B3B91451EC362DB005C0A1A /* SceneViewController.m */,
 				4BCF70901EDE7162001E1971 /* Shape.h */,
+				4B4DE5711EECB3F6000C9635 /* Shape.m */,
 				4B60BA2B1EBD87B7000FC8A5 /* MainViewController.h */,
 				4B60BA2C1EBD87B7000FC8A5 /* MainViewController.m */,
+				4B4DE5751EECB781000C9635 /* MicrophoneControlPanelViewController.h */,
+				4B4DE5761EECB781000C9635 /* MicrophoneControlPanelViewController.m */,
+				4B4DE5731EECB73D000C9635 /* MicrophoneControlPanel.xib */,
 				4B3B91501EC4058F005C0A1A /* SideBarViewController.xib */,
 				4B3B914B1EC4056C005C0A1A /* ToolViewController.xib */,
 				4B60BA2D1EBD87B7000FC8A5 /* MainViewController.xib */,
@@ -339,6 +350,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B4DE5741EECB73D000C9635 /* MicrophoneControlPanel.xib in Resources */,
 				4BBE45FE1EBC473000276A8A /* Assets.xcassets in Resources */,
 				4B3B91481EC362DB005C0A1A /* SceneViewController.xib in Resources */,
 				4B3B914D1EC4056C005C0A1A /* ToolViewController.xib in Resources */,
@@ -393,8 +405,10 @@
 				4BBE45FC1EBC473000276A8A /* Document.xcdatamodeld in Sources */,
 				4B3B91471EC362DB005C0A1A /* SceneViewController.m in Sources */,
 				4B3B91431EC3545A005C0A1A /* SerialPortHandler.m in Sources */,
+				4B4DE5721EECB54E000C9635 /* Shape.m in Sources */,
 				4B4DE56C1EE66D3F000C9635 /* MockDevice.m in Sources */,
 				4B3B914C1EC4056C005C0A1A /* ToolViewController.m in Sources */,
+				4B4DE5771EECB781000C9635 /* MicrophoneControlPanelViewController.m in Sources */,
 				4BBE45F01EBC473000276A8A /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

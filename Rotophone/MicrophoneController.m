@@ -51,6 +51,45 @@ static void* DeviceKVOContext = &DeviceKVOContext;
     return _deviceProvider.device;
 }
 
+- (void)setZero {
+    id<Device> d = self.device;
+    if (d != nil) {
+        
+        [d.deviceWriter setZero];
+    }
+}
+
+- (void)setOrigin:(NSPoint)origin {
+    _entity.originX = [NSNumber numberWithFloat:origin.x];
+    _entity.originY = [NSNumber numberWithFloat:origin.y];
+}
+
+- (void)setBaseAnchor:(NSPoint)anchor {
+    _entity.anchorX = [NSNumber numberWithFloat:anchor.x];
+    _entity.anchorY = [NSNumber numberWithFloat:anchor.y];
+}
+
+- (void)setBaseRotation:(float)rotation {
+    _entity.rotation = [NSNumber numberWithFloat:rotation];
+}
+
+- (void)setRotoTarget:(float)target {
+    if (target < 0) {
+        target = 0;
+    } else if (target > 2 * M_PI) {
+        target = 2 * M_PI;
+    }
+    
+    if (target == _entity.rotoTarget.floatValue) {
+        return;
+    }
+    
+    _entity.rotoTarget = [NSNumber numberWithFloat:target];
+    if (self.device != nil) {
+        [self.device.deviceWriter setPosition:target];
+    }
+}
+
 - (void)handleEvent:(id<RotoEvent>)event {
     [event accept:self];
 }
@@ -149,6 +188,10 @@ static void* DeviceKVOContext = &DeviceKVOContext;
     return self;
 }
 
+- (MicrophoneEntity *)entity {
+    return _entity;
+}
+
 - (void)communicationDidBeginWithMode:(ModeType)mode {
     [self willChangeValueForKey:@"isConnected"];
     _isConnected = true;
@@ -187,8 +230,10 @@ static void* DeviceKVOContext = &DeviceKVOContext;
                        context:(void *)context {
     
     if (context == DeviceKVOContext) {
-        id<Device> prevDevice = [change objectForKey:NSKeyValueChangeOldKey];
-        id<Device> nextDevice = [change objectForKey:NSKeyValueChangeNewKey];
+        NSObject* prev = [change objectForKey:NSKeyValueChangeOldKey];
+        NSObject* next = [change objectForKey:NSKeyValueChangeNewKey];
+        id<Device> prevDevice = prev == nil || prev == [NSNull null] ? nil : (id<Device>)prev;
+        id<Device> nextDevice = next == nil || next == [NSNull null] ? nil : (id<Device>)next;
         [self handleDeviceChangedFrom:prevDevice ToDevice:nextDevice];
     } else {
         // Any unrecognized context must belong to super

@@ -9,17 +9,17 @@
 #ifndef MicrophoneShapeAdapter_h
 #define MicrophoneShapeAdapter_h
 
-#import "Entities.h"
 #import "Shape.h"
+#import "MicrophoneController.h"
 
 
 @interface MicrophoneShapeAdapter : NSObject<MicrophoneShape> {
     
 }
 
-@property (retain) MicrophoneEntity* model;
+@property (retain) id<MicrophoneProxy> proxy;
 
-- (id)initWithModel:(MicrophoneEntity*)model;
+- (id)initWithProxy:(id<MicrophoneProxy>)proxy;
 
 @end
 

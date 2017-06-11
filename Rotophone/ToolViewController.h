@@ -17,5 +17,5 @@
 @end
 
 @interface ToolViewController : NSViewController
-
+@property (retain) NSViewController* controlPanel;
 @end

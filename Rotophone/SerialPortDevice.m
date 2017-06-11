@@ -65,11 +65,12 @@ static void *SelectedPortKVOContext = &SelectedPortKVOContext;
 
 - (void)setPosition:(float)position {
     // Convert it to a 16-bit integer
-    int pos = position * 0xFFFF;
+    // Pos is in 0-2PI
+    int pos = (position * kSetPositionBound) / (2 * M_PI);
     if (pos < 0) {
         pos = 0;
-    } else if (pos >= 0xFFFF) {
-        pos = 0xFFFF - 1;
+    } else if (pos >= kSetPositionBound) {
+        pos = kSetPositionBound - 1;
     }
     
     [self start:kSetPosCmd];

@@ -297,7 +297,7 @@ public:
 
 
   bool isComplete() {
-    return status_ == 4 || calibrationFailed_;
+    return status_ == kCalibrationStatusDone || calibrationFailed_;
   }
 
   virtual int handleCommand(Command *cmd) {

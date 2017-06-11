@@ -10,7 +10,19 @@
 #import "MicrophoneKeepAlive.h"
 #import "Event.h"
 
+
+
 @class MicrophoneEntity;
+
+
+@protocol MicrophoneProxy
+- (void)setZero;
+- (void)setRotoTarget:(float)target;
+- (void)setOrigin:(NSPoint)origin;
+- (void)setBaseAnchor:(NSPoint)anchor;
+- (void)setBaseRotation:(float)rotation;
+- (MicrophoneEntity *)entity;
+@end
 
 @protocol MicrophoneStatus<NSObject>
 @property (readonly) BOOL isConnected;
@@ -18,7 +30,7 @@
 @end
 
 
-@interface MicrophoneController : NSObject<RotoEventHandler, RotoEventVisitor, MicrophoneKeepAliveDelegate, MicrophoneStatus>
+@interface MicrophoneController : NSObject<RotoEventHandler, RotoEventVisitor, MicrophoneKeepAliveDelegate, MicrophoneStatus, MicrophoneProxy>
 
 @property (readonly) id<Device> device;
 @property (readonly) BOOL isConnected;

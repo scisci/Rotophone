@@ -14,6 +14,10 @@
 @protocol MicrophoneShape;
 @protocol RectangleShape;
 
+@interface ShapeHelper : NSObject 
++ (NSArray *)shapeChangedKeyPaths;
+@end
+
 @protocol ShapeVisitor<NSObject>
 - (void)visitMicrophoneShape:(id<MicrophoneShape>)shape;
 - (void)visitRectangleShape:(id<RectangleShape>)shape;
@@ -22,6 +26,7 @@
 
 @protocol Shape<NSObject>
 - (void)acceptShapeVisitor:(id<ShapeVisitor>)visitor;
+- (NSViewController *)createControlPanel;
 @required @property (readonly) NSSize size;
 @required @property CGPoint anchor;
 @required @property CGFloat rotation;

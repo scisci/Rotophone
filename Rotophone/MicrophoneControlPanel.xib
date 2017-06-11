@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12120"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="MicrophoneControlPanelViewController">
+            <connections>
+                <outlet property="view" destination="c22-O7-iKe" id="Rbx-Ph-DMO"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="c22-O7-iKe" customClass="MicrophoneControlPanelView">
+            <rect key="frame" x="0.0" y="0.0" width="480" height="272"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <button verticalHuggingPriority="750" misplaced="YES" id="alV-V6-10h">
+                    <rect key="frame" x="106" y="224" width="68" height="32"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="push" title="Zero" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="YjS-St-pVe">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="handleZeroClick:" target="-2" id="01e-hc-ctY"/>
+                    </connections>
+                </button>
+                <slider horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" id="7yG-OA-X6S">
+                    <rect key="frame" x="226" y="219" width="28" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <sliderCell key="cell" continuous="YES" alignment="left" maxValue="100" allowsTickMarkValuesOnly="YES" sliderType="circular" id="xcR-zd-tbG"/>
+                    <connections>
+                        <action selector="handleRotationChanged:" target="-2" id="xQj-V7-1DP"/>
+                    </connections>
+                </slider>
+                <slider horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" id="xud-ee-iok">
+                    <rect key="frame" x="306" y="219" width="28" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <sliderCell key="cell" continuous="YES" alignment="left" maxValue="100" allowsTickMarkValuesOnly="YES" sliderType="circular" id="63c-nO-QRf"/>
+                    <connections>
+                        <action selector="handleBaseRotationChanged:" target="-2" id="IhP-P2-zQR"/>
+                    </connections>
+                </slider>
+            </subviews>
+            <connections>
+                <outlet property="rotationSlider" destination="xud-ee-iok" id="KnI-yq-CgU"/>
+                <outlet property="targetSlider" destination="7yG-OA-X6S" id="vO0-1a-SWr"/>
+                <outlet property="zeroButton" destination="alV-V6-10h" id="jib-0T-n2F"/>
+            </connections>
+        </customView>
+    </objects>
+</document>

@@ -34,6 +34,20 @@ static void* ShapeChangedKVOContext = &ShapeChangedKVOContext;
     return NSMakeSize(20.0, 1.0);
 }
 
++ (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key {
+    
+    NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
+    
+    if ([key isEqualToString:@"shapeChanged"]) {
+        keyPaths = [keyPaths setByAddingObjectsFromArray:[ShapeHelper shapeChangedKeyPaths]];
+    }
+    return keyPaths;
+}
+
+- (NSViewController *)createControlPanel {
+    return nil;
+}
+
 
 
 @end
@@ -76,8 +90,10 @@ CGFloat scale;
 }
 
 - (void)mouseUp:(NSEvent *)theEvent {
-    
+    [self setNeedsDisplay:YES];
 }
+
+
 
 - (NSObject<Shape>*)hittest:(NSPoint)point {
     NSAffineTransform *transform = [NSAffineTransform transform];
@@ -86,7 +102,7 @@ CGFloat scale;
         NSAffineTransform *shapeTransform = [[NSAffineTransform alloc] initWithTransform:transform];
         [shapeTransform translateXBy:shape.origin.x yBy:shape.origin.y];
         [shapeTransform translateXBy:shape.anchor.x yBy:shape.anchor.y];
-        [shapeTransform rotateByDegrees:shape.rotation];
+        [shapeTransform rotateByRadians:shape.rotation];
         [shapeTransform translateXBy:-shape.anchor.x yBy:-shape.anchor.y];
         [shapeTransform invert];
         
@@ -147,25 +163,24 @@ CGFloat scale;
     
     NSBezierPath *mic = [NSBezierPath bezierPathWithRect:NSMakeRect(0, 0, 1, 10)];
     
-    NSAffineTransform* transform = [NSAffineTransform transform];
+    NSAffineTransform* transform = [[NSAffineTransform alloc] init];
     [transform translateXBy:7 yBy:7.5];
     
-    NSGraphicsContext *context = [NSGraphicsContext currentContext];
-    [context saveGraphicsState];
-    [transform rotateByRadians:shape.microphoneRotation];
-    NSBezierPath *micPosition = [transform transformBezierPath:mic];
+    //NSGraphicsContext *context = [NSGraphicsContext currentContext];
+    NSAffineTransform* posTransform = [[NSAffineTransform alloc] initWithTransform:transform];
+    [posTransform rotateByRadians:shape.microphoneRotation];
+    NSBezierPath *micPosition = [posTransform transformBezierPath:mic];
     [[NSColor greenColor] set];
     [micPosition fill];
-    [context restoreGraphicsState];
-    [transform rotateByRadians:shape.microphoneTarget];
-    NSBezierPath *micTarget = [transform transformBezierPath:mic];
+    //[context restoreGraphicsState];
+    NSAffineTransform* targetTransform = [[NSAffineTransform alloc] initWithTransform:transform];
+    [targetTransform rotateByRadians:shape.microphoneTarget];
+    NSBezierPath *micTarget = [targetTransform transformBezierPath:mic];
     [[NSColor purpleColor] set];
     [micTarget fill];
 
     
-    NSBezierPath *bounds = [NSBezierPath bezierPathWithRect:NSMakeRect(0.0, 0.0, shape.size.width, shape.size.height)];
-    [[NSColor whiteColor] set];
-    [bounds stroke];
+    
 }
 
 - (void)visitRectangleShape:(id<RectangleShape>)shape {
@@ -191,17 +206,25 @@ CGFloat scale;
         NSAffineTransform *shapeTransform = [NSAffineTransform transform];
         [shapeTransform translateXBy:shape.origin.x yBy:shape.origin.y];
         [shapeTransform translateXBy:shape.anchor.x yBy:shape.anchor.y];
-        [shapeTransform rotateByDegrees:shape.rotation];
+        [shapeTransform rotateByRadians:shape.rotation];
         [shapeTransform translateXBy:-shape.anchor.x yBy:-shape.anchor.y];
         
         [shapeTransform concat];
         [shape acceptShapeVisitor:self];
+        
+        if (shape == _selection) {
+            NSBezierPath *bounds = [NSBezierPath bezierPathWithRect:NSMakeRect(0.0, 0.0, shape.size.width, shape.size.height)];
+            [[NSColor whiteColor] set];
+            [bounds stroke];
+        }
         [context restoreGraphicsState];
         
     }
 }
 @end
 
+
+void *SceneViewSelectionKVOContext = &SceneViewSelectionKVOContext;
 
 @interface SceneViewController ()
 
@@ -212,6 +235,21 @@ CGFloat scale;
 - (void)loadView {
     [super loadView];
     // Do view setup here.
+    
+
+
+}
+
+
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary *)change
+                       context:(void *)context {
+
+    [super observeValueForKeyPath:keyPath
+                             ofObject:object
+                               change:change
+                              context:context];
 }
 
 @end

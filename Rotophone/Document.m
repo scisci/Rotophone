@@ -21,18 +21,23 @@ static void *MicrophoneConnectedKVOContext = &MicrophoneConnectedKVOContext;
 static void *MicrophoneStatusKVOContext = &MicrophoneStatusKVOContext;
 
 
-
 @interface Document ()
 @property (retain) PdFile *file;
 @property (retain) MicrophoneEntity *microphone;
 @property (retain) SerialPortEntity *serialPortSettings;
 @property (retain) SerialPortHandler *serialPortHandler;
 @property (retain) MicrophoneController *microphoneController;
+@property (retain) MainWindowController *mainWindowController;
 @end
 
 @implementation Document
 + (BOOL)usesUbiquitousStorage {
     return NO;
+}
+
+-(void)shapeSelectionChangedFrom:(id<Shape>)old To:(id<Shape>)selection {
+    // New selection
+    NSLog(@"new slection");
 }
 
 - (MicrophoneEntity *)getOrCreateMicrophone {
@@ -119,14 +124,16 @@ static void *MicrophoneStatusKVOContext = &MicrophoneStatusKVOContext;
 
     
     // Create a window
-    MainWindowController *wc = [[MainWindowController alloc] init];
-    wc.mainViewController.document = self;
-    [self addWindowController:wc];
+    self.mainWindowController = [[MainWindowController alloc] init];
+    _mainWindowController.mainViewController.document = self;
+    [self addWindowController:_mainWindowController];
     
-    MockDevice* mockDevice = [[MockDevice alloc] init];
+    //MockDevice* device = [[MockDevice alloc] init];
+    //[device setPosition: 0.3];
     
-    [mockDevice setPosition: 0.3];
-    self.microphoneController = [[MicrophoneController alloc] initWithEntity:_microphone andDeviceProvider:mockDevice];
+    SerialPortHandler* device = _serialPortHandler;
+    
+    self.microphoneController = [[MicrophoneController alloc] initWithEntity:_microphone andDeviceProvider:device];
     
     [_microphoneController addObserver:self
                          forKeyPath:@"status"
@@ -137,11 +144,12 @@ static void *MicrophoneStatusKVOContext = &MicrophoneStatusKVOContext;
     
     
     // Create a shape for the microphone
-    MicrophoneShapeAdapter* microphoneShape = [[MicrophoneShapeAdapter alloc] initWithModel:_microphone];
-    SceneView *sceneView = (SceneView *)wc.mainViewController.sceneViewController.view;
+    MicrophoneShapeAdapter* microphoneShape = [[MicrophoneShapeAdapter alloc] initWithProxy:_microphoneController];
+    SceneView *sceneView = (SceneView *)_mainWindowController.mainViewController.sceneViewController.view;
     [sceneView addShape:microphoneShape];
     
-    _serialPortHandler.rawStreamHandler =  wc.mainViewController.sideBarViewController;
+    
+    _serialPortHandler.rawStreamHandler =  _mainWindowController.mainViewController.sideBarViewController;
 }
 
 - (void)dealloc {
@@ -164,7 +172,7 @@ static void *MicrophoneStatusKVOContext = &MicrophoneStatusKVOContext;
             _serialPortSettings.path = _serialPortHandler.selectedPort.path;
             _serialPortSettings.name = _serialPortHandler.selectedPort.name;
         }
-    }   else {
+    } else {
         // Any unrecognized context must belong to super
         [super observeValueForKeyPath:keyPath
                              ofObject:object

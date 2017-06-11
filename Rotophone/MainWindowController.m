@@ -8,6 +8,8 @@
 
 #import "MainWindowController.h"
 
+static void *SceneViewSelectionKVOContext = &SceneViewSelectionKVOContext;
+
 
 @interface MainWindowController ()
 
@@ -27,6 +29,13 @@
     MainViewController *vc = [[MainViewController alloc] initWithNibName:@"MainViewController" bundle:nil];
     window.contentView = vc.view;
     
+    
+    [(SceneView *)vc.sceneViewController.view addObserver:self
+                forKeyPath:@"selection"
+                   options:(NSKeyValueObservingOptionNew |
+                            NSKeyValueObservingOptionOld)
+                   context:SceneViewSelectionKVOContext];
+    
     if (self = [super initWithWindow:window]) {
         self.mainViewController = vc;
     }
@@ -34,6 +43,29 @@
     return self;
 
 }
+
+
+
+
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary *)change
+                       context:(void *)context {
+    
+    if (context == SceneViewSelectionKVOContext) {
+        NSObject* shape = [change objectForKey:NSKeyValueChangeNewKey];
+        if (shape != nil && shape != [NSNull null]) {
+            _mainViewController.toolViewController.controlPanel = [(id<Shape>)shape createControlPanel];
+        }
+    } else {
+        // Any unrecognized context must belong to super
+        [super observeValueForKeyPath:keyPath
+                             ofObject:object
+                               change:change
+                              context:context];
+    }
+}
+
 
 
 @end
