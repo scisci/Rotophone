@@ -36,6 +36,7 @@ public:
     errorLog_->clear();
     startTime_ = millis();
     status_ = kLowPowerStatusInit;
+    stepper_->stop();
   }
 
   virtual void end() {

@@ -9,14 +9,76 @@
 #import "SideBarViewController.h"
 #import "MicrophoneController.h"
 
+static void *TransportStoppedKVOContext = &TransportStoppedKVOContext;
+
 @implementation TransportView
 
-- (IBAction)handleStartStopButton:(id)sender {
+@synthesize transport = _transport;
 
+- (void)setTransport:(NSObject<MicrophoneTransport> *)transport {
+    if (_transport != nil ) {
+        // Remove observers
+        [_transport removeObserver:self forKeyPath:@"isStopped"];
+        [_transport removeObserver:self forKeyPath:@"canStop"];
+        [_transport removeObserver:self forKeyPath:@"canStart"];
+    }
+    
+    _transport = transport;
+    
+    if (_transport != nil) {
+        // Add observers
+        [_transport addObserver:self forKeyPath:@"isStopped" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:TransportStoppedKVOContext];
+        [_transport addObserver:self forKeyPath:@"canStop" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:TransportStoppedKVOContext];
+        [_transport addObserver:self forKeyPath:@"canStart" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:TransportStoppedKVOContext];
+        [self updateStoppedState];
+    }
+}
+
+- (void)updateStoppedState {
+    if (_transport == nil) {
+        return;
+    }
+
+    _startStopButton.title = _transport.isStopped ? @"Start" : @"Stop";
+    
+    if ((_transport.isStopped && !_transport.canStart) || (!_transport.isStopped && !_transport.canStop)) {
+        [_startStopButton setEnabled:NO];
+    } else {
+        [_startStopButton setEnabled:YES];
+    }
+    [self setNeedsDisplay:YES];
+}
+
+- (NSObject<MicrophoneTransport> *)transport {
+    return _transport;
+}
+
+- (IBAction)handleStartStopButton:(id)sender {
+    if (_transport == nil) {
+        return;
+    }
+    
+    if (_transport.isStopped) {
+        [_transport start];
+    } else {
+        [_transport stop];
+    }
 }
 
 - (IBAction)handleCalibrateButton:(id)sender {
+    if (_transport == nil) {
+        return;
+    }
     
+    [_transport calibrate];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if (context == TransportStoppedKVOContext) {
+        [self updateStoppedState];
+    } else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
 }
 
 @end

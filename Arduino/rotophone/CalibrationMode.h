@@ -55,6 +55,7 @@ public:
     status_ = kCalibrationStatusInit;
     attempts_ = 0;
     calibrationFailed_ = false;
+    stepper_->stop();
     stepper_->useScanSpeed();
     statusIndicator_->push(kStatusTypeShortMediumBlink);
 #ifdef CALIB_DEBUG

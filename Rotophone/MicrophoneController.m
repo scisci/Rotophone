@@ -12,10 +12,89 @@
 
 static void* DeviceKVOContext = &DeviceKVOContext;
 
+@interface Transport : NSObject<MicrophoneTransport> {
+    ModeType _mode;
+}
+@property (unsafe_unretained) MicrophoneController* controller;
+@end
+
+@implementation Transport
+
+
+-(id)initWithController:(MicrophoneController *)controller {
+    if (self = [super init]) {
+        self.controller = controller;
+        _mode = kModeUnknown;
+    }
+    
+    return self;
+}
+
++ (BOOL)automaticallyNotifiesObserversForKey:(NSString *)theKey {
+    
+    BOOL automatic = NO;
+    if ([theKey isEqualToString:@"isStopped"] ||
+        [theKey isEqualToString:@"canStop"] ||
+        [theKey isEqualToString:@"canStart"]) {
+        automatic = NO;
+    }
+    else {
+        automatic = [super automaticallyNotifiesObserversForKey:theKey];
+    }
+    return automatic;
+}
+
+- (void)setMode:(ModeType)mode {
+    if (mode != _mode) {
+            [self willChangeValueForKey:@"isStopped"];
+            [self willChangeValueForKey:@"canStop"];
+            [self willChangeValueForKey:@"canStart"];
+            _mode = mode;
+            [self didChangeValueForKey:@"canStart"];
+            [self didChangeValueForKey:@"canStop"];
+            [self didChangeValueForKey:@"isStopped"];
+    }
+}
+
+- (BOOL)isStopped {
+    return _mode == kModeLowPower || _mode == kModeUnknown;
+}
+
+- (BOOL)canStop {
+    return _mode != kModeStartup && _mode != kModeLowPower;
+}
+
+- (BOOL)canStart {
+    return _mode == kModeLowPower;
+}
+
+- (void)calibrate {
+    NSLog(@"transport calibrate");
+}
+
+- (void)stop {
+    if (!self.canStop || _controller.device == nil) {
+        return;
+    }
+    
+    [_controller.device.deviceWriter setMode:kModeLowPower];
+}
+
+- (void)start {
+    if (!self.canStart || _controller.device == nil) {
+        return;
+    }
+    
+    [_controller.device.deviceWriter setMode:kModeStartup];
+}
+
+@end
+
 @interface MicrophoneController () {
    MicrophoneEntity *_entity;
     NSObject<DeviceProvider> *_deviceProvider;
     BOOL _needsLoadData;
+    Transport *_transport;
 }
 
 @property (retain) MicrophoneKeepAlive* keepAlive;
@@ -33,6 +112,7 @@ static void* DeviceKVOContext = &DeviceKVOContext;
         _isConnected = false;
         _entity = entity;
         _needsLoadData = false;
+        _transport = [[Transport alloc] initWithController:self];
         
         // Listen to changes in the device
         _deviceProvider = deviceProvider;
@@ -47,8 +127,8 @@ static void* DeviceKVOContext = &DeviceKVOContext;
     return self;
 }
 
-- (id<MicrophoneTransport>)transport {
-    return nil;
+- (NSObject<MicrophoneTransport> *)transport {
+    return _transport;
 }
 
 - (id<Device>)device {
@@ -132,6 +212,8 @@ static void* DeviceKVOContext = &DeviceKVOContext;
     [self willChangeValueForKey:@"currentMode"];
     _currentMode = event.mode;
     [self didChangeValueForKey:@"currentMode"];
+    
+    [_transport setMode:_currentMode];
     
     [self loadDataIfNecessary];
 }

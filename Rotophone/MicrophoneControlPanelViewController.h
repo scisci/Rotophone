@@ -17,5 +17,5 @@
 @end
 
 @interface MicrophoneControlPanelViewController : NSViewController
-@property (unsafe_unretained) id<MicrophoneProxy> microphone;
+@property (unsafe_unretained) NSObject<MicrophoneProxy> *microphone;
 @end

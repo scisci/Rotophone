@@ -12,7 +12,7 @@
 
 
 @interface TransportView : NSView
-@property (unsafe_unretained) id<MicrophoneTransport> transport;
+@property (unsafe_unretained) NSObject<MicrophoneTransport> *transport;
 @property (unsafe_unretained) IBOutlet NSButton *startStopButton;
 @property (unsafe_unretained) IBOutlet NSButton *calibrateButton;
 
