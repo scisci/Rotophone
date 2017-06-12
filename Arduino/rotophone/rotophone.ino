@@ -79,7 +79,6 @@ public:
         break;
         
       case kLoadCmd:
-        Serial.println("Got load command.");
         if (settings_.loadData((DataCommand *)cmd) != 0) {
           eventQueue_.addErrorEvent(kErrIncorrectDataFormat);
         }

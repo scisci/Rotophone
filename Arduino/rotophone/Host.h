@@ -57,7 +57,7 @@ public:
       lastHeartBeat_ = 0;
       lastHandshake_ = 0;
       handshakeID_ = -1;
-      Serial.println("Lost connection.");
+      //Serial.println("Lost connection.");
       dispatcher_->dispatchGenericCommand(kLostHostCmd);
     }
   }

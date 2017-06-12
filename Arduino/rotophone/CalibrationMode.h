@@ -6,7 +6,7 @@
 #define CALIBRATION_LOW_QUALITY_THRESHOLD 10
 #define CALIBRATION_CYCLE_THRESHOLD 10
 #define PROX_FRONT_EDGE_BUFFER_STEPS 160
-#define CALIB_DEBUG
+//#define CALIB_DEBUG
 
 enum CalibrationStatus {
   kCalibrationStatusInit,
