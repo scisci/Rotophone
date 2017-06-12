@@ -12,13 +12,13 @@
 #include "Interrupts.h"
 #include "Parser.h"
 #include "Settings.h"
+#include "Host.h"
 
 
 #ifdef TESTS
 #include "Tests.h"
 #endif
 
-#define HEART_BEAT_INTERVAL 5000
 
 
 
@@ -35,9 +35,8 @@ public:
    stepper_(&eventQueue_, AccelStepper::DRIVER, SERVO_CLOCK_PIN, SERVO_DIRECTION_PIN),
    settings_(&stepper_),
    reader_(&Serial, &dispatcher_, &parserFactory_),
-   lastHeartBeat_(0),
    lastProx_(0),
-   handshakeID_(-1)
+   host_(&eventQueue_, &dispatcher_)
   {
     startupMode_.init(this);
     idleMode_.init(this);
@@ -64,14 +63,23 @@ public:
           setMode(kModeIdle);
         }
         break;
-      case kHandshakeCmd:
-        handshakeID_ = ((HandshakeCommand *)cmd)->handshakeID;
-        // Emit it back
-        if (curMode_ != NULL) {
-          eventQueue_.addHandshakeEvent(handshakeID_, curMode_->mode());
+
+      case kFoundHostCmd:
+        if (curMode_ != NULL && host_.isConnected()) {
+          eventQueue_.addHandshakeEvent(host_.handshakeID(), curMode_->mode());
         }
         break;
+
+      case kLostHostCmd:
+        setMode(kModeIdle);
+        break;
+        
+      case kHandshakeCmd:
+        host_.handleHandshakeCmd((HandshakeCommand *)cmd);
+        break;
+        
       case kLoadCmd:
+        Serial.println("Got load command.");
         if (settings_.loadData((DataCommand *)cmd) != 0) {
           eventQueue_.addErrorEvent(kErrIncorrectDataFormat);
         }
@@ -93,6 +101,10 @@ public:
     return &stepper_;
   }
 
+  virtual Host* host() {
+    return &host_;
+  }
+
   virtual CommandDispatcher* dispatcher() {
     return &dispatcher_;
   }
@@ -103,6 +115,10 @@ public:
 
   virtual SerialReader* reader() {
     return &reader_;
+  }
+
+  virtual Settings* settings() {
+    return &settings_;
   }
 
   virtual StatusIndicator* statusIndicator() {
@@ -195,11 +211,7 @@ public:
     // Run the current mode
     curMode_->loop();
 
-    // Dispatch the handshake signal if we have a host
-    if (handshakeID_ > -1 && now - lastHeartBeat_ > HEART_BEAT_INTERVAL) {
-      lastHeartBeat_ = now;
-      eventQueue_.addHeartBeatEvent();
-    }
+    host_.run(now);
 
      // Read serial and dispatch commands.
     reader_.read();
@@ -241,9 +253,8 @@ private:
   CommandDispatcher dispatcher_;
   GenericCommandParserFactory parserFactory_;
   ErrorLog errorLog_;
-  unsigned long lastHeartBeat_;
+  Host host_;
   int lastProx_;
-  int handshakeID_;
 };
 
 

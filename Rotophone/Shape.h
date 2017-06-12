@@ -16,6 +16,8 @@
 
 @interface ShapeHelper : NSObject 
 + (NSArray *)shapeChangedKeyPaths;
++ (CGFloat)clockwiseToCounterClockwise:(CGFloat)radians;
++ (CGFloat)counterClockwiseToClockwise:(CGFloat)radians;
 @end
 
 @protocol ShapeVisitor<NSObject>

@@ -12,10 +12,10 @@ public:
   :stepper_(NULL),
    eventQueue_(NULL),
    errorLog_(NULL),
-   handshakeID_(-1),
    startTime_(0),
    dispatcher_(NULL),
    statusIndicator_(NULL),
+   host_(NULL),
    waitingForStop_(false)
   {}
 
@@ -25,15 +25,15 @@ public:
     dispatcher_ = resources->dispatcher();
     statusIndicator_ = resources->statusIndicator();
     errorLog_ = resources->errorLog();
+    host_ = resources->host();
   }
   
-  virtual uint8_t mode() {
+  virtual ModeType mode() {
     return kModeIdle;  
   }
 
   virtual void begin() {
     stepper_->stop();
-    handshakeID_ = -1;
     startTime_ = millis();
     waitingForStop_ = false;
     Serial.println("\nBegin Idle.");
@@ -65,10 +65,18 @@ public:
           dispatcher_->dispatchSetModeCommand(kModeLowPower);
           return;
       }
-        
-      if (stepper_->needsCalibration()) {
+
+      // No host, or host has to be connected for 5 seconds so it can init;
+      if (!host_->isConnected() || millis() - host_->startTime() < 5000) {
+        return;
+      }
+            
+      if (elapsed > 3000 && stepper_->needsCalibration()) {
         dispatcher_->dispatchSetModeCommand(kModeCalibrate);
-      } else if (elapsed > 7000) {
+        return;
+      }
+      
+      if (elapsed > 7000) {
         dispatcher_->dispatchSetModeCommand(kModeRun);
       }
     }
@@ -99,8 +107,8 @@ private:
   EventQueue *eventQueue_;
   ErrorLog *errorLog_;
   CommandDispatcher *dispatcher_;
+  Host *host_;
   StatusIndicator *statusIndicator_;
-  uint8_t handshakeID_;
   unsigned long startTime_;
   bool waitingForStop_;
 };

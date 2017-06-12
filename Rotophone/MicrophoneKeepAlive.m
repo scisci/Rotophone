@@ -14,6 +14,7 @@
     if (self = [super init]) {
         _handshakeConfirmed = NO;
         _handshakeID = -1;
+        _nextHandShakeID = arc4random_uniform(200);
         _lastHeartBeat = nil;
     }
     
@@ -25,7 +26,8 @@
         return;
     }
     
-    _handshakeID = 15;
+    _handshakeID = _nextHandShakeID;
+    _nextHandShakeID = (_nextHandShakeID + 1) & 0xFF;
     if (_commandWriter != nil) {
         [_commandWriter sendHandshake:_handshakeID];
     }
@@ -38,6 +40,12 @@
     
     if (_lastHeartBeat == nil || [_lastHeartBeat timeIntervalSinceNow] < -15.0) {
         [self stop];
+    }
+}
+
+- (void)handleHandshakeRefreshTimer:(id)sender {
+    if (_commandWriter != nil) {
+        [_commandWriter sendHandshake:_handshakeID];
     }
 }
 
@@ -64,12 +72,23 @@
             [_keepAliveTimeout invalidate];
             _keepAliveTimeout = nil;
         }
+        [[NSTimer alloc] initWithFireDate:[NSDate date] interval:0.1 target:self selector:@selector(updatePosition:) userInfo:nil repeats:YES];
         
-        _keepAliveTimeout = [NSTimer scheduledTimerWithTimeInterval: 15.0
+        // Here we check to see if we lost connection
+        _keepAliveTimeout = [[NSTimer alloc] initWithFireDate:[NSDate date] interval: 15.0
                                                              target: self
                                                            selector: @selector(handleKeepAliveTimer:)
                                                            userInfo: nil
                                                             repeats: YES];
+        [[NSRunLoop currentRunLoop] addTimer:_keepAliveTimeout forMode:NSRunLoopCommonModes];
+        
+        // Here we tell the device that we didn't lose connection
+        _handhshakeRefreshTimer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval: 10.0
+                                                                   target: self
+                                                                 selector: @selector(handleHandshakeRefreshTimer:)
+                                                                 userInfo: nil
+                                                                  repeats: YES];
+        [[NSRunLoop currentRunLoop] addTimer:_handhshakeRefreshTimer forMode:NSRunLoopCommonModes];
         
     }
 }
@@ -91,11 +110,12 @@
 - (void)start {
     [self stop];
     
-    _handshakeTimer = [NSTimer scheduledTimerWithTimeInterval: 2.0
+    _handshakeTimer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval: 2.0
                                                        target: self
                                                      selector: @selector(handleHandshakeTimer:)
                                                      userInfo: nil
                                                       repeats: YES];
+    [[NSRunLoop currentRunLoop] addTimer:_handshakeTimer forMode:NSRunLoopCommonModes];
 }
 
 - (void)stop {
@@ -112,6 +132,11 @@
     if (_keepAliveTimeout != nil) {
         [_keepAliveTimeout invalidate];
         _keepAliveTimeout = nil;
+    }
+    
+    if (_handhshakeRefreshTimer != nil) {
+        [_handhshakeRefreshTimer invalidate];
+        _handhshakeRefreshTimer = nil;
     }
     
     

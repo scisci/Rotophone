@@ -95,7 +95,16 @@ public:
 
   void zero() {
     // Need to make sure the number fits in 16 bit
-    setZeroOffset((stepper_.currentPosition() * SPROCKET_GEAR_NUM) % SPROCKET_SPR_DIV);
+    long step = stepper_.currentPosition();
+    int16_t reps = (step * SPROCKET_GEAR_NUM) / ((long)SPROCKET_GEAR_DEN * SERVO_SPR);
+    int16_t remainder = step - DIV_INT((reps * (long)SPROCKET_GEAR_DEN * SERVO_SPR), SPROCKET_GEAR_NUM);
+    
+    Serial.print("Current position = ");
+    Serial.print(stepper_.currentPosition());
+    Serial.print(", zeroing at ");
+    Serial.print(remainder);
+    Serial.println();
+    setZeroOffset(remainder);
   }
 
 

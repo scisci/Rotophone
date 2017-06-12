@@ -17,7 +17,7 @@ public:
     dispatcher_ = resources->dispatcher();
   }
   
-  virtual uint8_t mode() {
+  virtual ModeType mode() {
     return kModeStartup;  
   }
 

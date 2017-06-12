@@ -7,6 +7,8 @@
 #include "Stepper.h"
 #include "Pins.h"
 #include "Interrupts.h"
+#include "Settings.h"
+#include "Host.h"
 
 
 #ifdef TESTS
@@ -49,6 +51,8 @@ public:
   virtual ProximityInterrupt* proximityInterrupt() = 0;
   virtual StatusIndicator* statusIndicator() = 0;
   virtual ErrorLog* errorLog() = 0;
+  virtual Settings* settings() = 0;
+  virtual Host* host() = 0;
 };
 
 
@@ -57,7 +61,7 @@ public:
 class Mode : public CommandHandler {
 public:
   virtual void init(Resources *resources) = 0;
-  virtual uint8_t mode() = 0;
+  virtual ModeType mode() = 0;
   virtual void begin() = 0;
   virtual void end() = 0;
   virtual void loop() = 0;

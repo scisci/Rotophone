@@ -8,7 +8,7 @@
 
 #import "MicrophoneControlPanelViewController.h"
 #import "Entities.h"
-
+#import "Shape.h"
 
 @implementation MicrophoneControlPanelView
 
@@ -30,13 +30,13 @@ static void* MicrophoneRotationTargetKVOContext = &MicrophoneRotationTargetKVOCo
 }
 - (IBAction)handleRotationChanged:(id)sender {
     NSSlider* slider = (NSSlider *)sender;
-    float value = 2 * M_PI - [slider floatValue];
-    [_microphone setRotoTarget:value];
+    //float value = [2 * M_PI - [slider floatValue];
+    [_microphone setRotoTarget:[slider floatValue]];
 }
 - (IBAction)handleBaseRotationChanged:(id)sender {
     NSSlider* slider = (NSSlider *)sender;
-    float value = 2 * M_PI - [slider floatValue];
-    [_microphone setBaseRotation:value];
+    //float value = 2 * M_PI - [slider floatValue];
+    [_microphone setBaseRotation:[ShapeHelper clockwiseToCounterClockwise:[slider floatValue]]];
 }
 
 - (void)loadView {
@@ -68,8 +68,8 @@ static void* MicrophoneRotationTargetKVOContext = &MicrophoneRotationTargetKVOCo
         [_microphone.entity addObserver:self forKeyPath:@"rotation" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:MicrophoneBaseRotationKVOContext];
         [_microphone.entity addObserver:self forKeyPath:@"rotoTarget" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:MicrophoneRotationTargetKVOContext];
          MicrophoneControlPanelView* controlPanelView = (MicrophoneControlPanelView *)self.view;
-        controlPanelView.rotationSlider.floatValue = 2 * M_PI - _microphone.entity.rotation.floatValue;
-         controlPanelView.targetSlider.floatValue = 2 * M_PI - _microphone.entity.rotoTarget.floatValue;
+        controlPanelView.rotationSlider.floatValue = [ShapeHelper counterClockwiseToClockwise:_microphone.entity.rotation.floatValue];
+        controlPanelView.targetSlider.floatValue = _microphone.entity.rotoTarget.floatValue;
     }
 }
 
@@ -81,9 +81,9 @@ static void* MicrophoneRotationTargetKVOContext = &MicrophoneRotationTargetKVOCo
     
     MicrophoneControlPanelView* controlPanelView = (MicrophoneControlPanelView *)self.view;
     if (context == MicrophoneBaseRotationKVOContext) {
-        controlPanelView.rotationSlider.floatValue = 2 * M_PI - _microphone.entity.rotation.floatValue;
+        controlPanelView.rotationSlider.floatValue = [ShapeHelper counterClockwiseToClockwise:_microphone.entity.rotation.floatValue];
     } else if (context == MicrophoneRotationTargetKVOContext) {
-        controlPanelView.targetSlider.floatValue = 2 * M_PI - _microphone.entity.rotoTarget.floatValue;
+        controlPanelView.targetSlider.floatValue = _microphone.entity.rotoTarget.floatValue;
     }else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }

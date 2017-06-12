@@ -27,7 +27,7 @@ public:
     eventQueue_ = resources->eventQueue();
   }
   
-  virtual uint8_t mode() {
+  virtual ModeType mode() {
     return kModeLowPower;  
   }
 

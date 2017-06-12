@@ -47,7 +47,7 @@ public:
     errorLog_ = resources->errorLog();
   }
   
-  virtual uint8_t mode() {
+  virtual ModeType mode() {
     return kModeCalibrate;  
   }
 

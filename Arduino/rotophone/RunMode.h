@@ -2,20 +2,25 @@
 #define Rotophone_Run_Mode_h
 
 #include "Mode.h"
-
+#include "EventQueue.h"
+#include "Settings.h"
 
 
 class RunMode : public Mode {
 public:
   RunMode()
-  :stepper_(NULL)
+  :stepper_(NULL),
+   settings_(NULL),
+   eventQueue_(NULL)
    {}
 
   virtual void init(Resources *resources) {
     stepper_ = resources->stepper();
+    settings_ = resources->settings();
+    eventQueue_ = resources->eventQueue();
   }
   
-  virtual uint8_t mode() {
+  virtual ModeType mode() {
     return kModeRun;  
   }
 
@@ -42,6 +47,7 @@ public:
         } else {
           // Set the current zero
           stepper_->zero();
+          settings_->saveData(eventQueue_);
         }
         return COMMAND_HANDLED;
     }
@@ -52,6 +58,8 @@ public:
 private:
   AccelStepper *accelStepper_;
   Stepper *stepper_;
+  Settings *settings_;
+  EventQueue *eventQueue_;
 };
 
 

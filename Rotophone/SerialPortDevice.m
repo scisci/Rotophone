@@ -97,7 +97,7 @@ static void *SelectedPortKVOContext = &SelectedPortKVOContext;
 
 - (void)loadData:(NSData *)data {
     [self start:kLoadCmd];
-    [self writeByte:data.length];
+    [self writeByte:data.length + 1]; // Add 1 for the size field
     [self writeData:data];
     [self send];
 }

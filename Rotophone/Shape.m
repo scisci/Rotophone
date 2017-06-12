@@ -15,4 +15,13 @@
     return @[@"anchor", @"origin", @"rotation"];
 }
 
++ (CGFloat)clockwiseToCounterClockwise:(CGFloat)radians {
+    return 2 * M_PI - radians;
+}
+
++ (CGFloat)counterClockwiseToClockwise:(CGFloat)radians {
+    return 2 * M_PI - radians;
+}
+
+
 @end

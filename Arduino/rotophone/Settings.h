@@ -25,12 +25,19 @@ public:
 
       // First two bytes are the step offset
       int16_t stepOffset = (int16_t)dataCmd->data[1] << 8 | dataCmd->data[2];
+      Serial.print("\nLoaded zero offset");
+      Serial.print(stepOffset);
+      Serial.println(".");
       stepper_->setZeroOffset(stepOffset);
       return 0;
   }
 
   void saveData(EventQueue* eventQueue) {
     int16_t stepOffset = stepper_->zeroOffset();
+
+    Serial.print("\nSaving zero offset");
+      Serial.print(stepOffset);
+      Serial.println(".");
     
     eventQueue->startEvent(kSaveEvent);
     eventQueue->addEventData((uint8_t)5); // 1 count byte, 1 version byte, 2 offset bytes, 1 checksum

@@ -71,9 +71,15 @@ int DataCommandParser::parse(CommandDispatcher *dispatcher, uint8_t *buf, uint16
   }
   // buf[0] contains the number of payload bytes, including the size and checksum fields
   int status = parserStatus(buf[0], buf, size);
+  Serial.print("Parsing bytes 0 -");
+  Serial.print(size);
+  Serial.print(" result is ");
+  Serial.print(status);
+  Serial.println();
   if (status == 0) {
     // We need at least 1 byte + count, + checksum + semicolon;
     if (size < 4) {
+      Serial.println("not enough bytes");
       return -1;
     }
     // We now could check the checksum, add from byte 1 through to before the ;

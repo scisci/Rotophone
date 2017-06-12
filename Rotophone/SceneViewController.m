@@ -168,13 +168,15 @@ CGFloat scale;
     
     //NSGraphicsContext *context = [NSGraphicsContext currentContext];
     NSAffineTransform* posTransform = [[NSAffineTransform alloc] initWithTransform:transform];
-    [posTransform rotateByRadians:shape.microphoneRotation];
+    // Subtract 90 degrees to add additional rotation to the center point
+    [posTransform rotateByRadians:[ShapeHelper clockwiseToCounterClockwise:shape.microphoneRotation]/* - M_PI * 0.5*/];
     NSBezierPath *micPosition = [posTransform transformBezierPath:mic];
     [[NSColor greenColor] set];
     [micPosition fill];
     //[context restoreGraphicsState];
     NSAffineTransform* targetTransform = [[NSAffineTransform alloc] initWithTransform:transform];
-    [targetTransform rotateByRadians:shape.microphoneTarget];
+    // Subtract 90 degrees to add additional rotation to the zero point
+    [targetTransform rotateByRadians:[ShapeHelper clockwiseToCounterClockwise:shape.microphoneTarget]/* - M_PI * 0.5*/];
     NSBezierPath *micTarget = [targetTransform transformBezierPath:mic];
     [[NSColor purpleColor] set];
     [micTarget fill];

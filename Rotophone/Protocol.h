@@ -16,7 +16,9 @@ typedef enum {
 } TxEvent;
 
 typedef enum {
+  kLostHostCmd = 'b',
   kModeCompleteCmd = 'c',
+  kFoundHostCmd = 'f',
   kHandshakeCmd = 'H',
   kLoadCmd = 'L',
   kSetModeCmd = 'M',

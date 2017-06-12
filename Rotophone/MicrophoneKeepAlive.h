@@ -21,8 +21,10 @@
 @interface MicrophoneKeepAlive : NSObject<RotoEventHandler, RotoEventVisitor> {
     BOOL _handshakeConfirmed;
     int _handshakeID;
+    int _nextHandShakeID;
     NSDate *_lastHeartBeat;
     NSTimer *_handshakeTimer;
+    NSTimer *_handhshakeRefreshTimer;
     NSTimer *_keepAliveTimeout;
 }
 

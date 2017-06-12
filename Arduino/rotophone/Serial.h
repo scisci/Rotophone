@@ -215,9 +215,9 @@ public:
             if (res == 0) {
               continue;
             } else {
-#ifdef TESTS
+//#ifdef TESTS
               Serial.println("Error parsing.");
-#endif
+//#endif
             }
           } else {
             continue;

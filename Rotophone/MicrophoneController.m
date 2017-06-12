@@ -138,7 +138,7 @@ static void* DeviceKVOContext = &DeviceKVOContext;
 - (void)setZero {
     id<Device> d = self.device;
     if (d != nil) {
-        
+        _entity.rotoTarget = 0;
         [d.deviceWriter setZero];
     }
 }
@@ -194,10 +194,11 @@ static void* DeviceKVOContext = &DeviceKVOContext;
 - (void)loadDataIfNecessary {
     if (_isConnected && _needsLoadData /*&& (_currentMode == kModeIdle || _currentMode == kModeRun)*/) {
         // Save data
-        _needsLoadData = false;
+        
         if (_entity.embeddedData != nil && self.device != nil) {
+            _needsLoadData = false;
+            NSLog(@"Loading data");
             [self.device.deviceWriter loadData:_entity.embeddedData];
-            [self.device.deviceWriter saveData];
         }
     }
 }
