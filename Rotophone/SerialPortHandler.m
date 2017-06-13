@@ -14,6 +14,10 @@
 @interface SerialPortHandler ()
 {
     ORSSerialPort* _selectedPort;
+    ORSSerialPort* _retryPort;
+    int _retryCount;
+    NSTimer* _openTimeout;
+    NSTimer* _retryTimeout;
     
 }
 
@@ -23,6 +27,7 @@
 
 - (id)init {
     if (self = [super init]) {
+        _retryCount = 0;
     }
     return self;
 }
@@ -53,6 +58,16 @@
         [_selectedPort close];
     }
     
+    if (_openTimeout != nil) {
+        [_openTimeout invalidate];
+        _openTimeout = nil;
+    }
+    
+    if (_retryTimeout != nil) {
+        [_retryTimeout invalidate];
+        _retryTimeout = nil;
+    }
+    
     _selectedPort = selectedPort;
     if (_selectedPort != nil) {
         NSLog(@"Connecting to serial port");
@@ -61,7 +76,47 @@
         _selectedPort.numberOfStopBits = 1;
         _selectedPort.usesRTSCTSFlowControl = NO;
         _selectedPort.delegate = self;
+        
+        _openTimeout = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:15.0] interval:15.0 target:self selector:@selector(handleTimeout:) userInfo:nil repeats:NO];
+        
+        [[NSRunLoop currentRunLoop] addTimer:_openTimeout forMode:NSRunLoopCommonModes];
+        
         [_selectedPort open];
+    }
+}
+
+- (void)handleTimeout:(id)sender {
+    if (_selectedPort != nil) {
+        NSLog(@"port open timed out!");
+        if (!_selectedPort.isOpen) {
+            NSLog(@"Port is not open");
+            if (_retryPort == _selectedPort) {
+                _retryCount++;
+            } else {
+                _retryCount = 1;
+            }
+            
+            _retryPort = _selectedPort;
+            self.selectedPort = nil;
+            
+            double duration = 5.0 * _retryCount;
+            NSLog(@"Will retry port for %d time in %f seconds...", _retryCount, duration);
+            
+            _retryTimeout = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:duration] interval:duration target:self selector:@selector(handleRetryTimeout:) userInfo:nil repeats:NO];
+            
+            [[NSRunLoop currentRunLoop] addTimer:_retryTimeout forMode:NSRunLoopCommonModes];
+        } else {
+            NSLog(@"But port is open?!");
+        }
+    }
+}
+
+- (void)handleRetryTimeout:(id)sender {
+    
+    NSLog(@"retrying connection");
+    
+    if (_selectedPort == nil && _retryPort != nil) {
+        self.selectedPort = _retryPort;
     }
 }
 
@@ -79,12 +134,35 @@
  *  @param serialPort The `ORSSerialPort` instance representing the port that was removed.
  */
 - (void)serialPortWasRemovedFromSystem:(ORSSerialPort *)serialPort {
-    self.device = nil;
+    // This will call close which will also nullify device
     self.selectedPort = nil;
+    _retryPort = nil;
 }
 
 - (void)serialPortWasOpened:(ORSSerialPort *)serialPort {
+    if (_openTimeout != nil) {
+        [_openTimeout invalidate];
+        _openTimeout = nil;
+    }
+    
+    NSLog(@"Connected to serialport.");
+    
+    _retryPort = nil;
     self.device = [[SerialPortDevice alloc] initWithDelegate:self];
+}
+
+- (void)serialPortWasClosed:(ORSSerialPort *)serialPort {
+    if (_openTimeout != nil) {
+        [_openTimeout invalidate];
+        _openTimeout = nil;
+    }
+    
+    self.device = nil;
+}
+
+- (void)serialPort:(ORSSerialPort *)serialPort didEncounterError:(NSError *)error {
+    NSLog(@"Serial port error %@.", [error.userInfo objectForKey:NSLocalizedDescriptionKey]);
+    
 }
 
 

@@ -29,7 +29,7 @@
 
 
 @interface MicrophoneEntity : NSManagedObject
-+ (NSFetchRequest *_Nonnull)fetchRequest;
++ (NSFetchRequest *_Nonnull)fetchRequestInContext:(NSManagedObjectContext *_Nonnull)context;
 - (id _Nonnull )initWithName:(NSString *_Nonnull)name andContext:(NSManagedObjectContext *_Nonnull)context;
 
 @property (/*nullable,*/ nonatomic, retain) NSData *embeddedData;
@@ -48,7 +48,7 @@
 
 
 @interface SerialPortEntity : NSManagedObject
-+ (NSFetchRequest *_Nonnull)fetchRequest;
++ (NSFetchRequest *_Nonnull)fetchRequestInContext:(NSManagedObjectContext *_Nonnull)context;
 - (id _Nonnull )initWithName:(NSString *_Nonnull)name Path:(NSString *_Nonnull)path andContext:(NSManagedObjectContext *_Nonnull)context;
 
 @property (/*nullable,*/ nonatomic, retain) NSString *name;

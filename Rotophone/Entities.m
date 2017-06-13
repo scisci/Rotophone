@@ -22,8 +22,11 @@
     return self;
 }
 
-+ (NSFetchRequest *)fetchRequest {
-    return [[NSFetchRequest alloc] initWithEntityName:@"MicrophoneEntity"];
++ (NSFetchRequest *_Nonnull)fetchRequestInContext:(NSManagedObjectContext *_Nonnull)context {
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"MicrophoneEntity" inManagedObjectContext:context];
+    [request setEntity:entity];
+    return request;
 }
 
 @dynamic embeddedData;
@@ -53,8 +56,11 @@
     return self;
 }
 
-+ (NSFetchRequest *)fetchRequest {
-    return [[NSFetchRequest alloc] initWithEntityName:@"SerialPortEntity"];
++ (NSFetchRequest *_Nonnull)fetchRequestInContext:(NSManagedObjectContext *_Nonnull)context {
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"SerialPortEntity" inManagedObjectContext:context];
+    [request setEntity:entity];
+    return request;
 }
 
 @dynamic name;

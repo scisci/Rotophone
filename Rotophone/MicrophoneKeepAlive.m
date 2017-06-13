@@ -14,7 +14,8 @@
     if (self = [super init]) {
         _handshakeConfirmed = NO;
         _handshakeID = -1;
-        _nextHandShakeID = arc4random_uniform(200);
+        srand(time(NULL));
+        _nextHandShakeID = rand() & 0xFF;
         _lastHeartBeat = nil;
     }
     

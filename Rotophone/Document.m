@@ -41,7 +41,7 @@ static void *MicrophoneConnectedKVOContext = &MicrophoneConnectedKVOContext;
 
 - (MicrophoneEntity *)getOrCreateMicrophone {
     // See if we can get a microphone
-    NSFetchRequest *request = [MicrophoneEntity fetchRequest];
+    NSFetchRequest *request = [MicrophoneEntity fetchRequestInContext:self.managedObjectContext];
     NSError *err = nil;
     NSArray *results = [self.managedObjectContext executeFetchRequest:request error:&err];
     if (err != nil) {
@@ -60,7 +60,7 @@ static void *MicrophoneConnectedKVOContext = &MicrophoneConnectedKVOContext;
 }
 
 - (SerialPortEntity *)getOrCreateSerialPortSettings {
-    NSFetchRequest *request = [SerialPortEntity fetchRequest];
+    NSFetchRequest *request = [SerialPortEntity fetchRequestInContext:self.managedObjectContext];
     NSError *err = nil;
     NSArray *results = [self.managedObjectContext executeFetchRequest:request error:&err];
     if (err != nil) {
