@@ -45,6 +45,61 @@
 
 
 
+@implementation FieldEntity
+
+- (id)initWithName:(NSString *)name andContext:(NSManagedObjectContext *)context {
+    NSEntityDescription* entity = [NSEntityDescription entityForName:@"FieldEntity" inManagedObjectContext:context];
+    if (self = [super initWithEntity:entity insertIntoManagedObjectContext:context]) {
+        self.name = name;
+    }
+    return self;
+}
+
++ (NSFetchRequest *_Nonnull)fetchRequestInContext:(NSManagedObjectContext *_Nonnull)context {
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"FieldEntity" inManagedObjectContext:context];
+    [request setEntity:entity];
+    return request;
+}
+
+@dynamic name;
+@dynamic width;
+@dynamic height;
+
+@dynamic anchorX;
+@dynamic anchorY;
+@dynamic originX;
+@dynamic originY;
+@dynamic rotation;
+
+@end
+
+
+
+@implementation BodyEntity
+
+- (id)initWithName:(NSString *)name andContext:(NSManagedObjectContext *)context {
+    NSEntityDescription* entity = [NSEntityDescription entityForName:@"BodyEntity" inManagedObjectContext:context];
+    if (self = [super initWithEntity:entity insertIntoManagedObjectContext:context]) {
+        self.name = name;
+    }
+    return self;
+}
+
++ (NSFetchRequest *_Nonnull)fetchRequestInContext:(NSManagedObjectContext *_Nonnull)context {
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"BodyEntity" inManagedObjectContext:context];
+    [request setEntity:entity];
+    return request;
+}
+
+@dynamic name;
+@dynamic fields;
+
+@end
+
+
+
 @implementation SerialPortEntity
 
 - (id)initWithName:(NSString *)name Path:(NSString *)path andContext:(NSManagedObjectContext *)context {

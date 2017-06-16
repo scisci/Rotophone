@@ -42,6 +42,7 @@
 @end
 
 @protocol RectangleShape<Shape>
+@required @property NSSize rectangleSize;
 @end
 
 

@@ -6,8 +6,6 @@
 //  Copyright © 2017 Scientific Sciences. All rights reserved.
 //
 
-#ifndef MicrophoneShapeAdapter_h
-#define MicrophoneShapeAdapter_h
 
 #import "Shape.h"
 #import "MicrophoneController.h"
@@ -24,4 +22,3 @@
 @end
 
 
-#endif /* MicrophoneShapeAdapter_h */

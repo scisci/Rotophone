@@ -20,6 +20,34 @@
                 <customView id="dUq-Km-oXv" customClass="ToolbarView">
                     <rect key="frame" x="0.0" y="226" width="480" height="46"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <subviews>
+                        <button verticalHuggingPriority="750" misplaced="YES" id="M29-GU-cmg">
+                            <rect key="frame" x="4" y="5" width="121" height="32"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <buttonCell key="cell" type="push" title="Add Body" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Rdc-Fc-m1b">
+                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                <font key="font" metaFont="system"/>
+                            </buttonCell>
+                            <connections>
+                                <action selector="handleAddBodyButton:" target="-2" id="YL1-ey-XQy"/>
+                            </connections>
+                        </button>
+                        <button verticalHuggingPriority="750" misplaced="YES" id="7py-Ix-Jxj">
+                            <rect key="frame" x="133" y="5" width="80" height="32"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <buttonCell key="cell" type="push" title="Delete" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="bdd-YV-PJk">
+                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                <font key="font" metaFont="system"/>
+                            </buttonCell>
+                            <connections>
+                                <action selector="handleDeleteButton:" target="-2" id="8VE-hS-XMA"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <connections>
+                        <outlet property="addBodyButton" destination="M29-GU-cmg" id="tu3-IX-6D3"/>
+                        <outlet property="deleteButton" destination="7py-Ix-Jxj" id="4Ui-eD-h7j"/>
+                    </connections>
                 </customView>
             </subviews>
             <connections>

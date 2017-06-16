@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16F73" minimumToolsVersion="Automatic" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+    <entity name="BodyEntity" representedClassName="BodyEntity" syncable="YES">
+        <relationship name="field" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="FieldEntity" inverseName="body" inverseEntity="FieldEntity" syncable="YES"/>
+    </entity>
+    <entity name="FieldEntity" representedClassName="FieldEntity" syncable="YES">
+        <attribute name="anchorX" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="anchorY" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="height" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="name" attributeType="String" syncable="YES"/>
+        <attribute name="originX" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="originY" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="rotation" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="width" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="body" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BodyEntity" inverseName="field" inverseEntity="BodyEntity" syncable="YES"/>
+    </entity>
     <entity name="MicrophoneEntity" representedClassName="MicrophoneEntity" syncable="YES">
         <attribute name="anchorX" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="anchorY" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
@@ -19,5 +33,7 @@
     <elements>
         <element name="MicrophoneEntity" positionX="-63" positionY="-18" width="128" height="195"/>
         <element name="SerialPortEntity" positionX="-54" positionY="9" width="128" height="75"/>
+        <element name="FieldEntity" positionX="-54" positionY="54" width="128" height="180"/>
+        <element name="BodyEntity" positionX="-45" positionY="90" width="128" height="60"/>
     </elements>
 </model>

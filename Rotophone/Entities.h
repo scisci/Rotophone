@@ -46,6 +46,33 @@
 @end
 
 
+@interface FieldEntity : NSManagedObject
++ (NSFetchRequest *_Nonnull)fetchRequestInContext:(NSManagedObjectContext *_Nonnull)context;
+- (id _Nonnull )initWithName:(NSString *_Nonnull)name andContext:(NSManagedObjectContext *_Nonnull)context;
+
+@property (/*nullable,*/ nonatomic, retain) NSString *name;
+
+@property (/*nullable,*/ nonatomic, retain) NSNumber *width;
+@property (/*nullable,*/ nonatomic, retain) NSNumber *height;
+
+@property (/*nullable,*/ nonatomic, retain) NSNumber *anchorX;
+@property (/*nullable,*/ nonatomic, retain) NSNumber *anchorY;
+@property (/*nullable,*/ nonatomic, retain) NSNumber *originX;
+@property (/*nullable,*/ nonatomic, retain) NSNumber *originY;
+@property (/*nullable,*/ nonatomic, retain) NSNumber *rotation;
+@end
+
+
+@interface BodyEntity : NSManagedObject
++ (NSFetchRequest *_Nonnull)fetchRequestInContext:(NSManagedObjectContext *_Nonnull)context;
+- (id _Nonnull )initWithName:(NSString *_Nonnull)name andContext:(NSManagedObjectContext *_Nonnull)context;
+
+@property (/*nullable,*/ nonatomic, retain) NSString *name;
+
+@property (/*nullable,*/ nonatomic, retain) NSSet *fields;
+@end
+
+
 
 @interface SerialPortEntity : NSManagedObject
 + (NSFetchRequest *_Nonnull)fetchRequestInContext:(NSManagedObjectContext *_Nonnull)context;

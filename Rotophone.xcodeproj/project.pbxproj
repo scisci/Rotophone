@@ -22,6 +22,7 @@
 		4B4DE5721EECB54E000C9635 /* Shape.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B4DE5711EECB3F6000C9635 /* Shape.m */; };
 		4B4DE5741EECB73D000C9635 /* MicrophoneControlPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B4DE5731EECB73D000C9635 /* MicrophoneControlPanel.xib */; };
 		4B4DE5771EECB781000C9635 /* MicrophoneControlPanelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B4DE5761EECB781000C9635 /* MicrophoneControlPanelViewController.m */; };
+		4B4DE57D1EF498A1000C9635 /* FieldShapeAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B4DE57C1EF498A1000C9635 /* FieldShapeAdapter.m */; };
 		4B60BA2A1EBD84DC000FC8A5 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B60BA291EBD84DC000FC8A5 /* MainMenu.xib */; };
 		4B60BA2E1EBD87B7000FC8A5 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BA2C1EBD87B7000FC8A5 /* MainViewController.m */; };
 		4B60BA2F1EBD87B7000FC8A5 /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B60BA2D1EBD87B7000FC8A5 /* MainViewController.xib */; };
@@ -96,6 +97,8 @@
 		4B4DE5731EECB73D000C9635 /* MicrophoneControlPanel.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MicrophoneControlPanel.xib; sourceTree = "<group>"; };
 		4B4DE5751EECB781000C9635 /* MicrophoneControlPanelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MicrophoneControlPanelViewController.h; sourceTree = "<group>"; };
 		4B4DE5761EECB781000C9635 /* MicrophoneControlPanelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MicrophoneControlPanelViewController.m; sourceTree = "<group>"; };
+		4B4DE57B1EF498A1000C9635 /* FieldShapeAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FieldShapeAdapter.h; sourceTree = "<group>"; };
+		4B4DE57C1EF498A1000C9635 /* FieldShapeAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FieldShapeAdapter.m; sourceTree = "<group>"; };
 		4B60BA291EBD84DC000FC8A5 /* MainMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
 		4B60BA2B1EBD87B7000FC8A5 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		4B60BA2C1EBD87B7000FC8A5 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
@@ -184,6 +187,8 @@
 				4BCF703C1EDD032B001E1971 /* Protocol.h */,
 				4BCF70911EDE7197001E1971 /* MicrophoneShapeAdapter.h */,
 				4BCF70921EDE723B001E1971 /* MicrophoneShapeAdapter.m */,
+				4B4DE57B1EF498A1000C9635 /* FieldShapeAdapter.h */,
+				4B4DE57C1EF498A1000C9635 /* FieldShapeAdapter.m */,
 				4BCF703E1EDD0AEB001E1971 /* Entities.h */,
 				4BCF703F1EDD0BDD001E1971 /* Entities.m */,
 				4B60BA481EBD9DCF000FC8A5 /* ORSSerialPort.h */,
@@ -389,6 +394,7 @@
 				4BBE45F91EBC473000276A8A /* Document.m in Sources */,
 				4BBE45F61EBC473000276A8A /* ViewController.m in Sources */,
 				4B60BA2E1EBD87B7000FC8A5 /* MainViewController.m in Sources */,
+				4B4DE57D1EF498A1000C9635 /* FieldShapeAdapter.m in Sources */,
 				4B60BA4F1EBD9DCF000FC8A5 /* ORSSerialPortManager.m in Sources */,
 				4B60BA501EBD9DCF000FC8A5 /* ORSSerialRequest.m in Sources */,
 				4B0FC7F91EE1CC6A003CACD5 /* MicrophoneKeepAlive.m in Sources */,

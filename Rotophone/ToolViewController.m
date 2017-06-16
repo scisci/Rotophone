@@ -9,7 +9,9 @@
 #import "ToolViewController.h"
 
 
-@interface ToolbarView()
+@interface ToolbarView() {
+    
+}
 
 @end
 
@@ -68,6 +70,14 @@
 
 - (NSViewController *)controlPanel {
     return _controlPanel;
+}
+
+- (IBAction)handleAddBodyButton:(id)sender {
+    NSLog(@"add body");
+}
+
+- (IBAction)handleDeleteButton:(id)sender {
+    NSLog(@"delete");
 }
 
 - (void)setControlPanel:(NSViewController *)controlPanel {

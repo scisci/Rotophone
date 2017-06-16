@@ -95,6 +95,7 @@ static void* DeviceKVOContext = &DeviceKVOContext;
     NSObject<DeviceProvider> *_deviceProvider;
     BOOL _needsLoadData;
     Transport *_transport;
+    int _reconnectAttempts;
 }
 
 @property (retain) MicrophoneKeepAlive* keepAlive;
@@ -107,6 +108,7 @@ static void* DeviceKVOContext = &DeviceKVOContext;
     if (self = [super init]) {
         self.keepAlive = [[MicrophoneKeepAlive alloc] init];
         _keepAlive.delegate = self;
+        _reconnectAttempts = 0;
         _currentMode = kModeUnknown;
         _lastError = kErrCodeNone;
         _isConnected = false;
@@ -232,6 +234,7 @@ static void* DeviceKVOContext = &DeviceKVOContext;
     
     [_keepAlive stop];
     _keepAlive.commandWriter = nil;
+    _reconnectAttempts = 0;
     
     if (prev != nil) {
         [prev.deviceReader removeHandler:self];
@@ -283,6 +286,7 @@ static void* DeviceKVOContext = &DeviceKVOContext;
     [self willChangeValueForKey:@"isConnected"];
     _isConnected = true;
     _needsLoadData = true;
+    _reconnectAttempts = 0;
     [self didChangeValueForKey:@"isConnected"];
     NSLog(@"communication started with mode %d", mode);
     _currentMode = mode;
@@ -304,6 +308,11 @@ static void* DeviceKVOContext = &DeviceKVOContext;
 - (void)attemptReconnect {
     if (self.device == nil) {
         return;
+    }
+    
+    if (_reconnectAttempts++ == 3) {
+        // Need to maybe push error up the chain to serial port
+        NSLog(@"failing to connect with device.");
     }
     
     [_keepAlive stop];
