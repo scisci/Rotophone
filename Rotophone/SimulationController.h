@@ -18,7 +18,9 @@
 - (void)removeShape:(NSObject<Shape> *)shape;
 @end
 
-@interface SimulationController : NSObject
+@interface SimulationController : NSObject {
+
+}
 @property (retain) NSObject<Scene> * scene;
 - (void)addMicrophone:(NSObject<MicrophoneProxy> *)proxy;
 - (void)addBody:(BodyEntity *)entity;

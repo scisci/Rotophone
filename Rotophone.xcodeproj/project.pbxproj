@@ -33,6 +33,8 @@
 		4B60BA4F1EBD9DCF000FC8A5 /* ORSSerialPortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BA4B1EBD9DCF000FC8A5 /* ORSSerialPortManager.m */; };
 		4B60BA501EBD9DCF000FC8A5 /* ORSSerialRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BA4D1EBD9DCF000FC8A5 /* ORSSerialRequest.m */; };
 		4B60BA521EBD9EAD000FC8A5 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B60BA511EBD9EAD000FC8A5 /* IOKit.framework */; };
+		4BADEA531EF5A4A8003CF739 /* gpc.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BADEA4F1EF5A4A8003CF739 /* gpc.c */; };
+		4BADEA541EF5A4A8003CF739 /* GPCPolygon.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BADEA521EF5A4A8003CF739 /* GPCPolygon.m */; };
 		4BBE45F01EBC473000276A8A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BBE45EF1EBC473000276A8A /* AppDelegate.m */; };
 		4BBE45F31EBC473000276A8A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BBE45F21EBC473000276A8A /* main.m */; };
 		4BBE45F61EBC473000276A8A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BBE45F51EBC473000276A8A /* ViewController.m */; };
@@ -118,6 +120,10 @@
 		4B60BA4C1EBD9DCF000FC8A5 /* ORSSerialRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORSSerialRequest.h; sourceTree = "<group>"; };
 		4B60BA4D1EBD9DCF000FC8A5 /* ORSSerialRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ORSSerialRequest.m; sourceTree = "<group>"; };
 		4B60BA511EBD9EAD000FC8A5 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/IOKit.framework; sourceTree = DEVELOPER_DIR; };
+		4BADEA4F1EF5A4A8003CF739 /* gpc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gpc.c; sourceTree = "<group>"; };
+		4BADEA501EF5A4A8003CF739 /* gpc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gpc.h; sourceTree = "<group>"; };
+		4BADEA511EF5A4A8003CF739 /* GPCPolygon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPCPolygon.h; sourceTree = "<group>"; };
+		4BADEA521EF5A4A8003CF739 /* GPCPolygon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPCPolygon.m; sourceTree = "<group>"; };
 		4BBE45EB1EBC473000276A8A /* Rotophone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Rotophone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BBE45EE1EBC473000276A8A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		4BBE45EF1EBC473000276A8A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -187,6 +193,10 @@
 		4BBE45ED1EBC473000276A8A /* Rotophone */ = {
 			isa = PBXGroup;
 			children = (
+				4BADEA4F1EF5A4A8003CF739 /* gpc.c */,
+				4BADEA501EF5A4A8003CF739 /* gpc.h */,
+				4BADEA511EF5A4A8003CF739 /* GPCPolygon.h */,
+				4BADEA521EF5A4A8003CF739 /* GPCPolygon.m */,
 				4B0FC7F41EDFD06A003CACD5 /* MicrophoneController.h */,
 				4B0FC7F51EDFD06A003CACD5 /* MicrophoneController.m */,
 				4B0FC7F71EE1CC6A003CACD5 /* MicrophoneKeepAlive.h */,
@@ -411,6 +421,7 @@
 				4B60BA2E1EBD87B7000FC8A5 /* MainViewController.m in Sources */,
 				4B4DE57D1EF498A1000C9635 /* FieldShapeAdapter.m in Sources */,
 				4B60BA4F1EBD9DCF000FC8A5 /* ORSSerialPortManager.m in Sources */,
+				4BADEA541EF5A4A8003CF739 /* GPCPolygon.m in Sources */,
 				4B60BA501EBD9DCF000FC8A5 /* ORSSerialRequest.m in Sources */,
 				4B0FC7F91EE1CC6A003CACD5 /* MicrophoneKeepAlive.m in Sources */,
 				4B60BA4E1EBD9DCF000FC8A5 /* ORSSerialPort.m in Sources */,
@@ -432,6 +443,7 @@
 				4B3B914C1EC4056C005C0A1A /* ToolViewController.m in Sources */,
 				4B4DE5771EECB781000C9635 /* MicrophoneControlPanelViewController.m in Sources */,
 				4BBE45F01EBC473000276A8A /* AppDelegate.m in Sources */,
+				4BADEA531EF5A4A8003CF739 /* gpc.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
