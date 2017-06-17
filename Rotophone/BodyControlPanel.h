@@ -11,7 +11,7 @@
 
 @interface BodyControlPanelView : NSView
 @property (unsafe_unretained) IBOutlet NSSlider *widthSlider;
-@property (unsafe_unretained) IBOutlet NSSlider *height;
+@property (unsafe_unretained) IBOutlet NSSlider *heightSlider;
 @property (unsafe_unretained) IBOutlet NSSlider *rotationSlider;
 @end
 

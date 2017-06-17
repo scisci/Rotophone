@@ -63,6 +63,16 @@
 @end
 
 
+@interface SceneEntity : NSManagedObject
++ (NSFetchRequest *_Nonnull)fetchRequestInContext:(NSManagedObjectContext *_Nonnull)context;
+- (id _Nonnull )initWithContext:(NSManagedObjectContext *_Nonnull)context;
+
+@property (/*nullable,*/ nonatomic, retain) NSNumber *tX;
+@property (/*nullable,*/ nonatomic, retain) NSNumber *tY;
+@property (/*nullable,*/ nonatomic, retain) NSNumber *scale;
+@end
+
+
 @interface BodyEntity : NSManagedObject
 + (NSFetchRequest *_Nonnull)fetchRequestInContext:(NSManagedObjectContext *_Nonnull)context;
 - (id _Nonnull )initWithName:(NSString *_Nonnull)name andContext:(NSManagedObjectContext *_Nonnull)context;

@@ -64,7 +64,11 @@
     [super loadView];
     // Do view setup here.
     
+    ToolView *toolView = (ToolView *)self.view;
+    ToolbarView *toolBarView = toolView.toolbarView;
     
+    toolBarView.scaleSlider.minValue = 0.25;
+    toolBarView.scaleSlider.maxValue = 20.0;
     
 }
 
@@ -81,6 +85,12 @@
 - (IBAction)handleDeleteButton:(id)sender {
     if (_delegate != nil) {
         [_delegate deleteSelection];
+    }
+}
+
+- (IBAction)handleScaleSliderChanged:(id)sender {
+    if (_delegate != nil) {
+        [_delegate setScale:[sender floatValue]];
     }
 }
 

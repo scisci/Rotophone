@@ -43,10 +43,19 @@
                                 <action selector="handleDeleteButton:" target="-2" id="8VE-hS-XMA"/>
                             </connections>
                         </button>
+                        <slider verticalHuggingPriority="750" misplaced="YES" id="Yqk-J8-43l">
+                            <rect key="frame" x="298" y="16" width="96" height="19"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="F1f-tF-63r"/>
+                            <connections>
+                                <action selector="handleScaleSliderChanged:" target="-2" id="nKF-yx-3gt"/>
+                            </connections>
+                        </slider>
                     </subviews>
                     <connections>
                         <outlet property="addBodyButton" destination="M29-GU-cmg" id="tu3-IX-6D3"/>
                         <outlet property="deleteButton" destination="7py-Ix-Jxj" id="4Ui-eD-h7j"/>
+                        <outlet property="scaleSlider" destination="Yqk-J8-43l" id="wm2-95-ygO"/>
                     </connections>
                 </customView>
             </subviews>

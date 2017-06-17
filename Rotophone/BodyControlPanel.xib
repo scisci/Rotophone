@@ -46,6 +46,7 @@
             </subviews>
             <connections>
                 <outlet property="height" destination="zVC-QZ-5Wf" id="b7l-NQ-m2c"/>
+                <outlet property="heightSlider" destination="zVC-QZ-5Wf" id="hDv-Su-rWy"/>
                 <outlet property="rotationSlider" destination="EAb-1u-EvW" id="BWC-O6-OIg"/>
                 <outlet property="widthSlider" destination="jUZ-Zm-Iek" id="fCW-M1-u0m"/>
             </connections>

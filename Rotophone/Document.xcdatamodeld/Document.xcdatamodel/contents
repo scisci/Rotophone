@@ -27,14 +27,20 @@
         <attribute name="rotoPosition" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="rotoTarget" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
     </entity>
+    <entity name="SceneEntity" representedClassName="SceneEntity" syncable="YES">
+        <attribute name="scale" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="tX" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="tY" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+    </entity>
     <entity name="SerialPortEntity" representedClassName="SerialPortEntity" syncable="YES">
         <attribute name="name" attributeType="String" syncable="YES"/>
         <attribute name="path" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
+        <element name="BodyEntity" positionX="-45" positionY="90" width="128" height="75"/>
+        <element name="FieldEntity" positionX="-54" positionY="54" width="128" height="180"/>
         <element name="MicrophoneEntity" positionX="-63" positionY="-18" width="128" height="195"/>
         <element name="SerialPortEntity" positionX="-54" positionY="9" width="128" height="75"/>
-        <element name="FieldEntity" positionX="-54" positionY="54" width="128" height="180"/>
-        <element name="BodyEntity" positionX="-45" positionY="90" width="128" height="75"/>
+        <element name="SceneEntity" positionX="-45" positionY="90" width="128" height="90"/>
     </elements>
 </model>

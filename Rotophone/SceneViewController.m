@@ -61,29 +61,60 @@ static void* ShapeChangedKVOContext = &ShapeChangedKVOContext;
 
 @implementation SceneView
 
-CGFloat scale;
+
+BOOL spaceDown;
 @synthesize selection = _selection;
+
+- (BOOL)acceptsFirstResponder {
+    return YES;
+}
 
 - (void)awakeFromNib {
     [super awakeFromNib];
     self.shapes = [[NSMutableArray alloc] init];
     //[self addShape:[[ConcreteMicrophone alloc] init]];
    // [self addShape:[[ConcreteRectangle alloc] init]];
-    scale = 6.0;
+    spaceDown = false;
 }
 
 - (void)mouseDown:(NSEvent *)theEvent {
     
     NSPoint eventLocation = [theEvent locationInWindow];
     NSPoint localPoint = [self convertPoint:eventLocation fromView:nil];
-    NSLog(@"mouse event %f, %f", localPoint.x, localPoint.y);
-    self.selection = [self hittest:localPoint];
+    if (!spaceDown) {
+        self.selection = [self hittest:localPoint];
+    }
+}
+
+- (void)keyDown:(NSEvent *)theEvent {
+    if ([theEvent keyCode] == 49) {
+        spaceDown = true;
+    }
+}
+
+- (void)keyUp:(NSEvent *)theEvent {
+    if ([theEvent keyCode] == 49) {
+        spaceDown = false;
+    }
 }
 
 - (void)mouseDragged:(NSEvent *)theEvent {
-    if (_selection != nil) {
+    if (_entity == nil) {
+        return;
+    }
+    
+    if (spaceDown) {
         NSAffineTransform *transform = [NSAffineTransform transform];
-        [transform scaleBy:scale];
+        [transform scaleBy:[_entity.scale floatValue]];
+        [transform invert];
+        NSPoint newDelta = [transform transformPoint:NSMakePoint(theEvent.deltaX, theEvent.deltaY)];
+        
+        _entity.tX = [NSNumber numberWithFloat:[_entity.tX floatValue] + newDelta.x];
+        _entity.tY = [NSNumber numberWithFloat:[_entity.tY floatValue] - newDelta.y];
+        [self setNeedsDisplay:YES];
+    } else if (_selection != nil) {
+        NSAffineTransform *transform = [NSAffineTransform transform];
+        [transform scaleBy:[_entity.scale floatValue]];
         [transform invert];
         NSPoint newDelta = [transform transformPoint:NSMakePoint(theEvent.deltaX, theEvent.deltaY)];
         [_selection setOrigin: NSMakePoint(_selection.origin.x + newDelta.x, _selection.origin.y - newDelta.y)];
@@ -97,14 +128,16 @@ CGFloat scale;
 
 
 - (NSObject<Shape>*)hittest:(NSPoint)point {
+    if (_entity == nil) {
+        return nil;
+    }
+    
     NSAffineTransform *transform = [NSAffineTransform transform];
-    [transform scaleBy:scale];
+    [transform scaleBy:[_entity.scale floatValue]];
+    [transform translateXBy:[_entity.tX floatValue]    yBy:[_entity.tY floatValue]];
     for (id<Shape> shape in _shapes) {
         NSAffineTransform *shapeTransform = [[NSAffineTransform alloc] initWithTransform:transform];
-        [shapeTransform translateXBy:shape.origin.x yBy:shape.origin.y];
-        [shapeTransform translateXBy:shape.anchor.x yBy:shape.anchor.y];
-        [shapeTransform rotateByRadians:shape.rotation];
-        [shapeTransform translateXBy:-shape.anchor.x yBy:-shape.anchor.y];
+        [self applyShapeTransform:shape ToTransform:shapeTransform];
         [shapeTransform invert];
         
         NSPoint hitPoint = [shapeTransform transformPoint:point];
@@ -112,7 +145,6 @@ CGFloat scale;
         if (hitPoint.x >= 0 && hitPoint.y >= 0 && hitPoint.x < hitSize.width && hitPoint.y < hitSize.height) {
             return shape;
         }
-        //NSLog(@"hit point is %f, %f [%f, %f]", hitPoint.x, hitPoint.y, hitSize.width, hitSize.height);
     }
     
     return nil;
@@ -187,13 +219,29 @@ CGFloat scale;
 }
 
 - (void)visitRectangleShape:(id<RectangleShape>)shape {
-    NSBezierPath *path = [NSBezierPath bezierPathWithRect:NSMakeRect(0, 0, shape.size.width, shape.size.height)];
+    
+    NSBezierPath *path = [NSBezierPath bezierPathWithRect:NSMakeRect(0,0, shape.size.width, shape.size.height)];
+    
     [[NSColor redColor] set];
     [path fill];
 }
 
+- (void)applyShapeTransform:(id<Shape>)shape ToTransform:(NSAffineTransform *)transform {
+    
+    [transform translateXBy:shape.origin.x yBy:shape.origin.y];
+   // [transform translateXBy:shape.anchor.x yBy:shape.anchor.y];
+    [transform rotateByRadians:shape.rotation];
+    [transform translateXBy:-shape.anchor.x yBy:-shape.anchor.y];
+    
+    
+}
+
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
+    
+    if (_entity == nil) {
+        return;
+    }
     
     NSGraphicsContext *context = [NSGraphicsContext currentContext];
     
@@ -202,19 +250,19 @@ CGFloat scale;
     [super drawRect:dirtyRect];
     
     NSAffineTransform *transform = [NSAffineTransform transform];
-    [transform scaleBy:scale];
+   
+    [transform scaleBy:[_entity.scale floatValue]];
+    [transform translateXBy:[_entity.tX floatValue]    yBy:[_entity.tY floatValue]];
     [transform concat];
     for (id<Shape> shape in _shapes) {
         [context saveGraphicsState];
         NSAffineTransform *shapeTransform = [NSAffineTransform transform];
-        [shapeTransform translateXBy:shape.origin.x yBy:shape.origin.y];
-        [shapeTransform translateXBy:shape.anchor.x yBy:shape.anchor.y];
-        [shapeTransform rotateByRadians:shape.rotation];
-        [shapeTransform translateXBy:-shape.anchor.x yBy:-shape.anchor.y];
         
+        [self applyShapeTransform:shape ToTransform:shapeTransform];
         [shapeTransform concat];
         [shape acceptShapeVisitor:self];
         
+
         if (shape == _selection) {
             NSBezierPath *bounds = [NSBezierPath bezierPathWithRect:NSMakeRect(0.0, 0.0, shape.size.width, shape.size.height)];
             [[NSColor whiteColor] set];

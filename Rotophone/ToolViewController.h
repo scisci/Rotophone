@@ -11,16 +11,18 @@
 @protocol ToolViewControllerDelegate<NSObject>
 - (void)addBody;
 - (void)deleteSelection;
+- (void)setScale:(float)scale;
 @end
 
 
 @interface ToolbarView : NSView
 @property (unsafe_unretained) IBOutlet NSButton *addBodyButton;
 @property (unsafe_unretained) IBOutlet NSButton *deleteButton;
+@property (unsafe_unretained) IBOutlet NSSlider *scaleSlider;
 @end
 
 @interface ToolView : NSView
-@property (unsafe_unretained) IBOutlet NSView *toolbarView;
+@property (unsafe_unretained) IBOutlet ToolbarView *toolbarView;
 @end
 
 @interface ToolViewController : NSViewController
@@ -28,4 +30,5 @@
 @property (unsafe_unretained) id<ToolViewControllerDelegate> delegate;
 - (IBAction)handleAddBodyButton:(id)sender;
 - (IBAction)handleDeleteButton:(id)sender;
+- (IBAction)handleScaleSliderChanged:(id)sender;
 @end

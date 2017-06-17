@@ -76,6 +76,33 @@
 
 
 
+@implementation SceneEntity
+
+- (id)initWithContext:(NSManagedObjectContext *)context {
+    NSEntityDescription* entity = [NSEntityDescription entityForName:@"SceneEntity" inManagedObjectContext:context];
+    if (self = [super initWithEntity:entity insertIntoManagedObjectContext:context]) {
+        self.tX = [NSNumber numberWithFloat:0.0];
+        self.tY = [NSNumber numberWithFloat:0.0];
+        self.scale = [NSNumber numberWithFloat:6.0];
+    }
+    return self;
+}
+
++ (NSFetchRequest *_Nonnull)fetchRequestInContext:(NSManagedObjectContext *_Nonnull)context {
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"SceneEntity" inManagedObjectContext:context];
+    [request setEntity:entity];
+    return request;
+}
+
+@dynamic tX;
+@dynamic tY;
+@dynamic scale;
+
+@end
+
+
+
 @implementation BodyEntity
 
 - (id)initWithName:(NSString *)name andContext:(NSManagedObjectContext *)context {

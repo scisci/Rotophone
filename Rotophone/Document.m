@@ -61,6 +61,23 @@ static void *MicrophoneConnectedKVOContext = &MicrophoneConnectedKVOContext;
     return [results objectAtIndex:0];
 }
 
+- (SceneEntity *)getOrCreateScene {
+    // See if we can get a microphone
+    NSFetchRequest *request = [SceneEntity fetchRequestInContext:self.managedObjectContext];
+    NSError *err = nil;
+    NSArray *results = [self.managedObjectContext executeFetchRequest:request error:&err];
+    if (err != nil) {
+        return nil;
+    }
+    if (results.count == 0) {
+        SceneEntity* scene = [[SceneEntity alloc] initWithContext:self.managedObjectContext];
+        return scene;
+        
+    }
+    
+    return [results objectAtIndex:0];
+}
+
 - (BodyEntity *)createBody {
     // First create a field
     FieldEntity* field = [[FieldEntity alloc] initWithName:@"somefield" andContext:self.managedObjectContext];
@@ -138,6 +155,12 @@ static void *MicrophoneConnectedKVOContext = &MicrophoneConnectedKVOContext;
 }
 
 
+- (void)setScale:(float)scale {
+    SceneView *sceneView = (SceneView *)_mainWindowController.mainViewController.sceneViewController.view;
+    sceneView.entity.scale = [NSNumber numberWithFloat:scale];
+    [sceneView setNeedsDisplay:YES];
+}
+
 - (void)makeWindowControllers {
     
     AppDelegate *appDelegate = (AppDelegate *)[[NSApplication sharedApplication] delegate];
@@ -173,8 +196,10 @@ static void *MicrophoneConnectedKVOContext = &MicrophoneConnectedKVOContext;
     
     
     // Create a shape for the microphone
+    SceneEntity *sceneEntity = [self getOrCreateScene];
     
     SceneView *sceneView = (SceneView *)_mainWindowController.mainViewController.sceneViewController.view;
+    sceneView.entity = sceneEntity;
     
     _simulationController.scene = sceneView;
     [_simulationController addMicrophone:_microphoneController];

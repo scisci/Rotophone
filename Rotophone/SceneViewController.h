@@ -8,12 +8,12 @@
 
 #import <Cocoa/Cocoa.h>
 #import "SimulationController.h"
-
+#import "Entities.h"
 
 
 
 @interface SceneView : NSView<ShapeVisitor, Scene>
-
+@property (retain) SceneEntity* entity;
 @end
 
 
