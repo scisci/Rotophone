@@ -8,6 +8,12 @@
 
 #import <Cocoa/Cocoa.h>
 
+@protocol ToolViewControllerDelegate<NSObject>
+- (void)addBody;
+- (void)deleteSelection;
+@end
+
+
 @interface ToolbarView : NSView
 @property (unsafe_unretained) IBOutlet NSButton *addBodyButton;
 @property (unsafe_unretained) IBOutlet NSButton *deleteButton;
@@ -19,6 +25,7 @@
 
 @interface ToolViewController : NSViewController
 @property (retain) NSViewController* controlPanel;
+@property (unsafe_unretained) id<ToolViewControllerDelegate> delegate;
 - (IBAction)handleAddBodyButton:(id)sender;
 - (IBAction)handleDeleteButton:(id)sender;
 @end

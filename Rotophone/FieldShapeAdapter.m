@@ -7,6 +7,7 @@
 //
 
 #import "FieldShapeAdapter.h"
+#import "BodyControlPanel.h"
 
 static void* AnchorKVOContext = &AnchorKVOContext;
 static void* RotationKVOContext = &RotationKVOContext;
@@ -86,12 +87,10 @@ static void* HeightKVOContext = &HeightKVOContext;
 
 
 - (NSViewController *)createControlPanel {
-    return nil;
-    /*
-    MicrophoneControlPanelViewController* vc = [[MicrophoneControlPanelViewController alloc] initWithNibName:@"MicrophoneControlPanel" bundle:nil];
-    vc.microphone = _proxy;
+    BodyControlPanel* vc = [[BodyControlPanel alloc] initWithNibName:@"BodyControlPanel" bundle:nil];
+    //vc.microphone = _proxy;
+    vc.entity = _entity;
     return vc;
-     */
 }
 
 - (void)acceptShapeVisitor:(id<ShapeVisitor>)visitor {
@@ -130,6 +129,47 @@ static void* HeightKVOContext = &HeightKVOContext;
                               context:context];
     }
 }
+
+
+
+
+- (void)setAnchor:(CGPoint)anchor {
+    _entity.anchorX = [NSNumber numberWithFloat:anchor.x];
+    _entity.anchorY = [NSNumber numberWithFloat:anchor.y];
+}
+
+- (void)setOrigin:(CGPoint)origin {
+    _entity.originX = [NSNumber numberWithFloat:origin.x];
+    _entity.originY = [NSNumber numberWithFloat:origin.y];
+    
+}
+
+- (void)setRotation:(CGFloat)rotation {
+    _entity.rotation = [NSNumber numberWithFloat:rotation];
+}
+
+- (void)setRectangleSize:(NSSize)rectangleSize {
+    _entity.width = [NSNumber numberWithFloat:rectangleSize.width];
+    _entity.height = [NSNumber numberWithFloat:rectangleSize.height];
+
+}
+
+- (NSSize)rectangleSize {
+    return _rectangleSize;
+}
+
+- (CGPoint)anchor {
+    return CGPointMake(self.size.width/2, self.size.height/2);
+    return _anchor;
+}
+
+- (CGPoint)origin {
+    return _origin;}
+
+- (CGFloat)rotation {
+    return _rotation;
+}
+
 
 
 

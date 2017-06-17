@@ -10,7 +10,7 @@
 
 static void* ShapeChangedKVOContext = &ShapeChangedKVOContext;
 
-
+/*
 @implementation ConcreteRectangle
 
 @synthesize anchor, origin, rotation, shapeChanged;
@@ -52,7 +52,7 @@ static void* ShapeChangedKVOContext = &ShapeChangedKVOContext;
 
 @end
 
-
+*/
 
 
 @interface SceneView ()
@@ -62,12 +62,13 @@ static void* ShapeChangedKVOContext = &ShapeChangedKVOContext;
 @implementation SceneView
 
 CGFloat scale;
+@synthesize selection = _selection;
 
 - (void)awakeFromNib {
     [super awakeFromNib];
     self.shapes = [[NSMutableArray alloc] init];
     //[self addShape:[[ConcreteMicrophone alloc] init]];
-    [self addShape:[[ConcreteRectangle alloc] init]];
+   // [self addShape:[[ConcreteRectangle alloc] init]];
     scale = 6.0;
 }
 

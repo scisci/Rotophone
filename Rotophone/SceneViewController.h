@@ -7,18 +7,13 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "Shape.h"
+#import "SimulationController.h"
 
 
-@interface ConcreteRectangle : NSObject<RectangleShape>
-@end
 
 
-@interface SceneView : NSView<ShapeVisitor>
+@interface SceneView : NSView<ShapeVisitor, Scene>
 
-@property (retain) NSObject<Shape> *selection;
-- (void)addShape:(NSObject<Shape> *)shape;
-- (void)removeShape:(NSObject<Shape> *)shape;
 @end
 
 

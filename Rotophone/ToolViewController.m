@@ -73,11 +73,15 @@
 }
 
 - (IBAction)handleAddBodyButton:(id)sender {
-    NSLog(@"add body");
+    if (_delegate != nil) {
+        [_delegate addBody];
+    }
 }
 
 - (IBAction)handleDeleteButton:(id)sender {
-    NSLog(@"delete");
+    if (_delegate != nil) {
+        [_delegate deleteSelection];
+    }
 }
 
 - (void)setControlPanel:(NSViewController *)controlPanel {

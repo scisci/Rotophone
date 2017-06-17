@@ -15,6 +15,7 @@
 #import "MicrophoneShapeAdapter.h"
 #import "MicrophoneController.h"
 #import "MockDevice.h"
+#import "SimulationController.h"
 
 static void *SelectedPortKVOContext = &SelectedPortKVOContext;
 static void *MicrophoneConnectedKVOContext = &MicrophoneConnectedKVOContext;
@@ -27,6 +28,7 @@ static void *MicrophoneConnectedKVOContext = &MicrophoneConnectedKVOContext;
 @property (retain) SerialPortHandler *serialPortHandler;
 @property (retain) MicrophoneController *microphoneController;
 @property (retain) MainWindowController *mainWindowController;
+@property (retain) SimulationController *simulationController;
 @end
 
 @implementation Document
@@ -57,6 +59,32 @@ static void *MicrophoneConnectedKVOContext = &MicrophoneConnectedKVOContext;
     }
     
     return [results objectAtIndex:0];
+}
+
+- (BodyEntity *)createBody {
+    // First create a field
+    FieldEntity* field = [[FieldEntity alloc] initWithName:@"somefield" andContext:self.managedObjectContext];
+    field.width = [NSNumber numberWithFloat:20.0];
+    field.height = [NSNumber numberWithFloat:5.0];
+    field.originX = [NSNumber numberWithFloat:0];
+    field.originY = [NSNumber numberWithFloat:0];
+    field.rotation = [NSNumber numberWithFloat:0];
+    BodyEntity* body = [[BodyEntity alloc] initWithName:@"somebody" andContext:self.managedObjectContext];
+    
+    NSMutableSet *mutableSet = [body mutableSetValueForKey:@"fields"];
+    [mutableSet addObject:field];
+    return body;
+}
+
+- (NSArray *)bodies {
+    NSFetchRequest *request = [BodyEntity fetchRequestInContext:self.managedObjectContext];
+    NSError *err = nil;
+   NSArray *results = [self.managedObjectContext executeFetchRequest:request error:&err];
+    if (err != nil) {
+        NSLog(@"error getting bodies!");
+        return [[NSArray alloc] init];
+    }
+    return results;
 }
 
 - (SerialPortEntity *)getOrCreateSerialPortSettings {
@@ -117,7 +145,7 @@ static void *MicrophoneConnectedKVOContext = &MicrophoneConnectedKVOContext;
     self.microphone = [self getOrCreateMicrophone];
     self.serialPortSettings = [self getOrCreateSerialPortSettings];
     self.serialPortHandler = appDelegate.serialPortHandler;
-
+    self.simulationController = [[SimulationController alloc] init];
     
     [self setupSerialPort];
 
@@ -127,6 +155,8 @@ static void *MicrophoneConnectedKVOContext = &MicrophoneConnectedKVOContext;
     _mainWindowController.mainViewController.document = self;
     [self addWindowController:_mainWindowController];
     
+    
+    _mainWindowController.mainViewController.toolViewController.delegate = self;
     //MockDevice* device = [[MockDevice alloc] init];
     //[device setPosition: 0.3];
     
@@ -143,11 +173,19 @@ static void *MicrophoneConnectedKVOContext = &MicrophoneConnectedKVOContext;
     
     
     // Create a shape for the microphone
-    MicrophoneShapeAdapter* microphoneShape = [[MicrophoneShapeAdapter alloc] initWithProxy:_microphoneController];
+    
     SceneView *sceneView = (SceneView *)_mainWindowController.mainViewController.sceneViewController.view;
     
+    _simulationController.scene = sceneView;
+    [_simulationController addMicrophone:_microphoneController];
     
-    [sceneView addShape:microphoneShape];
+    // Add any boides
+    NSArray *bodies = [self bodies];
+    for (BodyEntity* body in bodies) {
+        [_simulationController addBody:body];
+    }
+    
+    
     
     SideBarView *sideBarView = (SideBarView *)_mainWindowController.mainViewController.sideBarViewController.view;
     sideBarView.statusView.status = _microphoneController.status;
@@ -156,6 +194,20 @@ static void *MicrophoneConnectedKVOContext = &MicrophoneConnectedKVOContext;
  
     
     _serialPortHandler.rawStreamHandler =  _mainWindowController.mainViewController.sideBarViewController;
+}
+
+- (void)addBody {
+    BodyEntity *body = [self createBody];
+    [_simulationController addBody:body];
+}
+
+
+
+- (void)deleteSelection {
+    SceneView *sceneView = (SceneView *)_mainWindowController.mainViewController.sceneViewController.view;
+    if (sceneView.selection != nil) {
+        [_simulationController removeShape:sceneView.selection];
+    }
 }
 
 - (void)dealloc {

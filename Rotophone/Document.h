@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "ToolViewController.h"
 
-@interface Document : NSPersistentDocument
+@interface Document : NSPersistentDocument<ToolViewControllerDelegate>
 @end
