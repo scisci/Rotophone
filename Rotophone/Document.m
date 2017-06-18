@@ -17,6 +17,8 @@
 #import "MockDevice.h"
 #import "SimulationController.h"
 
+#define USE_MOCK_DEVICE
+
 static void *SelectedPortKVOContext = &SelectedPortKVOContext;
 static void *MicrophoneConnectedKVOContext = &MicrophoneConnectedKVOContext;
 
@@ -180,10 +182,13 @@ static void *MicrophoneConnectedKVOContext = &MicrophoneConnectedKVOContext;
     
     
     _mainWindowController.mainViewController.toolViewController.delegate = self;
-    //MockDevice* device = [[MockDevice alloc] init];
-    //[device setPosition: 0.3];
     
+#ifdef USE_MOCK_DEVICE
+    MockDevice* device = [[MockDevice alloc] init];
+    [device setPosition: 0.3];
+#else
     SerialPortHandler* device = _serialPortHandler;
+#endif
     
     self.microphoneController = [[MicrophoneController alloc] initWithEntity:_microphone andDeviceProvider:device];
     
@@ -219,6 +224,8 @@ static void *MicrophoneConnectedKVOContext = &MicrophoneConnectedKVOContext;
  
     
     _serialPortHandler.rawStreamHandler =  _mainWindowController.mainViewController.sideBarViewController;
+    
+    [_simulationController start];
 }
 
 - (void)addBody {

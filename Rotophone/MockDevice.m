@@ -10,9 +10,11 @@
 
 
 @interface MockDevice () {
+    NSTimer* _keepAliveTimer;
     RotoEventStream* _eventStream;
     ModeType _mode;
     float _target;
+    int _handshakeID;
     float _rotation;
     NSTimer* _rotationTimer;
 }
@@ -27,6 +29,8 @@
         _mode = kModeStartup;
         _rotation = 0;
         _target = 0;
+        _handshakeID = -1;
+    
     }
     return self;
 }
@@ -118,7 +122,29 @@
 }
 
 - (void)sendHandshake:(unsigned char)handshakeID {
+    BOOL startTimer = false;
+    if (handshakeID != _handshakeID) {
+        startTimer = YES;
+    }
+    _handshakeID = handshakeID;
+    
+    
     [_eventStream handleEvent:[[ConcreteHandshakeEvent alloc] initWithTimestamp:0.0 rotoID:0 HandshakeID:handshakeID Mode:_mode]];
+    
+    if (startTimer) {
+        if (_keepAliveTimer != nil) {
+            [_keepAliveTimer invalidate];
+            _keepAliveTimer = nil;
+        }
+        
+        _keepAliveTimer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval:10.0 target:self selector:@selector(handleKeepAliveTimer:) userInfo:nil repeats:YES];
+        [[NSRunLoop currentRunLoop] addTimer:_keepAliveTimer forMode:NSRunLoopCommonModes];
+    }
+}
+
+- (void)handleKeepAliveTimer:(id)sender {
+    [_eventStream handleEvent:[[ConcreteHandshakeEvent alloc] initWithTimestamp:0.0 rotoID:0 HandshakeID:_handshakeID Mode:_mode]];
+
 }
 
 - (void)setZero {

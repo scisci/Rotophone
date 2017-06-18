@@ -57,6 +57,7 @@ static void* ShapeChangedKVOContext = &ShapeChangedKVOContext;
 
 @interface SceneView ()
 @property (retain) NSMutableArray *shapes;
+@property (retain) NSMutableArray *debugGraphics;
 @end
 
 @implementation SceneView
@@ -72,8 +73,7 @@ BOOL spaceDown;
 - (void)awakeFromNib {
     [super awakeFromNib];
     self.shapes = [[NSMutableArray alloc] init];
-    //[self addShape:[[ConcreteMicrophone alloc] init]];
-   // [self addShape:[[ConcreteRectangle alloc] init]];
+    self.debugGraphics = [[NSMutableArray alloc] init];
     spaceDown = false;
 }
 
@@ -137,7 +137,7 @@ BOOL spaceDown;
     [transform translateXBy:[_entity.tX floatValue]    yBy:[_entity.tY floatValue]];
     for (id<Shape> shape in _shapes) {
         NSAffineTransform *shapeTransform = [[NSAffineTransform alloc] initWithTransform:transform];
-        [self applyShapeTransform:shape ToTransform:shapeTransform];
+        [ShapeHelper applyShapeTransform:shape ToTransform:shapeTransform];
         [shapeTransform invert];
         
         NSPoint hitPoint = [shapeTransform transformPoint:point];
@@ -167,6 +167,14 @@ BOOL spaceDown;
     [self setNeedsDisplay:YES];
 }
 
+- (void)addDebugGraphics:(NSObject<DebugGraphics> *)debugGraphics {
+    [_debugGraphics addObject:debugGraphics];
+}
+
+- (void)removeDebugGraphics:(NSObject<DebugGraphics> *)debugGraphics {
+    [_debugGraphics removeObject:debugGraphics];
+}
+
 - (void)observeValueForKeyPath:(NSString *)keyPath
                       ofObject:(id)object
                         change:(NSDictionary *)change
@@ -187,17 +195,21 @@ BOOL spaceDown;
 
 - (void)visitMicrophoneShape:(id<MicrophoneShape>)shape {
     NSBezierPath *path = [NSBezierPath bezierPath];
+    //[path moveToPoint:NSMakePoint(0, 0)];
+    //[path lineToPoint:NSMakePoint(7.5, 15.0)];
+    //[path lineToPoint:NSMakePoint(15, 0)];
+    
     [path moveToPoint:NSMakePoint(0, 0)];
-    [path lineToPoint:NSMakePoint(7.5, 15.0)];
-    [path lineToPoint:NSMakePoint(15, 0)];
+    [path lineToPoint:NSMakePoint(15.0, 7.5)];
+    [path lineToPoint:NSMakePoint(0, 15.0)];
     [path closePath];
     [[NSColor purpleColor] set];
     [path fill];
     
-    NSBezierPath *mic = [NSBezierPath bezierPathWithRect:NSMakeRect(0, 0, 1, 10)];
+    NSBezierPath *mic = [NSBezierPath bezierPathWithRect:NSMakeRect(0, 0, 240, 1)];
     
     NSAffineTransform* transform = [[NSAffineTransform alloc] init];
-    [transform translateXBy:7 yBy:7.5];
+    [transform translateXBy:7.5 yBy:7.5];
     
     //NSGraphicsContext *context = [NSGraphicsContext currentContext];
     NSAffineTransform* posTransform = [[NSAffineTransform alloc] initWithTransform:transform];
@@ -226,15 +238,7 @@ BOOL spaceDown;
     [path fill];
 }
 
-- (void)applyShapeTransform:(id<Shape>)shape ToTransform:(NSAffineTransform *)transform {
-    
-    [transform translateXBy:shape.origin.x yBy:shape.origin.y];
-   // [transform translateXBy:shape.anchor.x yBy:shape.anchor.y];
-    [transform rotateByRadians:shape.rotation];
-    [transform translateXBy:-shape.anchor.x yBy:-shape.anchor.y];
-    
-    
-}
+
 
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
@@ -258,7 +262,7 @@ BOOL spaceDown;
         [context saveGraphicsState];
         NSAffineTransform *shapeTransform = [NSAffineTransform transform];
         
-        [self applyShapeTransform:shape ToTransform:shapeTransform];
+        [ShapeHelper applyShapeTransform:shape ToTransform:shapeTransform];
         [shapeTransform concat];
         [shape acceptShapeVisitor:self];
         
@@ -270,6 +274,10 @@ BOOL spaceDown;
         }
         [context restoreGraphicsState];
         
+    }
+    
+    for (id<DebugGraphics> debugGraphics in _debugGraphics) {
+        [debugGraphics drawDebugGraphics];
     }
 }
 @end

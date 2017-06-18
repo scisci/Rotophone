@@ -13,11 +13,17 @@
 
 @protocol MicrophoneShape;
 @protocol RectangleShape;
+@protocol Shape;
+
+@protocol DebugGraphics<NSObject>
+- (void)drawDebugGraphics;
+@end
 
 @interface ShapeHelper : NSObject 
 + (NSArray *)shapeChangedKeyPaths;
 + (CGFloat)clockwiseToCounterClockwise:(CGFloat)radians;
 + (CGFloat)counterClockwiseToClockwise:(CGFloat)radians;
++ (void)applyShapeTransform:(id<Shape>)shape ToTransform:(NSAffineTransform *)transform;
 @end
 
 @protocol ShapeVisitor<NSObject>

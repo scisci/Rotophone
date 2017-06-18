@@ -11,7 +11,7 @@
 
 #import "ORSSerialPort.h"
 #import "Document.h"
-#import "objc/PdAudioUnit.h"
+#import "SimulationAudioUnit.h"
 
 @interface SerialPortMenuItem : NSObject
 @property NSMenuItem *menuItem;
@@ -31,7 +31,7 @@
 @end
 
 @interface AppDelegate ()
-@property (retain) PdAudioUnit *pdAudioUnit;
+@property (retain) SimulationAudioUnit *pdAudioUnit;
 @property (readwrite) BOOL appStarted;
 @property (unsafe_unretained) IBOutlet NSApplication *application;
 

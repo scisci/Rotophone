@@ -23,5 +23,10 @@
     return 2 * M_PI - radians;
 }
 
++ (void)applyShapeTransform:(id<Shape>)shape ToTransform:(NSAffineTransform *)transform {
+    [transform translateXBy:shape.origin.x yBy:shape.origin.y];
+    [transform rotateByRadians:shape.rotation];
+    [transform translateXBy:-shape.anchor.x yBy:-shape.anchor.y];
+}
 
 @end
