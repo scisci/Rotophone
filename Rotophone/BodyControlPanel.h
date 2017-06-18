@@ -13,6 +13,7 @@
 @property (unsafe_unretained) IBOutlet NSSlider *widthSlider;
 @property (unsafe_unretained) IBOutlet NSSlider *heightSlider;
 @property (unsafe_unretained) IBOutlet NSSlider *rotationSlider;
+@property (unsafe_unretained) IBOutlet NSTextField *nameField;
 @end
 
 @interface BodyControlPanel : NSViewController
@@ -20,6 +21,7 @@
 - (IBAction)handleHeightChanged:(id)sender;
 - (IBAction)handleRotationChanged:(id)sender;
 
+@property (retain) BodyEntity* bodyEntity;
 @property (retain) FieldEntity* entity;
 
 @end

@@ -31,6 +31,8 @@
 - (void)setOrigin:(NSPoint)origin;
 - (void)setBaseAnchor:(NSPoint)anchor;
 - (void)setBaseRotation:(float)rotation;
+- (void)setPickupAngle:(float)pickupAngle;
+- (void)setPickupDist:(float)pickupDist;
 - (NSObject<MicrophoneTransport> *)transport;
 - (MicrophoneEntity *)entity;
 @end

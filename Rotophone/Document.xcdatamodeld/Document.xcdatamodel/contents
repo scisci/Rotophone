@@ -22,6 +22,8 @@
         <attribute name="name" attributeType="String" syncable="YES"/>
         <attribute name="originX" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="originY" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="pickupAngle" attributeType="Float" defaultValueString="0.6" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="pickupDist" attributeType="Float" defaultValueString="240" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="rotation" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="rotoID" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="rotoPosition" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
@@ -39,7 +41,7 @@
     <elements>
         <element name="BodyEntity" positionX="-45" positionY="90" width="128" height="75"/>
         <element name="FieldEntity" positionX="-54" positionY="54" width="128" height="180"/>
-        <element name="MicrophoneEntity" positionX="-63" positionY="-18" width="128" height="195"/>
+        <element name="MicrophoneEntity" positionX="-63" positionY="-18" width="128" height="225"/>
         <element name="SerialPortEntity" positionX="-54" positionY="9" width="128" height="75"/>
         <element name="SceneEntity" positionX="-45" positionY="90" width="128" height="90"/>
     </elements>

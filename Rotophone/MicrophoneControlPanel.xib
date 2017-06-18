@@ -44,8 +44,26 @@
                         <action selector="handleBaseRotationChanged:" target="-2" id="IhP-P2-zQR"/>
                     </connections>
                 </slider>
+                <slider verticalHuggingPriority="750" misplaced="YES" id="En2-t3-g7C">
+                    <rect key="frame" x="261" y="165" width="96" height="19"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="n3j-ov-COF"/>
+                    <connections>
+                        <action selector="handlePickupDistChanged:" target="-2" id="aHi-mO-PED"/>
+                    </connections>
+                </slider>
+                <slider horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" id="ngI-cd-i0p">
+                    <rect key="frame" x="133" y="160" width="28" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <sliderCell key="cell" continuous="YES" alignment="left" maxValue="100" allowsTickMarkValuesOnly="YES" sliderType="circular" id="5Z9-Iw-8Ca"/>
+                    <connections>
+                        <action selector="handlePickupAngleChanged:" target="-2" id="oRM-RL-xtT"/>
+                    </connections>
+                </slider>
             </subviews>
             <connections>
+                <outlet property="pickupAngleSlider" destination="ngI-cd-i0p" id="dxC-md-pHb"/>
+                <outlet property="pickupDistSlider" destination="En2-t3-g7C" id="YVe-hA-4QJ"/>
                 <outlet property="rotationSlider" destination="xud-ee-iok" id="KnI-yq-CgU"/>
                 <outlet property="targetSlider" destination="7yG-OA-X6S" id="vO0-1a-SWr"/>
                 <outlet property="zeroButton" destination="alV-V6-10h" id="jib-0T-n2F"/>

@@ -14,7 +14,8 @@
 }
 
 @property (retain) FieldEntity* entity;
+@property (retain) BodyEntity* bodyEntity;
 
-- (id)initWithEntity:(FieldEntity *)entity;
+- (id)initWithBody:(BodyEntity *)bodyEntity AndField:(FieldEntity *)entity;
 
 @end

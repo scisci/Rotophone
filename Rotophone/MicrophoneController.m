@@ -159,6 +159,14 @@ static void* DeviceKVOContext = &DeviceKVOContext;
     _entity.rotation = [NSNumber numberWithFloat:rotation];
 }
 
+- (void)setPickupDist:(float)pickupDist {
+    _entity.pickupDist = [NSNumber numberWithFloat:pickupDist];
+}
+
+- (void)setPickupAngle:(float)pickupAngle {
+    _entity.pickupAngle = [NSNumber numberWithFloat:pickupAngle];
+}
+
 - (void)setRotoTarget:(float)target {
     if (target < 0) {
         target = 0;
@@ -204,6 +212,7 @@ static void* DeviceKVOContext = &DeviceKVOContext;
         }
     }
 }
+
 
 
 - (void)visitUpdateModeEvent:(id<UpdateModeEvent>)event {
@@ -289,7 +298,10 @@ static void* DeviceKVOContext = &DeviceKVOContext;
     _reconnectAttempts = 0;
     [self didChangeValueForKey:@"isConnected"];
     NSLog(@"communication started with mode %d", mode);
+    
+     [self willChangeValueForKey:@"currentMode"];
     _currentMode = mode;
+     [self didChangeValueForKey:@"currentMode"];
     
     [self loadDataIfNecessary];
 }

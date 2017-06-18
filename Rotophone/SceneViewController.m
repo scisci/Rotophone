@@ -206,7 +206,7 @@ BOOL spaceDown;
     [[NSColor purpleColor] set];
     [path fill];
     
-    NSBezierPath *mic = [NSBezierPath bezierPathWithRect:NSMakeRect(0, 0, 240, 1)];
+    NSBezierPath *mic = [NSBezierPath bezierPathWithRect:NSMakeRect(0, 0, shape.pickupDist, 1)];
     
     NSAffineTransform* transform = [[NSAffineTransform alloc] init];
     [transform translateXBy:7.5 yBy:7.5];

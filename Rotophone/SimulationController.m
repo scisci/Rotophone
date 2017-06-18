@@ -93,8 +93,8 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     // Mic distance is 240 inches (20 ft)
     // Mic angle is 5 degrees
     
-    float micDist = 240.0;
-    float micAngle = 20 * M_PI / 180.0;
+    float micDist = _microphoneShape.pickupDist;
+    float micAngle = _microphoneShape.pickupAngle * 0.5;
     
     float xOffset1 = cosf(micAngle) * micDist;
     float yOffset1 = sinf(micAngle) * micDist;
@@ -147,6 +147,9 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
 @property (retain) FieldEntity* field;
 @property (retain) BodyEntity* body;
 @property (retain) FieldShapeAdapter* fieldShape;
+@property (readonly) float area;
+@property (readwrite) float intersectionArea;
+@property (readonly) float parameterizedIntersection;
 
 @end
 
@@ -157,16 +160,10 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
         self.field = [[body.fields allObjects] objectAtIndex:0];
         
         // TODO: listen to changes to the body
-        self.fieldShape = [[FieldShapeAdapter alloc] initWithEntity:_field];
+        self.fieldShape = [[FieldShapeAdapter alloc] initWithBody:body AndField:_field];
         
         [_fieldShape addObserver:self forKeyPath:@"shapeChanged" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:SimBodyKVOContext];
-        /*
-        [_field addObserver:self forKeyPath:@"width" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:SimBodyKVOContext];
-        [_field addObserver:self forKeyPath:@"height" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:SimBodyKVOContext];
-        [_field addObserver:self forKeyPath:@"originX" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:SimBodyKVOContext];
-        [_field addObserver:self forKeyPath:@"originY" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:SimBodyKVOContext];
-        [_field addObserver:self forKeyPath:@"rotation" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:SimBodyKVOContext];
-        */
+
         
         int numPoints = 4;
         NSPoint points[] = {NSMakePoint(0,0), NSMakePoint(0, 10), NSMakePoint(10,10), NSMakePoint(10, 0)};
@@ -178,6 +175,24 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
         //[self updatePoints];
     }
     return self;
+}
+- (float)area {
+    return _field.width.floatValue * _field.height.floatValue;
+}
+
+- (float)parameterizedIntersection {
+    float a = self.area;
+    if (a <= 0) {
+        return 0;
+    }
+    
+    float p = _intersectionArea / a;
+    if (p < 0) {
+        p = 0;
+    } else if (p > 1) {
+        p = 1;
+    }
+    return p;
 }
 
 - (void)updatePoints {
@@ -386,7 +401,9 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
                 }
             }
             
-            NSLog(@"got intersection area %f", area);
+            body.intersectionArea = area;
+        } else {
+            body.intersectionArea = 0.0;
         }
         
         gpc_free_polygon(&_intersection);

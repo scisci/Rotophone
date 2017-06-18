@@ -24,11 +24,12 @@ static void* HeightKVOContext = &HeightKVOContext;
 @synthesize shapeChanged = _shapeChanged;
 
 
-- (id)initWithEntity:(FieldEntity *)entity {
+- (id)initWithBody:(BodyEntity *)bodyEntity AndField:(FieldEntity *)field {
     self = [super init];
     if (self != nil) {
-        self.entity = entity;
-        FieldEntity* model = entity;
+        self.entity = field;
+        self.bodyEntity = bodyEntity;
+        FieldEntity* model = field;
         
         // Listen to changes to the model and notify anyone else
         [model addObserver:self forKeyPath:@"anchorX" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:AnchorKVOContext];
@@ -90,6 +91,7 @@ static void* HeightKVOContext = &HeightKVOContext;
     BodyControlPanel* vc = [[BodyControlPanel alloc] initWithNibName:@"BodyControlPanel" bundle:nil];
     //vc.microphone = _proxy;
     vc.entity = _entity;
+    vc.bodyEntity = _bodyEntity;
     return vc;
 }
 

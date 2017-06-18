@@ -17,6 +17,9 @@
     int _handshakeID;
     float _rotation;
     NSTimer* _rotationTimer;
+    
+    ModeType _nextMode;
+    NSTimer* _nextModeTimer;
 }
 
 @end
@@ -45,6 +48,30 @@
 
 - (void)setDevice:(id<Device>)device {
     
+}
+
+- (void)changeModeTo:(ModeType)mode In:(double)seconds {
+    if (_nextModeTimer != nil) {
+        [_nextModeTimer invalidate];
+        _nextModeTimer = nil;
+    }
+    
+    _nextMode = mode;
+    
+    [NSTimer scheduledTimerWithTimeInterval:seconds target:self selector:@selector(nextMode:) userInfo:nil repeats:NO];
+}
+
+- (void)nextMode:(id)sender {
+    if (_nextModeTimer != nil) {
+        [_nextModeTimer invalidate];
+        _nextModeTimer = nil;
+    }
+    
+    [self setMode:_nextMode];
+    
+    if (_nextMode == kModeIdle) {
+        [self changeModeTo:kModeRun In:5.0];
+    }
 }
 
 - (id<Device>)device {
@@ -139,11 +166,14 @@
         
         _keepAliveTimer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval:10.0 target:self selector:@selector(handleKeepAliveTimer:) userInfo:nil repeats:YES];
         [[NSRunLoop currentRunLoop] addTimer:_keepAliveTimer forMode:NSRunLoopCommonModes];
+        
+        
+        [self changeModeTo:kModeIdle In:5.0];
     }
 }
 
 - (void)handleKeepAliveTimer:(id)sender {
-    [_eventStream handleEvent:[[ConcreteHandshakeEvent alloc] initWithTimestamp:0.0 rotoID:0 HandshakeID:_handshakeID Mode:_mode]];
+    [_eventStream handleEvent:[[ConcreteGenericEvent alloc] initWithTimestamp:0.0 rotoID:0 EventType:kHeartBeatEvent]];
 
 }
 

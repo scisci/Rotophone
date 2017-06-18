@@ -45,6 +45,8 @@
 @protocol MicrophoneShape<Shape>
 @property CGFloat microphoneRotation;
 @property CGFloat microphoneTarget;
+@property CGFloat pickupAngle;
+@property CGFloat pickupDist;
 @end
 
 @protocol RectangleShape<Shape>

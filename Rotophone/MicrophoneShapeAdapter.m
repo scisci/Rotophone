@@ -16,6 +16,7 @@ static void* RotationKVOContext = &RotationKVOContext;
 static void* OriginKVOContext = &OriginKVOContext;
 static void* RotoPositionKVOContext = &RotoPositionKVOContext;
 static void* RotoTargetKVOContext = &RotoTargetKVOContext;
+static void* PickupKVOContext = &PickupKVOContext;
 
 @interface MicrophoneShapeAdapter () {
 }
@@ -29,6 +30,8 @@ static void* RotoTargetKVOContext = &RotoTargetKVOContext;
 @synthesize rotation = _rotation;
 @synthesize origin = _origin;
 @synthesize anchor = _anchor;
+@synthesize pickupAngle = _pickupAngle;
+@synthesize pickupDist = _pickupDist;
 @synthesize shapeChanged = _shapeChanged;
 
 - (id)initWithProxy:(id<MicrophoneProxy>)proxy {
@@ -45,12 +48,16 @@ static void* RotoTargetKVOContext = &RotoTargetKVOContext;
         [model addObserver:self forKeyPath:@"originY" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:OriginKVOContext];
         [model addObserver:self forKeyPath:@"rotoPosition" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:RotoPositionKVOContext];
         [model addObserver:self forKeyPath:@"rotoTarget" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:RotoTargetKVOContext];
+        [model addObserver:self forKeyPath:@"pickupAngle" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:PickupKVOContext];
+        [model addObserver:self forKeyPath:@"pickupDist" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:PickupKVOContext];
 
          _microphoneRotation = [model.rotoPosition floatValue];
         _microphoneTarget = [model.rotoTarget floatValue];
         _rotation = [model.rotation floatValue];
         _origin = CGPointMake([model.originX floatValue], [model.originY floatValue]);
         _anchor = CGPointMake([model.anchorX floatValue], [model.anchorY floatValue]);
+        _pickupAngle = [model.pickupAngle floatValue];
+        _pickupDist = [model.pickupDist floatValue];
     }
     return self;
 }
@@ -64,6 +71,8 @@ static void* RotoTargetKVOContext = &RotoTargetKVOContext;
     [model removeObserver:self forKeyPath:@"originY"];
     [model removeObserver:self forKeyPath:@"rotoPosition"];
     [model removeObserver:self forKeyPath:@"rotoTarget"];
+    [model removeObserver:self forKeyPath:@"pickupAngle"];
+    [model removeObserver:self forKeyPath:@"pickupDist"];
 }
 
 + (BOOL)automaticallyNotifiesObserversForKey:(NSString *)theKey {
@@ -73,7 +82,9 @@ static void* RotoTargetKVOContext = &RotoTargetKVOContext;
         [theKey isEqualToString:@"rotation"] ||
         [theKey isEqualToString:@"origin"] ||
         [theKey isEqualToString:@"microphoneRotation"] ||
-        [theKey isEqualToString:@"microphoneTarget"]) {
+        [theKey isEqualToString:@"microphoneTarget"] ||
+        [theKey isEqualToString:@"pickupAngle"] ||
+        [theKey isEqualToString:@"pickupDist"]) {
         automatic = NO;
     }
     else {
@@ -89,7 +100,7 @@ static void* RotoTargetKVOContext = &RotoTargetKVOContext;
     
     if ([key isEqualToString:@"shapeChanged"]) {
         keyPaths = [keyPaths setByAddingObjectsFromArray:[ShapeHelper shapeChangedKeyPaths]];
-        keyPaths = [keyPaths setByAddingObjectsFromArray:@[@"microphoneRotation", @"microphoneTarget"]];
+        keyPaths = [keyPaths setByAddingObjectsFromArray:@[@"microphoneRotation", @"microphoneTarget", @"pickupAngle", @"pickupDist"]];
     }
     return keyPaths;
 }
@@ -128,7 +139,14 @@ static void* RotoTargetKVOContext = &RotoTargetKVOContext;
         [self willChangeValueForKey:@"anchor"];
         _anchor = CGPointMake([model.anchorX floatValue], [model.anchorY floatValue]);
         [self didChangeValueForKey:@"anchor"];
-    } else {
+    } else if (context == PickupKVOContext) {
+        [self willChangeValueForKey:@"pickupAngle"];
+        [self willChangeValueForKey:@"pickupDist"];
+        _pickupAngle = model.pickupAngle.floatValue;
+        _pickupDist = model.pickupDist.floatValue;
+        [self didChangeValueForKey:@"pickupDist"];
+        [self didChangeValueForKey:@"pickupAngle"];
+    }else {
         // Any unrecognized context must belong to super
         [super observeValueForKeyPath:keyPath
                              ofObject:object
@@ -168,6 +186,14 @@ static void* RotoTargetKVOContext = &RotoTargetKVOContext;
     [_proxy setBaseRotation:rotation];
 }
 
+- (void)setPickupDist:(CGFloat)pickupDist {
+    _proxy.entity.pickupDist = [NSNumber numberWithFloat:pickupDist];
+}
+
+- (void)setPickupAngle:(CGFloat)pickupAngle {
+    _proxy.entity.pickupAngle = [NSNumber numberWithFloat:pickupAngle];
+}
+
 - (CGPoint)anchor {
     return CGPointMake(self.size.width/2, self.size.height/2);
     return _anchor;
@@ -182,6 +208,14 @@ static void* RotoTargetKVOContext = &RotoTargetKVOContext;
 
 - (CGFloat)microphoneRotation {
     return _microphoneRotation;
+}
+
+- (CGFloat)pickupAngle {
+    return _pickupAngle;
+}
+
+- (CGFloat)pickupDist {
+    return _pickupDist;
 }
 
 @end

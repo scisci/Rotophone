@@ -34,6 +34,8 @@
 @dynamic rotoID;
 @dynamic rotoPosition;
 @dynamic rotoTarget;
+@dynamic pickupAngle;
+@dynamic pickupDist;
 
 @dynamic anchorX;
 @dynamic anchorY;

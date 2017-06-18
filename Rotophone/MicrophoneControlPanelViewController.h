@@ -14,6 +14,8 @@
 @property (unsafe_unretained) IBOutlet NSButton *zeroButton;
 @property (unsafe_unretained) IBOutlet NSSlider *targetSlider;
 @property (unsafe_unretained) IBOutlet NSSlider *rotationSlider;
+@property (unsafe_unretained) IBOutlet NSSlider *pickupAngleSlider;
+@property (unsafe_unretained) IBOutlet NSSlider *pickupDistSlider;
 @end
 
 @interface MicrophoneControlPanelViewController : NSViewController
