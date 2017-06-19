@@ -15,7 +15,9 @@
 @property (unsafe_unretained) NSObject<MicrophoneTransport> *transport;
 @property (unsafe_unretained) IBOutlet NSButton *startStopButton;
 @property (unsafe_unretained) IBOutlet NSButton *calibrateButton;
-
+@property (unsafe_unretained) IBOutlet NSSlider *volumeSlider;
+@property (unsafe_unretained) IBOutlet
+    NSButton *muteButton;
 @end
 
 @interface StatusView : NSView

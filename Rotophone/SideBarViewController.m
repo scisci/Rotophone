@@ -10,6 +10,8 @@
 #import "MicrophoneController.h"
 
 static void *TransportStoppedKVOContext = &TransportStoppedKVOContext;
+static void *TransportMutedKVOContext = &TransportMutedKVOContext;
+static void *TransportVolumeKVOContext = &TransportVolumeKVOContext;
 
 @implementation TransportView
 
@@ -21,6 +23,8 @@ static void *TransportStoppedKVOContext = &TransportStoppedKVOContext;
         [_transport removeObserver:self forKeyPath:@"isStopped"];
         [_transport removeObserver:self forKeyPath:@"canStop"];
         [_transport removeObserver:self forKeyPath:@"canStart"];
+        [_transport removeObserver:self forKeyPath:@"isMuted"];
+        [_transport removeObserver:self forKeyPath:@"volume"];
     }
     
     _transport = transport;
@@ -30,8 +34,27 @@ static void *TransportStoppedKVOContext = &TransportStoppedKVOContext;
         [_transport addObserver:self forKeyPath:@"isStopped" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:TransportStoppedKVOContext];
         [_transport addObserver:self forKeyPath:@"canStop" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:TransportStoppedKVOContext];
         [_transport addObserver:self forKeyPath:@"canStart" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:TransportStoppedKVOContext];
+        [_transport addObserver:self forKeyPath:@"isMuted" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:TransportMutedKVOContext];
+        [_transport addObserver:self forKeyPath:@"volume" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:TransportVolumeKVOContext];
         [self updateStoppedState];
     }
+}
+
+- (void)updateMutedState {
+    if (_transport == nil) {
+        return;
+    }
+    
+    _muteButton.title = _transport.isMuted ? @"Unmute" : @"Mute";
+    [self setNeedsDisplay:YES];
+}
+
+- (void)updateVolumeState {
+    if (_transport == nil) {
+        return;
+    }
+    
+    _volumeSlider.floatValue = _transport.volume;
 }
 
 - (void)updateStoppedState {
@@ -73,10 +96,34 @@ static void *TransportStoppedKVOContext = &TransportStoppedKVOContext;
     [_transport calibrate];
 }
 
+- (IBAction)handleMuteButton:(id)sender {
+    if (_transport == nil) {
+        return;
+    }
+    
+    if ([_transport isMuted]) {
+        [_transport unmute];
+    } else {
+        [_transport mute];
+    }
+}
+
+- (IBAction)handleVolumeSlider:(id)sender {
+    if (_transport == nil) {
+        return;
+    }
+    
+    [_transport setVolume:[(NSSlider *)sender floatValue]];
+}
+
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if (context == TransportStoppedKVOContext) {
         [self updateStoppedState];
-    } else {
+    } else if (context == TransportMutedKVOContext) {
+        [self updateMutedState];
+    } else if (context == TransportVolumeKVOContext) {
+        [self updateVolumeState];
+    }else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
 }
@@ -208,6 +255,9 @@ static void *TransportStoppedKVOContext = &TransportStoppedKVOContext;
     // Do view setup here.
     sideBarView.rawView = [[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, 200, 200)];
     [sideBarView addSubview:sideBarView.rawView];
+    
+    [sideBarView.transportView.volumeSlider setMinValue:0.0];
+    [sideBarView.transportView.volumeSlider setMaxValue:1.0];
 }
 
 - (void)handleRawData:(NSData *)rawData {

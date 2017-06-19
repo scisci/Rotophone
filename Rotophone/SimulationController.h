@@ -10,6 +10,7 @@
 #import "Shape.h"
 #import "Entities.h"
 #import "MicrophoneController.h"
+#import "PdFile.h"
 
 @class SimulationBody;
 @class SimulationMicrophone;
@@ -33,6 +34,7 @@
 
 }
 @property (retain) NSObject<Scene> * scene;
+- (id)initWithPatch:(PdFile *)patch;
 - (void)addMicrophone:(NSObject<MicrophoneProxy> *)proxy;
 - (void)addBody:(BodyEntity *)entity;
 - (void)removeShape:(id<Shape>) shape;

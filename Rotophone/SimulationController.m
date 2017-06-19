@@ -12,6 +12,9 @@
 #import "FieldShapeAdapter.h"
 #import "GPCPolygon.h"
 #include "gpc.h"
+#import "PdFile.h"
+#import "PdBase.h"
+#import "MicrophonePerformer.h"
 
 
 static void* SimBodyKVOContext = &SimBodyKVOContext;
@@ -154,6 +157,9 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
 @end
 
 @implementation SimulationBody
+
+@synthesize intersectionArea = _intersectionArea;
+
 - (id) initWithBody:(BodyEntity *)body {
     if (self = [super init]) {
         self.body = body;
@@ -247,9 +253,11 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
 
 @interface SimulationController () {
     NSArray* _bodies;
+    PdFile *_patch;
     SimulationMicrophone* _microphone;
     NSTimer* _simulationTimer;
     gpc_polygon _intersection;
+    MicrophonePerformer *_performer;
     
     BOOL _sceneDirty;
 }
@@ -258,14 +266,15 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
 
 @implementation SimulationController
 @synthesize scene = _scene;
-- (id)init {
+- (id)initWithPatch:(PdFile *)patch {
     if (self = [super init]) {
+        _patch = patch;
         _bodies = [[NSArray alloc] init];
         
         _intersection.contour = NULL;
         _intersection.hole = NULL;
         _intersection.num_contours = 0;
-
+        _performer = [[MicrophonePerformer alloc] init];
         _sceneDirty = true;
         
 
@@ -297,12 +306,15 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
         return;
     }
     
-    _simulationTimer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval: 0.1
+    // Update simulation 24fps, this matches with the interpolator in the pd file
+    _simulationTimer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval: 0.05
                                                   target: self
                                                 selector: @selector(updateSimulation:)
                                                 userInfo: nil
                                                  repeats: YES];
     [[NSRunLoop currentRunLoop] addTimer:_simulationTimer forMode:NSRunLoopCommonModes];
+    
+    [_performer start];
 }
 
 - (void)drawDebugGraphics {
@@ -336,6 +348,8 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     
     [_simulationTimer invalidate];
     _simulationTimer = nil;
+    
+    [_performer stop];
 }
 
 
@@ -346,6 +360,9 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     }
     _microphone = [[SimulationMicrophone alloc] initWithMicrophoneProxy:proxy];
     _microphone.delegate = self;
+    
+    _performer.microphone = proxy;
+    
     [_scene addShape:_microphone.microphoneShape];
     _sceneDirty = YES;
     
@@ -410,8 +427,20 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     }
     
     
+    // Update pd
+    [self updatePD];
+    
+    
     _sceneDirty = false;
     
+}
+
+- (void) updatePD {
+    for (SimulationBody *body in _bodies) {
+        NSString *paramName = [NSString stringWithFormat:@"%d-%@", _patch.dollarZero, body.body.name];
+        [PdBase sendFloat:body.parameterizedIntersection toReceiver:paramName];
+    }
+
 }
 
 - (void)addBody:(BodyEntity *)entity {

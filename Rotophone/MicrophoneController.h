@@ -17,8 +17,12 @@
 
 @protocol MicrophoneTransport<NSObject>
 @property (readonly) BOOL isStopped;
+@property (readonly) BOOL isMuted;
 @property (readonly) BOOL canStop;
 @property (readonly) BOOL canStart;
+@property (readwrite) float volume;
+- (void)mute;
+- (void)unmute;
 - (void)stop;
 - (void)start;
 - (void)calibrate;

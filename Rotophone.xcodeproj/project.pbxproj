@@ -36,6 +36,7 @@
 		4BADEA531EF5A4A8003CF739 /* gpc.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BADEA4F1EF5A4A8003CF739 /* gpc.c */; };
 		4BADEA541EF5A4A8003CF739 /* GPCPolygon.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BADEA521EF5A4A8003CF739 /* GPCPolygon.m */; };
 		4BADEA5A1EF5DD79003CF739 /* SimulationAudioUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BADEA591EF5DD79003CF739 /* SimulationAudioUnit.m */; };
+		4BADEA5D1EF74051003CF739 /* MicrophonePerformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BADEA5C1EF74051003CF739 /* MicrophonePerformer.m */; };
 		4BBE45F01EBC473000276A8A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BBE45EF1EBC473000276A8A /* AppDelegate.m */; };
 		4BBE45F31EBC473000276A8A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BBE45F21EBC473000276A8A /* main.m */; };
 		4BBE45F61EBC473000276A8A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BBE45F51EBC473000276A8A /* ViewController.m */; };
@@ -127,6 +128,8 @@
 		4BADEA521EF5A4A8003CF739 /* GPCPolygon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPCPolygon.m; sourceTree = "<group>"; };
 		4BADEA581EF5DD79003CF739 /* SimulationAudioUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimulationAudioUnit.h; sourceTree = "<group>"; };
 		4BADEA591EF5DD79003CF739 /* SimulationAudioUnit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimulationAudioUnit.m; sourceTree = "<group>"; };
+		4BADEA5B1EF74051003CF739 /* MicrophonePerformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MicrophonePerformer.h; sourceTree = "<group>"; };
+		4BADEA5C1EF74051003CF739 /* MicrophonePerformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MicrophonePerformer.m; sourceTree = "<group>"; };
 		4BBE45EB1EBC473000276A8A /* Rotophone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Rotophone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BBE45EE1EBC473000276A8A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		4BBE45EF1EBC473000276A8A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -200,6 +203,8 @@
 				4BADEA501EF5A4A8003CF739 /* gpc.h */,
 				4BADEA511EF5A4A8003CF739 /* GPCPolygon.h */,
 				4BADEA521EF5A4A8003CF739 /* GPCPolygon.m */,
+				4BADEA5B1EF74051003CF739 /* MicrophonePerformer.h */,
+				4BADEA5C1EF74051003CF739 /* MicrophonePerformer.m */,
 				4BADEA581EF5DD79003CF739 /* SimulationAudioUnit.h */,
 				4BADEA591EF5DD79003CF739 /* SimulationAudioUnit.m */,
 				4B0FC7F41EDFD06A003CACD5 /* MicrophoneController.h */,
@@ -441,6 +446,7 @@
 				4B0FC7F61EDFD06A003CACD5 /* MicrophoneController.m in Sources */,
 				4BCF70931EDE723B001E1971 /* MicrophoneShapeAdapter.m in Sources */,
 				4BBE45FC1EBC473000276A8A /* Document.xcdatamodeld in Sources */,
+				4BADEA5D1EF74051003CF739 /* MicrophonePerformer.m in Sources */,
 				4B3B91471EC362DB005C0A1A /* SceneViewController.m in Sources */,
 				4B3B91431EC3545A005C0A1A /* SerialPortHandler.m in Sources */,
 				4B4DE5721EECB54E000C9635 /* Shape.m in Sources */,

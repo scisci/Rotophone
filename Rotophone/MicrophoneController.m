@@ -14,16 +14,19 @@ static void* DeviceKVOContext = &DeviceKVOContext;
 
 @interface Transport : NSObject<MicrophoneTransport> {
     ModeType _mode;
+    BOOL _muted;
 }
 @property (unsafe_unretained) MicrophoneController* controller;
 @end
 
 @implementation Transport
-
+@synthesize volume = _volume;
 
 -(id)initWithController:(MicrophoneController *)controller {
     if (self = [super init]) {
         self.controller = controller;
+        self.volume = 1.0;
+        _muted = false;
         _mode = kModeUnknown;
     }
     
@@ -35,7 +38,9 @@ static void* DeviceKVOContext = &DeviceKVOContext;
     BOOL automatic = NO;
     if ([theKey isEqualToString:@"isStopped"] ||
         [theKey isEqualToString:@"canStop"] ||
-        [theKey isEqualToString:@"canStart"]) {
+        [theKey isEqualToString:@"canStart"] ||
+        [theKey isEqualToString:@"isMuted"] ||
+        [theKey isEqualToString:@"volume"]) {
         automatic = NO;
     }
     else {
@@ -66,6 +71,44 @@ static void* DeviceKVOContext = &DeviceKVOContext;
 
 - (BOOL)canStart {
     return _mode == kModeLowPower;
+}
+
+- (BOOL)isMuted {
+    return _muted;
+}
+
+- (void)mute {
+    if (_muted) {
+        return;
+    }
+    
+    [self willChangeValueForKey:@"isMuted"];
+    _muted = YES;
+    [self didChangeValueForKey:@"isMuted"];
+}
+
+- (void)unmute {
+    if (!_muted) {
+        return;
+    }
+    
+    [self willChangeValueForKey:@"isMuted"];
+    _muted = NO;
+    [self didChangeValueForKey:@"isMuted"];
+
+}
+
+- (void)setVolume:(float)volume {
+    if (volume == _volume) {
+        return;
+    }
+    [self willChangeValueForKey:@"volume"];
+    _volume = volume;
+    [self didChangeValueForKey:@"volume"];
+}
+
+- (float)volume {
+    return _volume;
 }
 
 - (void)calibrate {
