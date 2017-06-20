@@ -18,6 +18,8 @@
 @property (unsafe_unretained) IBOutlet NSSlider *volumeSlider;
 @property (unsafe_unretained) IBOutlet
     NSButton *muteButton;
+@property (unsafe_unretained) IBOutlet
+NSButton *performButton;
 @end
 
 @interface StatusView : NSView

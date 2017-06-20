@@ -14,6 +14,7 @@
 @property (unsafe_unretained) IBOutlet NSSlider *heightSlider;
 @property (unsafe_unretained) IBOutlet NSSlider *rotationSlider;
 @property (unsafe_unretained) IBOutlet NSTextField *nameField;
+@property (unsafe_unretained) IBOutlet NSSlider *weightField;
 @end
 
 @interface BodyControlPanel : NSViewController

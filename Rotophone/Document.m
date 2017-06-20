@@ -18,12 +18,13 @@
 #import "SimulationController.h"
 #import "PdBase.h"
 
-#define USE_MOCK_DEVICE
+//#define USE_MOCK_DEVICE
 
 static void *SelectedPortKVOContext = &SelectedPortKVOContext;
 static void *MicrophoneConnectedKVOContext = &MicrophoneConnectedKVOContext;
 static void *VolumeKVOContext = &VolumeKVOContext;
 static void *MuteKVOContext = &MuteKVOContext;
+static void *PerformKVOContext = &PerformKVOContext;
 
 
 @interface Document ()
@@ -92,6 +93,7 @@ static void *MuteKVOContext = &MuteKVOContext;
     field.originY = [NSNumber numberWithFloat:0];
     field.rotation = [NSNumber numberWithFloat:0];
     BodyEntity* body = [[BodyEntity alloc] initWithName:@"somebody" andContext:self.managedObjectContext];
+    body.weight = [NSNumber numberWithFloat:1.0];
     
     NSMutableSet *mutableSet = [body mutableSetValueForKey:@"fields"];
     [mutableSet addObject:field];
@@ -228,14 +230,16 @@ static void *MuteKVOContext = &MuteKVOContext;
     
     _serialPortHandler.rawStreamHandler =  _mainWindowController.mainViewController.sideBarViewController;
     
-    [_simulationController start];
+   // [_simulationController start];
     
     // Listen to changes to the transport and update
     [_microphoneController.transport addObserver:self forKeyPath:@"volume" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:VolumeKVOContext];
     [_microphoneController.transport addObserver:self forKeyPath:@"isMuted" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:MuteKVOContext];
+    [_microphoneController.transport addObserver:self forKeyPath:@"isPerforming" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:PerformKVOContext];
     
     [self updateVolumeState];
     [self updateMuteState];
+    [self updatePerformState];
 }
 
 - (void)updateMuteState {
@@ -246,6 +250,14 @@ static void *MuteKVOContext = &MuteKVOContext;
 - (void)updateVolumeState {
     NSString *paramName = [NSString stringWithFormat:@"%d-volume", _file.dollarZero];
     [PdBase sendFloat:_microphoneController.transport.volume toReceiver:paramName];
+}
+
+- (void)updatePerformState {
+    if (_microphoneController.transport.isPerforming) {
+        [_simulationController startPerform];
+    } else {
+        [_simulationController stopPerform];
+    }
 }
 
 - (void)addBody {
@@ -266,6 +278,7 @@ static void *MuteKVOContext = &MuteKVOContext;
     [_serialPortHandler removeObserver:self forKeyPath:@"selectedPort"];
     [_microphoneController.transport removeObserver:self forKeyPath:@"volume"];
     [_microphoneController.transport removeObserver:self forKeyPath:@"isMuted"];
+    [_microphoneController.transport removeObserver:self forKeyPath:@"isPerforming"];
     [_microphoneController removeObserver:self
                                forKeyPath:@"status"];
 
@@ -302,7 +315,9 @@ static void *MuteKVOContext = &MuteKVOContext;
         [self updateMuteState];
     } else if (context == VolumeKVOContext) {
         [self updateVolumeState];
-    }else {
+    } else if (context == PerformKVOContext) {
+        [self updatePerformState];
+    } else {
         // Any unrecognized context must belong to super
         [super observeValueForKeyPath:keyPath
                              ofObject:object

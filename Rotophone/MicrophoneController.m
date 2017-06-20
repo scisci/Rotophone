@@ -15,6 +15,7 @@ static void* DeviceKVOContext = &DeviceKVOContext;
 @interface Transport : NSObject<MicrophoneTransport> {
     ModeType _mode;
     BOOL _muted;
+    BOOL _performing;
 }
 @property (unsafe_unretained) MicrophoneController* controller;
 @end
@@ -27,6 +28,7 @@ static void* DeviceKVOContext = &DeviceKVOContext;
         self.controller = controller;
         self.volume = 1.0;
         _muted = false;
+        _performing = true;
         _mode = kModeUnknown;
     }
     
@@ -40,7 +42,8 @@ static void* DeviceKVOContext = &DeviceKVOContext;
         [theKey isEqualToString:@"canStop"] ||
         [theKey isEqualToString:@"canStart"] ||
         [theKey isEqualToString:@"isMuted"] ||
-        [theKey isEqualToString:@"volume"]) {
+        [theKey isEqualToString:@"volume"] ||
+        [theKey isEqualToString:@"isPerforming"]) {
         automatic = NO;
     }
     else {
@@ -77,6 +80,10 @@ static void* DeviceKVOContext = &DeviceKVOContext;
     return _muted;
 }
 
+- (BOOL)isPerforming {
+    return _performing;
+}
+
 - (void)mute {
     if (_muted) {
         return;
@@ -96,6 +103,27 @@ static void* DeviceKVOContext = &DeviceKVOContext;
     _muted = NO;
     [self didChangeValueForKey:@"isMuted"];
 
+}
+
+- (void)startPerform {
+    if (_performing) {
+        return;
+    }
+    
+    [self willChangeValueForKey:@"isPerforming"];
+    _performing = YES;
+    [self didChangeValueForKey:@"isPerforming"];
+}
+
+- (void)stopPerform {
+    if (!_performing) {
+        return;
+    }
+    
+    [self willChangeValueForKey:@"isPerforming"];
+    _performing = NO;
+    [self didChangeValueForKey:@"isPerforming"];
+    
 }
 
 - (void)setVolume:(float)volume {
@@ -250,7 +278,6 @@ static void* DeviceKVOContext = &DeviceKVOContext;
         
         if (_entity.embeddedData != nil && self.device != nil) {
             _needsLoadData = false;
-            NSLog(@"Loading data");
             [self.device.deviceWriter loadData:_entity.embeddedData];
         }
     }

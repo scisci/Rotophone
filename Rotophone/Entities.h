@@ -81,6 +81,7 @@
 - (id _Nonnull )initWithName:(NSString *_Nonnull)name andContext:(NSManagedObjectContext *_Nonnull)context;
 
 @property (/*nullable,*/ nonatomic, retain) NSString *name;
+@property (/*nullable,*/ nonatomic, retain) NSNumber *weight;
 
 @property (/*nullable,*/ nonatomic, retain) NSSet *fields;
 @end

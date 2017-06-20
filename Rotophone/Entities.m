@@ -124,6 +124,7 @@
 
 @dynamic name;
 @dynamic fields;
+@dynamic weight;
 
 @end
 

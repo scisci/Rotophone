@@ -44,7 +44,7 @@
                     </connections>
                 </slider>
                 <textField verticalHuggingPriority="750" misplaced="YES" allowsCharacterPickerTouchBarItem="NO" id="Hg4-d8-76e">
-                    <rect key="frame" x="298" y="223" width="128" height="19"/>
+                    <rect key="frame" x="310" y="233" width="128" height="19"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="bhc-LT-SQI">
                         <font key="font" metaFont="smallSystem"/>
@@ -55,11 +55,20 @@
                         <action selector="handleNameChanged:" target="-2" id="SzT-2k-dDp"/>
                     </connections>
                 </textField>
+                <slider verticalHuggingPriority="750" misplaced="YES" id="ACK-PW-9g9">
+                    <rect key="frame" x="310" y="203" width="143" height="15"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <sliderCell key="cell" controlSize="small" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="Lk5-o6-VhF"/>
+                    <connections>
+                        <action selector="handleWeightChanged:" target="-2" id="vfR-4J-6mb"/>
+                    </connections>
+                </slider>
             </subviews>
             <connections>
                 <outlet property="heightSlider" destination="zVC-QZ-5Wf" id="hDv-Su-rWy"/>
                 <outlet property="nameField" destination="Hg4-d8-76e" id="XqT-Ih-X9z"/>
                 <outlet property="rotationSlider" destination="EAb-1u-EvW" id="BWC-O6-OIg"/>
+                <outlet property="weightField" destination="ACK-PW-9g9" id="Fca-mE-YgZ"/>
                 <outlet property="widthSlider" destination="jUZ-Zm-Iek" id="fCW-M1-u0m"/>
             </connections>
         </customView>

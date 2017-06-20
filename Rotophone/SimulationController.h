@@ -40,4 +40,6 @@
 - (void)removeShape:(id<Shape>) shape;
 - (void)stop;
 - (void)start;
+- (void)startPerform;
+- (void)stopPerform;
 @end

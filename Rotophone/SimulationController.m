@@ -18,6 +18,7 @@
 
 
 static void* SimBodyKVOContext = &SimBodyKVOContext;
+static void* SimBodyWeightKVOContext = &SimBodyWeightKVOContext;
 
 static void* SimMicKVOContext = &SimMicKVOContext;
 
@@ -169,6 +170,8 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
         self.fieldShape = [[FieldShapeAdapter alloc] initWithBody:body AndField:_field];
         
         [_fieldShape addObserver:self forKeyPath:@"shapeChanged" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:SimBodyKVOContext];
+        
+        [_body addObserver:self forKeyPath:@"weight" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:SimBodyWeightKVOContext];
 
         
         int numPoints = 4;
@@ -178,7 +181,6 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
         intersectionArea.strip = NULL;
         intersectionArea.num_strips = 0;
         dirty = YES;
-        //[self updatePoints];
     }
     return self;
 }
@@ -193,6 +195,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     }
     
     float p = _intersectionArea / a;
+    p *= _body.weight.floatValue;
     if (p < 0) {
         p = 0;
     } else if (p > 1) {
@@ -224,11 +227,13 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    if (context == SimBodyKVOContext) {
+    if (context == SimBodyKVOContext || context == SimBodyWeightKVOContext) {
         if (_delegate != nil) {
             // Update our points
+            if (context == SimBodyKVOContext) {
+                dirty = YES;
+            }
             
-            dirty = YES;
             [_delegate simulationBodyChanged:self];
         }
     } else {
@@ -238,13 +243,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
 
 - (void)dealloc {
     [_field removeObserver:self forKeyPath:@"shapeChanged"];
-    /*
-    [_field removeObserver:self forKeyPath:@"width"];
-    [_field removeObserver:self forKeyPath:@"height"];
-    [_field removeObserver:self forKeyPath:@"originX"];
-    [_field removeObserver:self forKeyPath:@"originY"];
-    [_field removeObserver:self forKeyPath:@"rotation"];
-     */
+    [_body removeObserver:self forKeyPath:@"weight"];
     gpc_free_polygon(&poly);
     gpc_free_tristrip(&intersectionArea);
 }
@@ -258,7 +257,8 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     NSTimer* _simulationTimer;
     gpc_polygon _intersection;
     MicrophonePerformer *_performer;
-    
+    BOOL _performing;
+    BOOL _started;
     BOOL _sceneDirty;
 }
 
@@ -270,15 +270,13 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     if (self = [super init]) {
         _patch = patch;
         _bodies = [[NSArray alloc] init];
-        
+        _started = NO;
+        _performing = NO;
         _intersection.contour = NULL;
         _intersection.hole = NULL;
         _intersection.num_contours = 0;
         _performer = [[MicrophonePerformer alloc] init];
         _sceneDirty = true;
-        
-
-        
     }
     return self;
 }
@@ -302,9 +300,11 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
 }
 
 - (void)start {
-    if (_simulationTimer != nil) {
+    if (_started) {
         return;
     }
+
+    _started = YES;
     
     // Update simulation 24fps, this matches with the interpolator in the pd file
     _simulationTimer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval: 0.05
@@ -314,7 +314,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
                                                  repeats: YES];
     [[NSRunLoop currentRunLoop] addTimer:_simulationTimer forMode:NSRunLoopCommonModes];
     
-    [_performer start];
+    [self updatePerformState];
 }
 
 - (void)drawDebugGraphics {
@@ -322,9 +322,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     if (_microphone == nil) {
         return;
     }
-    
-    //NSGraphicsContext *context = [NSGraphicsContext currentContext];
-    
+
     for (SimulationBody *body in _bodies) {
         for (int i = 0 ; i < body->intersectionArea.num_strips ; i++)
         {
@@ -342,16 +340,37 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
 }
 
 - (void)stop {
-    if (_simulationTimer == nil) {
+    if (!_started) {
         return;
     }
+    
+    _started = NO;
     
     [_simulationTimer invalidate];
     _simulationTimer = nil;
     
-    [_performer stop];
+    [self updatePerformState];
 }
 
+
+- (void)startPerform {
+    _performing = YES;
+    [self updatePerformState];
+   
+}
+
+- (void)stopPerform {
+    _performing = NO;
+    [self updatePerformState];
+}
+
+- (void)updatePerformState {
+    if (_performing && _started) {
+        [_performer start];
+    } else {
+        [_performer stop];
+    }
+}
 
 
 - (void)addMicrophone:(NSObject<MicrophoneProxy> *)proxy {

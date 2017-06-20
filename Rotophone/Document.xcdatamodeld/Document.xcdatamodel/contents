@@ -2,6 +2,7 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16F73" minimumToolsVersion="Automatic" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="BodyEntity" representedClassName="BodyEntity" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="weight" attributeType="Float" defaultValueString="1" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="fields" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="FieldEntity" inverseName="body" inverseEntity="FieldEntity" syncable="YES"/>
     </entity>
     <entity name="FieldEntity" representedClassName="FieldEntity" syncable="YES">
@@ -39,10 +40,10 @@
         <attribute name="path" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="BodyEntity" positionX="-45" positionY="90" width="128" height="75"/>
+        <element name="BodyEntity" positionX="-45" positionY="90" width="128" height="90"/>
         <element name="FieldEntity" positionX="-54" positionY="54" width="128" height="180"/>
         <element name="MicrophoneEntity" positionX="-63" positionY="-18" width="128" height="225"/>
-        <element name="SerialPortEntity" positionX="-54" positionY="9" width="128" height="75"/>
         <element name="SceneEntity" positionX="-45" positionY="90" width="128" height="90"/>
+        <element name="SerialPortEntity" positionX="-54" positionY="9" width="128" height="75"/>
     </elements>
 </model>

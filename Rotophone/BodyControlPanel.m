@@ -13,6 +13,7 @@ static void *RotationKVOContext = &RotationKVOContext;
 static void *WidthKVOContext = &WidthKVOContext;
 static void *HeightKVOContext = &HeightKVOContext;
 static void *NameKVOContext = &NameKVOContext;
+static void *WeightKVOContext = &WeightKVOContext;
 
 @interface BodyControlPanelView ()
 
@@ -82,6 +83,7 @@ static void *NameKVOContext = &NameKVOContext;
     if (_bodyEntity != nil) {
         // Remove observers
         [_bodyEntity removeObserver:self forKeyPath:@"name"];
+        [_bodyEntity removeObserver:self forKeyPath:@"weight"];
     }
     
     _bodyEntity = bodyEntity;
@@ -90,6 +92,7 @@ static void *NameKVOContext = &NameKVOContext;
         
         // Add observers
         [_bodyEntity addObserver:self forKeyPath:@"name" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:NameKVOContext];
+        [_bodyEntity addObserver:self forKeyPath:@"weight" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:WeightKVOContext];
         [self updateControls];
     }
 }
@@ -105,8 +108,9 @@ static void *NameKVOContext = &NameKVOContext;
     } else {
         view.nameField.stringValue = _bodyEntity.name;
     }
+    
+    view.weightField.floatValue = _bodyEntity.weight.floatValue;
 }
-
 
 - (IBAction)handleWidthChanged:(id)sender {
     _entity.width = [NSNumber numberWithFloat:[(NSSlider *)sender floatValue]];
@@ -116,18 +120,22 @@ static void *NameKVOContext = &NameKVOContext;
     _entity.height = [NSNumber numberWithFloat:[(NSSlider *)sender floatValue]];
 }
 
+- (IBAction)handleWeightChanged:(id)sender {
+    _bodyEntity.weight = [NSNumber numberWithFloat:[(NSSlider *)sender floatValue]];
+}
+
 - (IBAction)handleRotationChanged:(id)sender {
     BodyControlPanelView *bcpv = (BodyControlPanelView *)self.view;
     _entity.rotation = [NSNumber numberWithFloat:[ShapeHelper clockwiseToCounterClockwise:[bcpv.rotationSlider floatValue]]];
 }
+
 - (IBAction)handleNameChanged:(id)sender {
     BodyControlPanelView *bcpv = (BodyControlPanelView *)self.view;
     _bodyEntity.name = bcpv.nameField.stringValue;
 }
 
-
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    if (context == RotationKVOContext || context == WidthKVOContext || context==HeightKVOContext || context ==NameKVOContext) {
+    if (context == RotationKVOContext || context == WidthKVOContext || context==HeightKVOContext || context == NameKVOContext || context == WeightKVOContext) {
         [self updateControls];
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];

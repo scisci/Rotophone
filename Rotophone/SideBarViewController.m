@@ -12,6 +12,7 @@
 static void *TransportStoppedKVOContext = &TransportStoppedKVOContext;
 static void *TransportMutedKVOContext = &TransportMutedKVOContext;
 static void *TransportVolumeKVOContext = &TransportVolumeKVOContext;
+static void *TransportPerformingKVOContext = &TransportPerformingKVOContext;
 
 @implementation TransportView
 
@@ -25,6 +26,7 @@ static void *TransportVolumeKVOContext = &TransportVolumeKVOContext;
         [_transport removeObserver:self forKeyPath:@"canStart"];
         [_transport removeObserver:self forKeyPath:@"isMuted"];
         [_transport removeObserver:self forKeyPath:@"volume"];
+        [_transport removeObserver:self forKeyPath:@"isPerforming"];
     }
     
     _transport = transport;
@@ -35,8 +37,11 @@ static void *TransportVolumeKVOContext = &TransportVolumeKVOContext;
         [_transport addObserver:self forKeyPath:@"canStop" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:TransportStoppedKVOContext];
         [_transport addObserver:self forKeyPath:@"canStart" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:TransportStoppedKVOContext];
         [_transport addObserver:self forKeyPath:@"isMuted" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:TransportMutedKVOContext];
+         [_transport addObserver:self forKeyPath:@"isPerforming" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:TransportPerformingKVOContext];
         [_transport addObserver:self forKeyPath:@"volume" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:TransportVolumeKVOContext];
         [self updateStoppedState];
+        [self updatePerformingState];
+        [self updateVolumeState];
     }
 }
 
@@ -55,6 +60,16 @@ static void *TransportVolumeKVOContext = &TransportVolumeKVOContext;
     }
     
     _volumeSlider.floatValue = _transport.volume;
+}
+
+- (void)updatePerformingState {
+    if (_transport == nil) {
+        return;
+    }
+    
+    _performButton.title = _transport.isPerforming ? @"Unperform" : @"Perform";
+
+    [self setNeedsDisplay:YES];
 }
 
 - (void)updateStoppedState {
@@ -116,6 +131,18 @@ static void *TransportVolumeKVOContext = &TransportVolumeKVOContext;
     [_transport setVolume:[(NSSlider *)sender floatValue]];
 }
 
+- (IBAction)handlePerformButton:(id)sender {
+    if (_transport == nil) {
+        return;
+    }
+    
+    if ([_transport isPerforming]) {
+        [_transport stopPerform];
+    } else {
+        [_transport startPerform];
+    }
+}
+
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if (context == TransportStoppedKVOContext) {
         [self updateStoppedState];
@@ -123,6 +150,8 @@ static void *TransportVolumeKVOContext = &TransportVolumeKVOContext;
         [self updateMutedState];
     } else if (context == TransportVolumeKVOContext) {
         [self updateVolumeState];
+    } else if (context == TransportPerformingKVOContext) {
+        [self updatePerformingState];
     }else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
