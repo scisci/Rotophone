@@ -23,6 +23,20 @@ static void* SimBodyPanKVOContext = &SimBodyPanKVOContext;
 
 static void* SimMicKVOContext = &SimMicKVOContext;
 
+static float triStripArea(gpc_tristrip* ts) {
+    float area = 0.0;
+    for (int i = 0 ; i < ts->num_strips ; i++)
+    {
+        for (int j = 0 ; j < ts->strip[i].num_vertices-2 ; j++) {
+            NSPoint a = NSMakePoint(ts->strip[i].vertex[j].x,ts->strip[i].vertex[j].y);
+            NSPoint b = NSMakePoint(ts->strip[i].vertex[j+1].x,ts->strip[i].vertex[j+1].y);
+            NSPoint c = NSMakePoint(ts->strip[i].vertex[j+2].x,ts->strip[i].vertex[j+2].y);
+            area += fabs(a.x*(b.y-c.y) + b.x*(c.y-a.y) + c.x*(a.y-b.y))/2.0;
+        }
+    }
+    return area;
+}
+
 static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints) {
     // allocate memory for the gpcPolygon.
     poly->contour = NULL;
@@ -61,7 +75,8 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
 
 @interface SimulationMicrophone : NSObject {
     @public
-    gpc_polygon poly;
+    gpc_polygon polyLeft;
+    gpc_polygon polyRight;
     BOOL dirty;
 }
 
@@ -80,7 +95,8 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
         int numPoints = 3;
         NSPoint points[] = {NSMakePoint(0,0), NSMakePoint(0, 10), NSMakePoint(10,10)};
         
-        initPolyWithPoints(&poly, &points[0], numPoints);
+        initPolyWithPoints(&polyLeft, &points[0], numPoints);
+        initPolyWithPoints(&polyRight, &points[0], numPoints);
         dirty = YES;
         //[self updatePoints];
     }
@@ -107,12 +123,20 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     float xOffset2 = cosf(-micAngle) * micDist;
     float yOffset2 = sinf(-micAngle) * micDist;
     // Transform each point
-    int numPoints = 3;
-    NSPoint points[] = {NSMakePoint(0,0), NSMakePoint(xOffset1, yOffset1), NSMakePoint(xOffset2,yOffset2)};
-    for (int i = 0; i < numPoints;i++) {
-        NSPoint tp = [transform transformPoint:points[i]];
-        poly.contour[0].vertex[i].x = tp.x;
-        poly.contour[0].vertex[i].y = tp.y;
+    int numPointsLeft = 3;
+    NSPoint pointsLeft[] = {NSMakePoint(0,0), NSMakePoint(xOffset2, yOffset2), NSMakePoint(micDist, 0)};//NSMakePoint(xOffset2,yOffset2)};
+    for (int i = 0; i < numPointsLeft; i++) {
+        NSPoint tp = [transform transformPoint:pointsLeft[i]];
+        polyLeft.contour[0].vertex[i].x = tp.x;
+        polyLeft.contour[0].vertex[i].y = tp.y;
+    }
+    
+    int numPointsRight = 3;
+    NSPoint pointsRight[] = {NSMakePoint(0,0), NSMakePoint(xOffset1, yOffset1), NSMakePoint(micDist, 0)};
+    for (int i = 0; i < numPointsRight; i++) {
+        NSPoint tp = [transform transformPoint:pointsRight[i]];
+        polyRight.contour[0].vertex[i].x = tp.x;
+        polyRight.contour[0].vertex[i].y = tp.y;
     }
     
     dirty = false;
@@ -133,7 +157,8 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
 
 - (void)dealloc {
     [_microphoneShape removeObserver:self forKeyPath:@"shapeChanged"];
-    gpc_free_polygon(&poly);
+    gpc_free_polygon(&polyLeft);
+    gpc_free_polygon(&polyRight);
 }
 @end
 
@@ -143,7 +168,8 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
 @interface SimulationBody : NSObject {
     @public
     gpc_polygon poly;
-    gpc_tristrip intersectionArea;
+    gpc_tristrip intersectionAreaLeft;
+    gpc_tristrip intersectionAreaRight;
     BOOL dirty;
 }
 
@@ -153,14 +179,17 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
 @property (retain) BodyEntity* body;
 @property (retain) FieldShapeAdapter* fieldShape;
 @property (readonly) float area;
-@property (readwrite) float intersectionArea;
+@property (readwrite) float intersectionAreaLeft;
+@property (readwrite) float intersectionAreaRight;
 @property (readonly) float parameterizedIntersection;
 
 @end
 
 @implementation SimulationBody
 
-@synthesize intersectionArea = _intersectionArea;
+@synthesize intersectionAreaLeft = _intersectionAreaLeft;
+@synthesize intersectionAreaRight = _intersectionAreaRight;
+
 
 - (id) initWithBody:(BodyEntity *)body {
     if (self = [super init]) {
@@ -180,8 +209,11 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
         NSPoint points[] = {NSMakePoint(0,0), NSMakePoint(0, 10), NSMakePoint(10,10), NSMakePoint(10, 0)};
         
             initPolyWithPoints(&poly, &points[0], numPoints);
-        intersectionArea.strip = NULL;
-        intersectionArea.num_strips = 0;
+        intersectionAreaLeft.strip = NULL;
+        intersectionAreaLeft.num_strips = 0;
+        intersectionAreaRight.strip = NULL;
+        intersectionAreaRight.num_strips = 0;
+
         dirty = YES;
     }
     return self;
@@ -196,7 +228,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
         return 0;
     }
     
-    float p = _intersectionArea / a;
+    float p = (_intersectionAreaLeft + _intersectionAreaRight) / a;
     p *= _body.weight.floatValue;
     if (p < 0) {
         p = 0;
@@ -204,6 +236,16 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
         p = 1;
     }
     return p;
+}
+
+- (float)parameterizedPan {
+    if ((_intersectionAreaLeft == 0 && _intersectionAreaRight == 0) || self.area == 0) {
+        return 0.5;
+    }
+    
+    float panParam = 1.0 - (_intersectionAreaLeft / (_intersectionAreaLeft + _intersectionAreaRight));
+    
+    return panParam;
 }
 
 - (void)updatePoints {
@@ -252,7 +294,8 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     [_body removeObserver:self forKeyPath:@"weight"];
     [_field removeObserver:self forKeyPath:@"pan"];
     gpc_free_polygon(&poly);
-    gpc_free_tristrip(&intersectionArea);
+    gpc_free_tristrip(&intersectionAreaLeft);
+    gpc_free_tristrip(&intersectionAreaRight);
 }
 @end
 
@@ -283,6 +326,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
         _intersection.contour = NULL;
         _intersection.hole = NULL;
         _intersection.num_contours = 0;
+
         _performer = [[MicrophonePerformer alloc] init];
         _sceneDirty = true;
         _mixerDirty = true;
@@ -333,16 +377,29 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     }
 
     for (SimulationBody *body in _bodies) {
-        for (int i = 0 ; i < body->intersectionArea.num_strips ; i++)
+        for (int i = 0 ; i < body->intersectionAreaLeft.num_strips ; i++)
         {
             NSBezierPath *path = [NSBezierPath bezierPath];
-            for (int j = 0 ; j < body->intersectionArea.strip[i].num_vertices-2 ; j++) {
-                [path moveToPoint:NSMakePoint(body->intersectionArea.strip[i].vertex[j].x,body->intersectionArea.strip[i].vertex[j].y)];
-                [path lineToPoint:NSMakePoint(body->intersectionArea.strip[i].vertex[j+1].x,body->intersectionArea.strip[i].vertex[j+1].y)];
-                [path lineToPoint:NSMakePoint(body->intersectionArea.strip[i].vertex[j+2].x,body->intersectionArea.strip[i].vertex[j+2].y)];
+            for (int j = 0 ; j < body->intersectionAreaLeft.strip[i].num_vertices-2 ; j++) {
+                [path moveToPoint:NSMakePoint(body->intersectionAreaLeft.strip[i].vertex[j].x,body->intersectionAreaLeft.strip[i].vertex[j].y)];
+                [path lineToPoint:NSMakePoint(body->intersectionAreaLeft.strip[i].vertex[j+1].x,body->intersectionAreaLeft.strip[i].vertex[j+1].y)];
+                [path lineToPoint:NSMakePoint(body->intersectionAreaLeft.strip[i].vertex[j+2].x,body->intersectionAreaLeft.strip[i].vertex[j+2].y)];
             
             }
             [[NSColor brownColor] set];
+            [path fill];
+        }
+        
+        for (int i = 0 ; i < body->intersectionAreaRight.num_strips ; i++)
+        {
+            NSBezierPath *path = [NSBezierPath bezierPath];
+            for (int j = 0 ; j < body->intersectionAreaRight.strip[i].num_vertices-2 ; j++) {
+                [path moveToPoint:NSMakePoint(body->intersectionAreaRight.strip[i].vertex[j].x,body->intersectionAreaRight.strip[i].vertex[j].y)];
+                [path lineToPoint:NSMakePoint(body->intersectionAreaRight.strip[i].vertex[j+1].x,body->intersectionAreaRight.strip[i].vertex[j+1].y)];
+                [path lineToPoint:NSMakePoint(body->intersectionAreaRight.strip[i].vertex[j+2].x,body->intersectionAreaRight.strip[i].vertex[j+2].y)];
+                
+            }
+            [[NSColor purpleColor] set];
             [path fill];
         }
     }
@@ -432,31 +489,36 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
             }
             
             initPolyWithPoints(&_intersection, NULL, 0);
-            gpc_polygon_clip(GPC_INT, &body->poly, &_microphone->poly, &_intersection);
             
-            gpc_free_tristrip(&body->intersectionArea);
-
+            gpc_polygon_clip(GPC_INT, &body->poly, &_microphone->polyLeft, &_intersection);
+            gpc_free_tristrip(&body->intersectionAreaLeft);
             if (_intersection.contour != NULL) {
-                gpc_polygon_to_tristrip(&_intersection, &body->intersectionArea);
-                
-                // Calculate the area
-                float area = 0.0;
-                for (int i = 0 ; i < body->intersectionArea.num_strips ; i++)
-                {
-                    for (int j = 0 ; j < body->intersectionArea.strip[i].num_vertices-2 ; j++) {
-                        NSPoint a = NSMakePoint(body->intersectionArea.strip[i].vertex[j].x,body->intersectionArea.strip[i].vertex[j].y);
-                        NSPoint b = NSMakePoint(body->intersectionArea.strip[i].vertex[j+1].x,body->intersectionArea.strip[i].vertex[j+1].y);
-                        NSPoint c = NSMakePoint(body->intersectionArea.strip[i].vertex[j+2].x,body->intersectionArea.strip[i].vertex[j+2].y);
-                        area += fabs(a.x*(b.y-c.y) + b.x*(c.y-a.y) + c.x*(a.y-b.y))/2.0;
-                    }
-                }
-                
-                body.intersectionArea = area;
+                gpc_polygon_to_tristrip(&_intersection, &body->intersectionAreaLeft);
+                body.intersectionAreaLeft = triStripArea(&body->intersectionAreaLeft);
             } else {
-                body.intersectionArea = 0.0;
+                body.intersectionAreaLeft = 0.0;
             }
             
             gpc_free_polygon(&_intersection);
+            
+            
+            
+            initPolyWithPoints(&_intersection, NULL, 0);
+            
+            gpc_polygon_clip(GPC_INT, &body->poly, &_microphone->polyRight, &_intersection);
+            gpc_free_tristrip(&body->intersectionAreaRight);
+            if (_intersection.contour != NULL) {
+                gpc_polygon_to_tristrip(&_intersection, &body->intersectionAreaRight);
+                body.intersectionAreaRight = triStripArea(&body->intersectionAreaRight);
+                
+            } else {
+                body.intersectionAreaRight = 0.0;
+            }
+            
+            gpc_free_polygon(&_intersection);
+
+            
+            
         }
         
         
@@ -477,6 +539,8 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     for (SimulationBody *body in _bodies) {
         NSString *paramName = [NSString stringWithFormat:@"%d-%@", _patch.dollarZero, body.body.name];
         [PdBase sendFloat:body.parameterizedIntersection toReceiver:paramName];
+        NSString *panName = [NSString stringWithFormat:@"%d-%@_pan", _patch.dollarZero, body.body.name];
+        [PdBase sendFloat:body.parameterizedPan toReceiver:panName];
     }
 
 }
