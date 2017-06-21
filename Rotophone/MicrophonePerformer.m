@@ -8,8 +8,14 @@
 
 #import "MicrophonePerformer.h"
 
+@implementation PerformanceTarget
+
+@end
+
 @interface MicrophonePerformer () {
     NSTimer* _nextTimer;
+    NSArray* _targets;
+    int _nextTarget;
 }
 
 @end
@@ -17,6 +23,24 @@
 
 @implementation MicrophonePerformer
 @synthesize microphone = _microphone;
+
+- (id)init {
+    if (self = [super init]) {
+        _targets = [[NSArray alloc] init];
+        _nextTarget = 0;
+    }
+    return self;
+}
+
+- (void)addTarget:(PerformanceTarget *)target {
+    _targets = [_targets arrayByAddingObject:target];
+}
+
+- (void)removeTarget:(PerformanceTarget *)target {
+    NSMutableArray *targets = [NSMutableArray arrayWithArray:_targets];
+    [targets removeObject:target];
+    _targets = [NSArray arrayWithArray:targets];
+}
 
 - (void)setMicrophone:(NSObject<MicrophoneProxy> *)microphone {
     if (_microphone != nil) {
@@ -42,6 +66,29 @@
 }
 
 - (float)chooseNextValue {
+    if (_targets.count == 0) {
+        return 0;
+    }
+    // Move to the center of the first target
+    if (_nextTarget >= _targets.count) {
+        _nextTarget = 0;
+    }
+    
+    PerformanceTarget* target = [_targets objectAtIndex:_nextTarget++];
+
+    float angle = (target.angleMin + target.angleMax) / 2;
+    
+    while (angle > 2 * M_PI) {
+        angle -= 2 * M_PI;
+    }
+    
+    while (angle < 0) {
+        angle += 2 * M_PI;
+    }
+    
+    return angle;
+    
+    
     float nextValue = ((float)rand() / RAND_MAX) * 2 * M_PI;
     return nextValue;
 }
@@ -51,6 +98,7 @@
         [_nextTimer invalidate];
         _nextTimer = nil;
     }
+    
     
     
     [_microphone setRotoTarget:[self chooseNextValue]];

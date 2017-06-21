@@ -171,6 +171,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     gpc_tristrip intersectionAreaLeft;
     gpc_tristrip intersectionAreaRight;
     BOOL dirty;
+    PerformanceTarget* target;
 }
 
 
@@ -195,6 +196,8 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     if (self = [super init]) {
         self.body = body;
         self.field = [[body.fields allObjects] objectAtIndex:0];
+        
+        target = [[PerformanceTarget alloc] init];
         
         // TODO: listen to changes to the body
         self.fieldShape = [[FieldShapeAdapter alloc] initWithBody:body AndField:_field];
@@ -243,7 +246,8 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
         return 0.5;
     }
     
-    float panParam = 1.0 - (_intersectionAreaLeft / (_intersectionAreaLeft + _intersectionAreaRight));
+    // Use this if you want to base pan of the idea of a stereo mic
+    //float panParam = 1.0 - (_intersectionAreaLeft / (_intersectionAreaLeft + _intersectionAreaRight));
     
     
     return _field.pan.floatValue;
@@ -270,6 +274,47 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     }
     
     dirty = false;
+}
+
+- (void)updateTargets:(SimulationMicrophone *)microphone {
+    // We compare
+    gpc_vertex micOrigin = microphone->polyLeft.contour[0].vertex[0];
+    
+    int numPoints = 4;
+    target.angleMin = CGFLOAT_MAX;
+    target.angleMax = -CGFLOAT_MAX;
+    float angles[4];
+    for (int i = 0; i < numPoints;i++) {
+        gpc_vertex tp = poly.contour[0].vertex[i];
+        float dx = tp.x - micOrigin.x;
+        float dy = tp.y - micOrigin.y;
+        
+        angles[i] = 2 * M_PI - atan2f(dy, dx) + microphone.microphoneShape.rotation;
+        /*
+        if (angles[i] < 0) {
+            angles[i] += 2 * M_PI;
+        }
+         */
+        
+        // Angle is in range -PI to PI
+        
+        for (int j = 0; j < i; j++) {
+            float dif = angles[i] - angles[j];
+            if (dif >= M_PI) {
+                angles[i] -= 2 * M_PI;
+            } else if (dif <= -M_PI) {
+                angles[i] += 2 * M_PI;
+            }
+        }
+        
+        if (angles[i] < target.angleMin) {
+            target.angleMin = angles[i];
+        }
+        
+        if (angles[i] > target.angleMax) {
+            target.angleMax = angles[i];
+        }
+    }
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
@@ -488,6 +533,9 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
         for (SimulationBody *body in _bodies) {
             if (body->dirty) {
                 [body updatePoints];
+                
+                // Update the targets
+                [body updateTargets:_microphone];
             }
             
             initPolyWithPoints(&_intersection, NULL, 0);
@@ -518,6 +566,9 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
             }
             
             gpc_free_polygon(&_intersection);
+            
+            
+            
 
             
             
@@ -563,6 +614,8 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     [_scene addShape:body.fieldShape];
     
     _sceneDirty = YES;
+    
+    [_performer addTarget:body->target];
 }
 
 - (void)removeShape:(id<Shape>)shape {
@@ -574,6 +627,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
             NSMutableArray *newBodies = [NSMutableArray arrayWithArray:_bodies];
             [newBodies removeObject:body];
             _bodies = [NSArray arrayWithArray:newBodies];
+            [_performer removeTarget:body->target];
             return;
         }
     }

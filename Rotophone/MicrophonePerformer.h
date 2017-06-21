@@ -9,9 +9,18 @@
 #import <Foundation/Foundation.h>
 #import "MicrophoneController.h"
 
+@interface PerformanceTarget : NSObject {
+}
+
+@property (readwrite) float angleMin;
+@property (readwrite) float angleMax;
+@end
+
 @interface MicrophonePerformer : NSObject
 @property (retain) NSObject<MicrophoneProxy> *microphone;
 
+- (void)addTarget:(PerformanceTarget *)target;
+- (void)removeTarget:(PerformanceTarget *)target;
 - (void)start;
 - (void)stop;
 @end
