@@ -57,8 +57,43 @@ static void *SelectedPortKVOContext = &SelectedPortKVOContext;
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
+    /*
+    NSString *bundlePath = NSBundle.mainBundle.bundlePath;
     // Insert code here to initialize your application
-
+    NSString *fileName = @"~/Library/LaunchAgents/Rotophone.plist".stringByExpandingTildeInPath;
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:fileName]) {
+        //create content - four lines of text
+        NSString *content = [NSString stringWithFormat:@"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\
+        <!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\
+        <plist version=\"1.0\">\
+        <dict>\
+        <key>Label</key>\
+        <string>com.considerthebelvedere</string>\
+        <key>ProgramArguments</key>\
+        <array>\
+        <string>/bin/sh</string>\
+        <string>%@</string>\
+        </array>\
+        <key>RunAtLoad</key>\
+        <true/>\
+        </dict>\
+        </plist>", bundlePath];
+        
+        
+        
+        //save content to the documents directory
+        [content writeToFile:fileName
+                  atomically:YES
+                    encoding:NSStringEncodingConversionAllowLossy
+                       error:nil];
+    }
+    */
+    // Try to install the launch script
+    
+    /*
+     
+     */
     _serialMenuItems = [[NSMutableArray alloc] initWithCapacity:0];
     
     

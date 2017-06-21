@@ -245,7 +245,9 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     
     float panParam = 1.0 - (_intersectionAreaLeft / (_intersectionAreaLeft + _intersectionAreaRight));
     
-    return panParam;
+    
+    return _field.pan.floatValue;
+    //return panParam;
 }
 
 - (void)updatePoints {

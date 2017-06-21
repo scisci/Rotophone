@@ -16,6 +16,8 @@ static void* DeviceKVOContext = &DeviceKVOContext;
     ModeType _mode;
     BOOL _muted;
     BOOL _performing;
+    BOOL _useMock;
+    BOOL _enableRawSerial;
 }
 @property (unsafe_unretained) MicrophoneController* controller;
 @end
@@ -30,6 +32,8 @@ static void* DeviceKVOContext = &DeviceKVOContext;
         _muted = false;
         _performing = true;
         _mode = kModeUnknown;
+        _useMock = false;
+        _enableRawSerial = false;
     }
     
     return self;
@@ -43,7 +47,9 @@ static void* DeviceKVOContext = &DeviceKVOContext;
         [theKey isEqualToString:@"canStart"] ||
         [theKey isEqualToString:@"isMuted"] ||
         [theKey isEqualToString:@"volume"] ||
-        [theKey isEqualToString:@"isPerforming"]) {
+        [theKey isEqualToString:@"isPerforming"] ||
+        [theKey isEqualToString:@"isUsingMock"] ||
+        [theKey isEqualToString:@"isRawSerialEnabled"]) {
         automatic = NO;
     }
     else {
@@ -82,6 +88,14 @@ static void* DeviceKVOContext = &DeviceKVOContext;
 
 - (BOOL)isPerforming {
     return _performing;
+}
+
+- (BOOL)isUsingMock {
+    return _useMock;
+}
+
+- (BOOL)isRawSerialEnabled {
+    return _enableRawSerial;
 }
 
 - (void)mute {
@@ -159,6 +173,42 @@ static void* DeviceKVOContext = &DeviceKVOContext;
     [_controller.device.deviceWriter setMode:kModeStartup];
 }
 
+- (void)useMock {
+    if (_useMock) {
+        return;
+    }
+    
+    [self willChangeValueForKey:@"isUsingMock"];
+    _useMock = YES;
+    [self didChangeValueForKey:@"isUsingMock"];
+}
+- (void)useSerial {
+    if (!_useMock) {
+        return;
+    }
+    
+    [self willChangeValueForKey:@"isUsingMock"];
+    _useMock = NO;
+    [self didChangeValueForKey:@"isUsingMock"];
+}
+- (void)enableRawSerial {
+    if (_enableRawSerial) {
+        return;
+    }
+    
+    [self willChangeValueForKey:@"isRawSerialEnabled"];
+    _enableRawSerial = YES;
+    [self didChangeValueForKey:@"isRawSerialEnabled"];
+}
+- (void)disableRawSerial {
+    if (!_enableRawSerial) {
+        return;
+    }
+    
+    [self willChangeValueForKey:@"isRawSerialEnabled"];
+    _enableRawSerial = NO;
+    [self didChangeValueForKey:@"isRawSerialEnabled"];
+}
 @end
 
 @interface MicrophoneController () {

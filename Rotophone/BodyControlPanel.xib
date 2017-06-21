@@ -56,7 +56,7 @@
                     </connections>
                 </textField>
                 <slider verticalHuggingPriority="750" misplaced="YES" id="ACK-PW-9g9">
-                    <rect key="frame" x="310" y="203" width="143" height="15"/>
+                    <rect key="frame" x="310" y="215" width="143" height="15"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="Lk5-o6-VhF"/>
                     <connections>
@@ -64,7 +64,7 @@
                     </connections>
                 </slider>
                 <slider verticalHuggingPriority="750" misplaced="YES" id="Qtv-Uy-EBU">
-                    <rect key="frame" x="310" y="182" width="143" height="18"/>
+                    <rect key="frame" x="310" y="193" width="143" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="0.5" tickMarkPosition="above" numberOfTickMarks="9" sliderType="linear" id="MBX-ZV-J83"/>
                     <connections>

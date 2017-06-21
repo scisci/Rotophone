@@ -13,6 +13,8 @@ static void *TransportStoppedKVOContext = &TransportStoppedKVOContext;
 static void *TransportMutedKVOContext = &TransportMutedKVOContext;
 static void *TransportVolumeKVOContext = &TransportVolumeKVOContext;
 static void *TransportPerformingKVOContext = &TransportPerformingKVOContext;
+static void *TransportRawSerialKVOContext = &TransportRawSerialKVOContext;
+static void *TransportMockKVOContext = &TransportMockKVOContext;
 
 @implementation TransportView
 
@@ -27,6 +29,8 @@ static void *TransportPerformingKVOContext = &TransportPerformingKVOContext;
         [_transport removeObserver:self forKeyPath:@"isMuted"];
         [_transport removeObserver:self forKeyPath:@"volume"];
         [_transport removeObserver:self forKeyPath:@"isPerforming"];
+        [_transport removeObserver:self forKeyPath:@"isUsingMock"];
+        [_transport removeObserver:self forKeyPath:@"isRawSerialEnabled"];
     }
     
     _transport = transport;
@@ -39,9 +43,13 @@ static void *TransportPerformingKVOContext = &TransportPerformingKVOContext;
         [_transport addObserver:self forKeyPath:@"isMuted" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:TransportMutedKVOContext];
          [_transport addObserver:self forKeyPath:@"isPerforming" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:TransportPerformingKVOContext];
         [_transport addObserver:self forKeyPath:@"volume" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:TransportVolumeKVOContext];
+        [_transport addObserver:self forKeyPath:@"isUsingMock" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:TransportMockKVOContext];
+        [_transport addObserver:self forKeyPath:@"isRawSerialEnabled" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:TransportRawSerialKVOContext];
         [self updateStoppedState];
         [self updatePerformingState];
         [self updateVolumeState];
+        [self updateMockState];
+        [self updateRawSerialEnabledState];
     }
 }
 
@@ -85,6 +93,30 @@ static void *TransportPerformingKVOContext = &TransportPerformingKVOContext;
         [_startStopButton setEnabled:YES];
     }
     [self setNeedsDisplay:YES];
+}
+
+- (void)updateMockState {
+    if (_transport == nil) {
+        return;
+    }
+    
+    if (_transport.isUsingMock) {
+        _useMockButton.state = NSOnState;
+    } else {
+        _useMockButton.state = NSOffState;
+    }
+}
+
+- (void)updateRawSerialEnabledState {
+    if (_transport == nil) {
+        return;
+    }
+    
+    if (_transport.isRawSerialEnabled) {
+        _enableRawSerialButton.state = NSOnState;
+    } else {
+        _enableRawSerialButton.state = NSOffState;
+    }
 }
 
 - (NSObject<MicrophoneTransport> *)transport {
@@ -143,6 +175,33 @@ static void *TransportPerformingKVOContext = &TransportPerformingKVOContext;
     }
 }
 
+
+- (IBAction)handleUseMockButton:(id)sender {
+    if (_transport == nil) {
+        return;
+    }
+    
+    NSButton* button = (NSButton *)sender;
+    if (button.state == NSOnState) {
+        [_transport useMock];
+    } else {
+        [_transport useSerial];
+    }
+}
+
+- (IBAction)handleEnableRawSerialButton:(id)sender {
+    if (_transport == nil) {
+        return;
+    }
+    
+    NSButton* button = (NSButton *)sender;
+    if (button.state == NSOnState) {
+        [_transport enableRawSerial];
+    } else {
+        [_transport disableRawSerial];
+    }
+}
+
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if (context == TransportStoppedKVOContext) {
         [self updateStoppedState];
@@ -152,6 +211,10 @@ static void *TransportPerformingKVOContext = &TransportPerformingKVOContext;
         [self updateVolumeState];
     } else if (context == TransportPerformingKVOContext) {
         [self updatePerformingState];
+    } else if (context == TransportMockKVOContext) {
+        [self updateMockState];
+    } else if (context == TransportRawSerialKVOContext) {
+        [self updateRawSerialEnabledState];
     }else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     }
@@ -254,7 +317,7 @@ static void *TransportPerformingKVOContext = &TransportPerformingKVOContext;
 
 - (void)resizeSubviewsWithOldSize:(NSSize)oldSize {
     // [super resizeSubviewsWithOldSize:oldSize];
-    float transportHeight = 100;
+    float transportHeight = 150;
     float statusHeight = 50;
     
     _transportView.frame = CGRectMake(0, _frame.size.height - transportHeight, _frame.size.width, transportHeight);

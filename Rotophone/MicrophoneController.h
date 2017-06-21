@@ -21,6 +21,8 @@
 @property (readonly) BOOL isPerforming;
 @property (readonly) BOOL canStop;
 @property (readonly) BOOL canStart;
+@property (readonly) BOOL isUsingMock;
+@property (readonly) BOOL isRawSerialEnabled;
 @property (readwrite) float volume;
 - (void)mute;
 - (void)unmute;
@@ -29,6 +31,10 @@
 - (void)stop;
 - (void)start;
 - (void)calibrate;
+- (void)useMock;
+- (void)useSerial;
+- (void)enableRawSerial;
+- (void)disableRawSerial;
 @end
 
 

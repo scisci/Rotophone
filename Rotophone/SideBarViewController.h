@@ -20,6 +20,8 @@
     NSButton *muteButton;
 @property (unsafe_unretained) IBOutlet
 NSButton *performButton;
+@property (unsafe_unretained) IBOutlet NSButton *useMockButton;
+@property (unsafe_unretained) IBOutlet NSButton *enableRawSerialButton;
 @end
 
 @interface StatusView : NSView

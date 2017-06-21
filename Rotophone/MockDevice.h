@@ -10,6 +10,11 @@
 
 #import "Event.h"
 
+@interface DeviceProviderSelector : NSObject<DeviceProvider>
+
+@property (retain) NSObject<DeviceProvider>* deviceProvider;
+@end
+
 @interface MockDevice : NSObject<Device, RotoEventSource, RotoCommandWriter, DeviceProvider>
 
 @end

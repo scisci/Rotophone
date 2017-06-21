@@ -8,6 +8,44 @@
 
 #import "MockDevice.h"
 
+static void *DeviceKVOContext = &DeviceKVOContext;
+
+@implementation DeviceProviderSelector
+@synthesize deviceProvider = _deviceProvider;
+@synthesize device;
+
+
+- (NSObject<DeviceProvider> *)deviceProvider {
+    return _deviceProvider;
+}
+
+- (void)setDeviceProvider:(NSObject<DeviceProvider> *)deviceProvider {
+    if (_deviceProvider != nil) {
+        [_deviceProvider removeObserver:self forKeyPath:@"device"];
+    }
+    
+    _deviceProvider = deviceProvider;
+    
+    if (_deviceProvider != nil) {
+        [_deviceProvider addObserver:self forKeyPath:@"device" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:DeviceKVOContext];
+        self.device = _deviceProvider.device;
+    } else {
+        self.device = nil;
+    }
+
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if (context == DeviceKVOContext) {
+        self.device = _deviceProvider.device;
+    } else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
+}
+- (void)dealloc {
+    self.deviceProvider = nil;
+}
+@end
 
 @interface MockDevice () {
     NSTimer* _keepAliveTimer;

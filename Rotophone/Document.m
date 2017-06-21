@@ -25,9 +25,13 @@ static void *MicrophoneConnectedKVOContext = &MicrophoneConnectedKVOContext;
 static void *VolumeKVOContext = &VolumeKVOContext;
 static void *MuteKVOContext = &MuteKVOContext;
 static void *PerformKVOContext = &PerformKVOContext;
+static void *MockKVOContext = &MockKVOContext;
+static void *RawSerialKVOContext = &RawSerialKVOContext;
 
 
-@interface Document ()
+@interface Document () {
+    MockDevice* _mockDevice;
+}
 @property (retain) PdFile *file;
 @property (retain) MicrophoneEntity *microphone;
 @property (retain) SerialPortEntity *serialPortSettings;
@@ -35,6 +39,7 @@ static void *PerformKVOContext = &PerformKVOContext;
 @property (retain) MicrophoneController *microphoneController;
 @property (retain) MainWindowController *mainWindowController;
 @property (retain) SimulationController *simulationController;
+@property (retain) DeviceProviderSelector *deviceSelector;
 @end
 
 @implementation Document
@@ -139,7 +144,7 @@ static void *PerformKVOContext = &PerformKVOContext;
         NSString* filePath = bundle.resourcePath;
         filePath = [filePath stringByAppendingPathComponent:@"Resources"];
         self.file = [PdFile openFileNamed:@"testpatch-sine.pd" path:filePath];
-        
+        self.deviceSelector = [[DeviceProviderSelector alloc] init];
         
             }
     return self;
@@ -188,15 +193,15 @@ static void *PerformKVOContext = &PerformKVOContext;
     
     
     _mainWindowController.mainViewController.toolViewController.delegate = self;
-    
+    /*
 #ifdef USE_MOCK_DEVICE
-    MockDevice* device = [[MockDevice alloc] init];
-    [device setPosition: 0.3];
-#else
-    SerialPortHandler* device = _serialPortHandler;
-#endif
     
-    self.microphoneController = [[MicrophoneController alloc] initWithEntity:_microphone andDeviceProvider:device];
+#else
+    
+#endif
+    */
+   
+    self.microphoneController = [[MicrophoneController alloc] initWithEntity:_microphone andDeviceProvider:_deviceSelector];
     
     [_microphoneController addObserver:self
                          forKeyPath:@"status"
@@ -229,7 +234,6 @@ static void *PerformKVOContext = &PerformKVOContext;
     sideBarView.transportView.transport = _microphoneController.transport;
  
     
-    _serialPortHandler.rawStreamHandler =  _mainWindowController.mainViewController.sideBarViewController;
     
    // [_simulationController start];
     
@@ -237,10 +241,14 @@ static void *PerformKVOContext = &PerformKVOContext;
     [_microphoneController.transport addObserver:self forKeyPath:@"volume" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:VolumeKVOContext];
     [_microphoneController.transport addObserver:self forKeyPath:@"isMuted" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:MuteKVOContext];
     [_microphoneController.transport addObserver:self forKeyPath:@"isPerforming" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:PerformKVOContext];
+    [_microphoneController.transport addObserver:self forKeyPath:@"isUsingMock" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:MockKVOContext];
+    [_microphoneController.transport addObserver:self forKeyPath:@"isRawSerialEnabled" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:RawSerialKVOContext];
     
     [self updateVolumeState];
     [self updateMuteState];
     [self updatePerformState];
+    [self updateRawSerialState];
+    [self updateMockState];
 }
 
 - (void)updateMuteState {
@@ -280,12 +288,36 @@ static void *PerformKVOContext = &PerformKVOContext;
     [_microphoneController.transport removeObserver:self forKeyPath:@"volume"];
     [_microphoneController.transport removeObserver:self forKeyPath:@"isMuted"];
     [_microphoneController.transport removeObserver:self forKeyPath:@"isPerforming"];
+    [_microphoneController.transport removeObserver:self forKeyPath:@"isUsingMock"];
+    [_microphoneController.transport removeObserver:self forKeyPath:@"isRawSerialEnabled"];
     [_microphoneController removeObserver:self
                                forKeyPath:@"status"];
 
     _serialPortHandler.rawStreamHandler = nil;
 }
 
+
+- (void)updateRawSerialState {
+    if (_microphoneController.transport.isRawSerialEnabled) {
+        _serialPortHandler.rawStreamHandler =  _mainWindowController.mainViewController.sideBarViewController;
+        
+    } else {
+        _serialPortHandler.rawStreamHandler = nil;
+        
+    }
+}
+
+- (void)updateMockState {
+    if (_microphoneController.transport.isUsingMock) {
+        if (_mockDevice == nil) {
+            _mockDevice = [[MockDevice alloc] init];
+        }
+        _deviceSelector.deviceProvider = _mockDevice;
+        
+    } else {
+        _deviceSelector.deviceProvider = _serialPortHandler;
+    }
+}
 
 
 
@@ -318,7 +350,11 @@ static void *PerformKVOContext = &PerformKVOContext;
         [self updateVolumeState];
     } else if (context == PerformKVOContext) {
         [self updatePerformState];
-    } else {
+    } else if (context == MockKVOContext) {
+        [self updateMockState];
+    } else if (context == RawSerialKVOContext) {
+        [self updateRawSerialState];
+    }else {
         // Any unrecognized context must belong to super
         [super observeValueForKeyPath:keyPath
                              ofObject:object

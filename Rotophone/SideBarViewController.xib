@@ -36,11 +36,11 @@
                     </connections>
                 </customView>
                 <customView misplaced="YES" id="Tp6-Ge-sVn" customClass="TransportView">
-                    <rect key="frame" x="29" y="170" width="313" height="89"/>
+                    <rect key="frame" x="29" y="141" width="313" height="126"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <subviews>
                         <button verticalHuggingPriority="750" misplaced="YES" id="l8T-PW-XAm">
-                            <rect key="frame" x="5" y="48" width="101" height="32"/>
+                            <rect key="frame" x="5" y="85" width="101" height="32"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <buttonCell key="cell" type="push" title="Initializing" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="tMb-Gh-NQc">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -51,7 +51,7 @@
                             </connections>
                         </button>
                         <button verticalHuggingPriority="750" misplaced="YES" id="xMU-NX-O8O">
-                            <rect key="frame" x="102" y="48" width="95" height="32"/>
+                            <rect key="frame" x="102" y="85" width="95" height="32"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <buttonCell key="cell" type="push" title="Calibrate" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="fbp-3B-Vqg">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -62,7 +62,7 @@
                             </connections>
                         </button>
                         <button verticalHuggingPriority="750" misplaced="YES" id="4Xn-we-HWT">
-                            <rect key="frame" x="5" y="21" width="101" height="32"/>
+                            <rect key="frame" x="5" y="58" width="101" height="32"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <buttonCell key="cell" type="push" title="Mute" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="mBb-q3-lRh">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -73,7 +73,7 @@
                             </connections>
                         </button>
                         <slider verticalHuggingPriority="750" misplaced="YES" id="47a-xp-bwq">
-                            <rect key="frame" x="9" y="4" width="184" height="19"/>
+                            <rect key="frame" x="9" y="41" width="184" height="19"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="kbI-h3-9CC"/>
                             <connections>
@@ -81,7 +81,7 @@
                             </connections>
                         </slider>
                         <button verticalHuggingPriority="750" misplaced="YES" id="VKf-1s-ylb">
-                            <rect key="frame" x="102" y="21" width="95" height="32"/>
+                            <rect key="frame" x="102" y="58" width="95" height="32"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <buttonCell key="cell" type="push" title="Perform" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="xDM-05-cmQ">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -91,12 +91,36 @@
                                 <action selector="handlePerformButton:" target="Tp6-Ge-sVn" id="WgO-kF-I42"/>
                             </connections>
                         </button>
+                        <button misplaced="YES" id="an8-mi-gng">
+                            <rect key="frame" x="18" y="15" width="56" height="18"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <buttonCell key="cell" type="check" title="Mock" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="KEw-rf-cfP">
+                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                <font key="font" metaFont="system"/>
+                            </buttonCell>
+                            <connections>
+                                <action selector="handleUseMockButton:" target="Tp6-Ge-sVn" id="9s7-dN-aEX"/>
+                            </connections>
+                        </button>
+                        <button misplaced="YES" id="X9r-PM-qtY">
+                            <rect key="frame" x="108" y="15" width="85" height="18"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <buttonCell key="cell" type="check" title="Raw Serial" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="5i5-81-rUh">
+                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                <font key="font" metaFont="system"/>
+                            </buttonCell>
+                            <connections>
+                                <action selector="handleEnableRawSerialButton:" target="Tp6-Ge-sVn" id="P3p-41-vfl"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <connections>
                         <outlet property="calibrateButton" destination="xMU-NX-O8O" id="Vuo-BP-scW"/>
+                        <outlet property="enableRawSerialButton" destination="X9r-PM-qtY" id="5Fe-tH-e6W"/>
                         <outlet property="muteButton" destination="4Xn-we-HWT" id="6Ro-qx-cdN"/>
                         <outlet property="performButton" destination="VKf-1s-ylb" id="fAN-Um-WAy"/>
                         <outlet property="startStopButton" destination="l8T-PW-XAm" id="32j-an-gxu"/>
+                        <outlet property="useMockButton" destination="an8-mi-gng" id="FDq-i9-gNl"/>
                         <outlet property="volumeSlider" destination="47a-xp-bwq" id="GZJ-L8-gHQ"/>
                     </connections>
                 </customView>

@@ -18,7 +18,7 @@ static void *SceneViewSelectionKVOContext = &SceneViewSelectionKVOContext;
 @implementation MainWindowController
 
 - (id)init {
-    NSRect frame = NSMakeRect(0, 0, 600, 600);
+    NSRect frame = NSScreen.mainScreen.frame;
     NSWindow *window  = [[NSWindow alloc] initWithContentRect:frame
                                                     styleMask:NSTitledWindowMask | NSResizableWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask
                                                       backing:NSBackingStoreBuffered
