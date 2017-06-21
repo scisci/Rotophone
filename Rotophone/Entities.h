@@ -62,6 +62,7 @@
 @property (/*nullable,*/ nonatomic, retain) NSNumber *originX;
 @property (/*nullable,*/ nonatomic, retain) NSNumber *originY;
 @property (/*nullable,*/ nonatomic, retain) NSNumber *rotation;
+@property (/*nullable,*/ nonatomic, retain) NSNumber *pan;
 
 @end
 

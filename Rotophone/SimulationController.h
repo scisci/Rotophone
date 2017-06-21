@@ -16,6 +16,7 @@
 @class SimulationMicrophone;
 
 @protocol SimulationBodyDelegate<NSObject>
+- (void)simulationBodyMixerChanged:(SimulationBody *)simulationBody;
 - (void)simulationBodyChanged:(SimulationBody *)simulationBody;
 - (void)simulationMicChanged:(SimulationMicrophone *)simulationMicrophone;
 @end

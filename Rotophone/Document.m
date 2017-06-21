@@ -18,7 +18,7 @@
 #import "SimulationController.h"
 #import "PdBase.h"
 
-//#define USE_MOCK_DEVICE
+#define USE_MOCK_DEVICE
 
 static void *SelectedPortKVOContext = &SelectedPortKVOContext;
 static void *MicrophoneConnectedKVOContext = &MicrophoneConnectedKVOContext;
@@ -94,6 +94,7 @@ static void *PerformKVOContext = &PerformKVOContext;
     field.rotation = [NSNumber numberWithFloat:0];
     BodyEntity* body = [[BodyEntity alloc] initWithName:@"somebody" andContext:self.managedObjectContext];
     body.weight = [NSNumber numberWithFloat:1.0];
+    field.pan = [NSNumber numberWithFloat:0.5];
     
     NSMutableSet *mutableSet = [body mutableSetValueForKey:@"fields"];
     [mutableSet addObject:field];

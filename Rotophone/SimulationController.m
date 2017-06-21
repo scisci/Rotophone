@@ -19,6 +19,7 @@
 
 static void* SimBodyKVOContext = &SimBodyKVOContext;
 static void* SimBodyWeightKVOContext = &SimBodyWeightKVOContext;
+static void* SimBodyPanKVOContext = &SimBodyPanKVOContext;
 
 static void* SimMicKVOContext = &SimMicKVOContext;
 
@@ -170,6 +171,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
         self.fieldShape = [[FieldShapeAdapter alloc] initWithBody:body AndField:_field];
         
         [_fieldShape addObserver:self forKeyPath:@"shapeChanged" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:SimBodyKVOContext];
+        [_field addObserver:self forKeyPath:@"pan" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:SimBodyPanKVOContext];
         
         [_body addObserver:self forKeyPath:@"weight" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:SimBodyWeightKVOContext];
 
@@ -227,14 +229,18 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    if (context == SimBodyKVOContext || context == SimBodyWeightKVOContext) {
+    if (context == SimBodyKVOContext || context == SimBodyWeightKVOContext || context == SimBodyPanKVOContext) {
         if (_delegate != nil) {
             // Update our points
             if (context == SimBodyKVOContext) {
                 dirty = YES;
             }
             
-            [_delegate simulationBodyChanged:self];
+            if (context == SimBodyPanKVOContext) {
+                [_delegate simulationBodyMixerChanged:self];
+            } else {
+                [_delegate simulationBodyChanged:self];
+            }
         }
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
@@ -242,8 +248,9 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
 }
 
 - (void)dealloc {
-    [_field removeObserver:self forKeyPath:@"shapeChanged"];
+    [_fieldShape removeObserver:self forKeyPath:@"shapeChanged"];
     [_body removeObserver:self forKeyPath:@"weight"];
+    [_field removeObserver:self forKeyPath:@"pan"];
     gpc_free_polygon(&poly);
     gpc_free_tristrip(&intersectionArea);
 }
@@ -260,6 +267,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     BOOL _performing;
     BOOL _started;
     BOOL _sceneDirty;
+    BOOL _mixerDirty;
 }
 
 @end
@@ -277,6 +285,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
         _intersection.num_contours = 0;
         _performer = [[MicrophonePerformer alloc] init];
         _sceneDirty = true;
+        _mixerDirty = true;
     }
     return self;
 }
@@ -393,15 +402,18 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     _sceneDirty = YES;
 }
 
+- (void)simulationBodyMixerChanged:(SimulationBody *)simulationBody {
+    _mixerDirty = YES;
+}
+
 - (void)simulationMicChanged:(SimulationMicrophone *)simulationMicrophone {
     simulationMicrophone->dirty = YES;
     _sceneDirty = YES;
 }
 
+
+
 - (void)updateSimulation:(id)sender {
-    if (!_sceneDirty) {
-        return;
-    }
     
     if (_microphone == nil) {
         return;
@@ -411,45 +423,52 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
         [_microphone updatePoints];
     }
     
-    // Check each body
-    for (SimulationBody *body in _bodies) {
-        if (body->dirty) {
-            [body updatePoints];
-        }
-        
-        initPolyWithPoints(&_intersection, NULL, 0);
-        gpc_polygon_clip(GPC_INT, &body->poly, &_microphone->poly, &_intersection);
-        
-        gpc_free_tristrip(&body->intersectionArea);
-
-        if (_intersection.contour != NULL) {
-            gpc_polygon_to_tristrip(&_intersection, &body->intersectionArea);
-            
-            // Calculate the area
-            float area = 0.0;
-            for (int i = 0 ; i < body->intersectionArea.num_strips ; i++)
-            {
-                for (int j = 0 ; j < body->intersectionArea.strip[i].num_vertices-2 ; j++) {
-                NSPoint a = NSMakePoint(body->intersectionArea.strip[i].vertex[j].x,body->intersectionArea.strip[i].vertex[j].y);
-                NSPoint b = NSMakePoint(body->intersectionArea.strip[i].vertex[j+1].x,body->intersectionArea.strip[i].vertex[j+1].y);
-                NSPoint c = NSMakePoint(body->intersectionArea.strip[i].vertex[j+2].x,body->intersectionArea.strip[i].vertex[j+2].y);
-                area += fabs(a.x*(b.y-c.y) + b.x*(c.y-a.y) + c.x*(a.y-b.y))/2.0;
-                }
+    
+    if (_sceneDirty) {
+        // Check each body
+        for (SimulationBody *body in _bodies) {
+            if (body->dirty) {
+                [body updatePoints];
             }
             
-            body.intersectionArea = area;
-        } else {
-            body.intersectionArea = 0.0;
+            initPolyWithPoints(&_intersection, NULL, 0);
+            gpc_polygon_clip(GPC_INT, &body->poly, &_microphone->poly, &_intersection);
+            
+            gpc_free_tristrip(&body->intersectionArea);
+
+            if (_intersection.contour != NULL) {
+                gpc_polygon_to_tristrip(&_intersection, &body->intersectionArea);
+                
+                // Calculate the area
+                float area = 0.0;
+                for (int i = 0 ; i < body->intersectionArea.num_strips ; i++)
+                {
+                    for (int j = 0 ; j < body->intersectionArea.strip[i].num_vertices-2 ; j++) {
+                        NSPoint a = NSMakePoint(body->intersectionArea.strip[i].vertex[j].x,body->intersectionArea.strip[i].vertex[j].y);
+                        NSPoint b = NSMakePoint(body->intersectionArea.strip[i].vertex[j+1].x,body->intersectionArea.strip[i].vertex[j+1].y);
+                        NSPoint c = NSMakePoint(body->intersectionArea.strip[i].vertex[j+2].x,body->intersectionArea.strip[i].vertex[j+2].y);
+                        area += fabs(a.x*(b.y-c.y) + b.x*(c.y-a.y) + c.x*(a.y-b.y))/2.0;
+                    }
+                }
+                
+                body.intersectionArea = area;
+            } else {
+                body.intersectionArea = 0.0;
+            }
+            
+            gpc_free_polygon(&_intersection);
         }
         
-        gpc_free_polygon(&_intersection);
+        
+        // Update pd
+        [self updatePD];
     }
     
+    if (_mixerDirty) {
+        [self updateMixer];
+    }
     
-    // Update pd
-    [self updatePD];
-    
-    
+    _mixerDirty = false;
     _sceneDirty = false;
     
 }
@@ -460,6 +479,13 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
         [PdBase sendFloat:body.parameterizedIntersection toReceiver:paramName];
     }
 
+}
+
+- (void)updateMixer {
+    for (SimulationBody *body in _bodies) {
+        NSString *paramName = [NSString stringWithFormat:@"%d-%@_pan", _patch.dollarZero, body.body.name];
+        [PdBase sendFloat:body.field.pan.floatValue toReceiver:paramName];
+    }
 }
 
 - (void)addBody:(BodyEntity *)entity {

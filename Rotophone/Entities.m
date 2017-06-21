@@ -73,6 +73,7 @@
 @dynamic originX;
 @dynamic originY;
 @dynamic rotation;
+@dynamic pan;
 
 @end
 

@@ -50,7 +50,7 @@ static void *SelectedPortKVOContext = &SelectedPortKVOContext;
         self.appStarted = false;
         self.serialPortManager = [ORSSerialPortManager sharedSerialPortManager];
         self.serialPortHandler = [[SerialPortHandler alloc] init];
-        self.pdAudioUnit = [[PdAudioUnit alloc] init];
+        self.pdAudioUnit = [[SimulationAudioUnit alloc] init];
         int result = [_pdAudioUnit configureWithSampleRate:44100.0 numberChannels:2 inputEnabled:NO];
     }
     return self;

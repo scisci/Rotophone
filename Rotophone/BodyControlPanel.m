@@ -14,6 +14,7 @@ static void *WidthKVOContext = &WidthKVOContext;
 static void *HeightKVOContext = &HeightKVOContext;
 static void *NameKVOContext = &NameKVOContext;
 static void *WeightKVOContext = &WeightKVOContext;
+static void *PanKVOContext = &PanKVOContext;
 
 @interface BodyControlPanelView ()
 
@@ -38,12 +39,16 @@ static void *WeightKVOContext = &WeightKVOContext;
     
     BodyControlPanelView *bcpv = (BodyControlPanelView *)self.view;
     
-    [bcpv.widthSlider setMinValue:1.0];
+    [bcpv.widthSlider setMinValue:0.0];
     [bcpv.widthSlider setMaxValue:100.0];
     [bcpv.heightSlider setMinValue:1.0];
     [bcpv.heightSlider setMaxValue:100.0];
     [bcpv.rotationSlider setMinValue:0.0];
     [bcpv.rotationSlider setMaxValue:2 * M_PI];
+    [bcpv.weightField setMinValue:0.0];
+    [bcpv.weightField setMaxValue:1.0];
+    [bcpv.panField setMinValue:0.0];
+    [bcpv.panField setMaxValue:1.0];
 }
 
 
@@ -53,6 +58,7 @@ static void *WeightKVOContext = &WeightKVOContext;
 
 - (void)dealloc {
     self.entity = nil;
+    self.bodyEntity = nil;
 }
 
 - (void)setEntity:(FieldEntity *)entity {
@@ -61,6 +67,7 @@ static void *WeightKVOContext = &WeightKVOContext;
         [_entity removeObserver:self forKeyPath:@"rotation"];
         [_entity removeObserver:self forKeyPath:@"width"];
         [_entity removeObserver:self forKeyPath:@"height"];
+        [_entity removeObserver:self forKeyPath:@"pan"];
     }
     
     _entity = entity;
@@ -71,6 +78,7 @@ static void *WeightKVOContext = &WeightKVOContext;
         [_entity addObserver:self forKeyPath:@"rotation" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:RotationKVOContext];
         [_entity addObserver:self forKeyPath:@"width" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:WidthKVOContext];
         [_entity addObserver:self forKeyPath:@"height" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:HeightKVOContext];
+        [_entity addObserver:self forKeyPath:@"pan" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:PanKVOContext];
         [self updateControls];
     }
 }
@@ -110,6 +118,7 @@ static void *WeightKVOContext = &WeightKVOContext;
     }
     
     view.weightField.floatValue = _bodyEntity.weight.floatValue;
+    view.panField.floatValue = _entity.pan.floatValue;
 }
 
 - (IBAction)handleWidthChanged:(id)sender {
@@ -123,6 +132,9 @@ static void *WeightKVOContext = &WeightKVOContext;
 - (IBAction)handleWeightChanged:(id)sender {
     _bodyEntity.weight = [NSNumber numberWithFloat:[(NSSlider *)sender floatValue]];
 }
+- (IBAction)handlePanChanged:(id)sender {
+    _entity.pan = [NSNumber numberWithFloat:[(NSSlider *)sender floatValue]];
+}
 
 - (IBAction)handleRotationChanged:(id)sender {
     BodyControlPanelView *bcpv = (BodyControlPanelView *)self.view;
@@ -135,7 +147,7 @@ static void *WeightKVOContext = &WeightKVOContext;
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    if (context == RotationKVOContext || context == WidthKVOContext || context==HeightKVOContext || context == NameKVOContext || context == WeightKVOContext) {
+    if (context == RotationKVOContext || context == WidthKVOContext || context==HeightKVOContext || context == NameKVOContext || context == WeightKVOContext || context == PanKVOContext) {
         [self updateControls];
     } else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];

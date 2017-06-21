@@ -12,6 +12,7 @@
         <attribute name="name" attributeType="String" syncable="YES"/>
         <attribute name="originX" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="originY" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="pan" attributeType="Float" defaultValueString="0.5" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="rotation" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="width" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="body" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BodyEntity" inverseName="fields" inverseEntity="BodyEntity" syncable="YES"/>
@@ -41,7 +42,7 @@
     </entity>
     <elements>
         <element name="BodyEntity" positionX="-45" positionY="90" width="128" height="90"/>
-        <element name="FieldEntity" positionX="-54" positionY="54" width="128" height="180"/>
+        <element name="FieldEntity" positionX="-54" positionY="54" width="128" height="195"/>
         <element name="MicrophoneEntity" positionX="-63" positionY="-18" width="128" height="225"/>
         <element name="SceneEntity" positionX="-45" positionY="90" width="128" height="90"/>
         <element name="SerialPortEntity" positionX="-54" positionY="9" width="128" height="75"/>
