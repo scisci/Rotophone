@@ -26,10 +26,11 @@ public:
     bool requiresResponse = handshakeID_ != handshakeID;
     handshakeID_ = handshakeID;
     lastHandshake_ = now;
-    startTime_ = now;
+    
 
     if (requiresResponse) {
       // Emit it back
+      startTime_ = now;
       dispatcher_->dispatchGenericCommand(kFoundHostCmd);
     }
   }

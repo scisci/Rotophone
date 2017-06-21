@@ -14,7 +14,7 @@
     if (self = [super init]) {
         _handshakeConfirmed = NO;
         _handshakeID = -1;
-        srand(time(NULL));
+        srand((unsigned int)time(NULL));
         _nextHandShakeID = rand() & 0xFF;
         _lastHeartBeat = nil;
     }
@@ -22,15 +22,23 @@
     return self;
 }
 
+- (void)dealloc {
+    [self stop];
+}
+
 - (void)handleHandshakeTimer:(id)sender {
     if (_handshakeConfirmed) {
+        NSLog(@"Polling for device, but already confirmed!");
         return;
     }
     
+    NSLog(@"Polling for device");
     _handshakeID = _nextHandShakeID;
     _nextHandShakeID = (_nextHandShakeID + 1) & 0xFF;
     if (_commandWriter != nil) {
         [_commandWriter sendHandshake:_handshakeID];
+    } else {
+        NSLog(@"No command writer to poll!");
     }
 }
 
@@ -40,6 +48,7 @@
     }
     
     if (_lastHeartBeat == nil || [_lastHeartBeat timeIntervalSinceNow] < -15.0) {
+        NSLog(@"Lost device.");
         [self stop];
     }
 }
@@ -73,8 +82,7 @@
             [_keepAliveTimeout invalidate];
             _keepAliveTimeout = nil;
         }
-        [[NSTimer alloc] initWithFireDate:[NSDate date] interval:0.1 target:self selector:@selector(updatePosition:) userInfo:nil repeats:YES];
-        
+
         // Here we check to see if we lost connection
         _keepAliveTimeout = [[NSTimer alloc] initWithFireDate:[NSDate date] interval: 15.0
                                                              target: self
@@ -100,8 +108,6 @@
     }
     
     _lastHeartBeat = [[NSDate alloc] init];
-    
-    
 }
 
 - (BOOL)isAlive {
@@ -116,6 +122,7 @@
                                                      selector: @selector(handleHandshakeTimer:)
                                                      userInfo: nil
                                                       repeats: YES];
+    
     [[NSRunLoop currentRunLoop] addTimer:_handshakeTimer forMode:NSRunLoopCommonModes];
 }
 
@@ -141,7 +148,7 @@
     }
     
     
-    if (didEnd) {
+    if (didEnd && _delegate != nil) {
         [_delegate communicationDidEnd];
     }
 }
