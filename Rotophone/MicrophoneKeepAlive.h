@@ -14,6 +14,7 @@
 @protocol MicrophoneKeepAliveDelegate
 -(void)communicationDidBeginWithMode:(ModeType)mode;
 -(void)communicationDidEnd;
+-(void)reloadDevice;
 @end
 
 
@@ -22,6 +23,7 @@
     BOOL _handshakeConfirmed;
     int _handshakeID;
     int _nextHandShakeID;
+    NSDate *_startTime;
     NSDate *_lastHeartBeat;
     NSTimer *_handshakeTimer;
     NSTimer *_handhshakeRefreshTimer;

@@ -46,7 +46,9 @@ public:
     if (stepper_->isRunning()) {
       stepper_->run();
       return;
-    } else if (status_ == kLowPowerStatusInit) {
+    }
+    
+    if (status_ == kLowPowerStatusInit) {
       status_ = kLowPowerStatusDisableMotor;
     }
 

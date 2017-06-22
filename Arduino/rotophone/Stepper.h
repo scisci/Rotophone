@@ -55,7 +55,7 @@ public:
   }
 
   void useRunSpeed() {
-    stepper_.setMaxSpeed(1600);
+    stepper_.setMaxSpeed(1700);
   }
 
 

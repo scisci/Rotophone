@@ -19,6 +19,12 @@ static void *DeviceKVOContext = &DeviceKVOContext;
     return _deviceProvider;
 }
 
+- (void)reload {
+    if (_deviceProvider != nil) {
+        [_deviceProvider reload];
+    }
+}
+
 - (void)setDeviceProvider:(NSObject<DeviceProvider> *)deviceProvider {
     if (_deviceProvider != nil) {
         [_deviceProvider removeObserver:self forKeyPath:@"device"];
@@ -34,6 +40,7 @@ static void *DeviceKVOContext = &DeviceKVOContext;
     }
 
 }
+
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if (context == DeviceKVOContext) {
@@ -74,6 +81,11 @@ static void *DeviceKVOContext = &DeviceKVOContext;
     
     }
     return self;
+}
+
+
+- (void)reload {
+    NSLog(@"can't reload mock device.");
 }
 
 - (id<RotoCommandWriter>)deviceWriter {

@@ -162,7 +162,7 @@ public:
       calibrationStep_ = 0;
       proxDebounce_ = 0;
       stepper_->scan(1.25);
-      statusIndicator_->set(kStatusTypeMedium2Blink);
+      //statusIndicator_->set(kStatusTypeMedium2Blink);
     }
 
     if (status_ == kCalibrationStatusScanForProx) {
@@ -177,7 +177,7 @@ public:
           Serial.println();
 #endif
           stepper_->stop();
-          statusIndicator_->set(kStatusTypeFastBlink);
+          //statusIndicator_->set(kStatusTypeFastBlink);
         }
       } else {
         proxDebounce_ = 0;
@@ -287,7 +287,7 @@ public:
       Serial.println("\nCalibration step 4: calibrate");
 #endif
       stepper_->calibrate();
-      statusIndicator_->push(kStatusTypeShortMediumBlink);
+      //statusIndicator_->push(kStatusTypeShortMediumBlink);
 
       errorLog_->clearCalibrationErrors();
       // We're done so change mode

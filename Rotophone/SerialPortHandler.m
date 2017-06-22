@@ -46,6 +46,35 @@
 }
 
 
+- (void)reload {
+    if (_selectedPort == nil) {
+        return;
+    }
+    
+    if (_retryTimeout != nil) {
+        [_retryTimeout invalidate];
+        _retryTimeout = nil;
+    }
+    
+    // Disconnect and reconnect
+    if (_retryPort == _selectedPort) {
+        _retryCount++;
+    } else {
+        _retryCount = 1;
+    }
+    
+    _retryPort = _selectedPort;
+    self.selectedPort = nil;
+    
+    double duration = 5.0 * _retryCount;
+    NSLog(@"Will retry port for %d time in %f seconds...", _retryCount, duration);
+    
+    _retryTimeout = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:duration] interval:duration target:self selector:@selector(handleRetryTimeout:) userInfo:nil repeats:NO];
+    
+    [[NSRunLoop currentRunLoop] addTimer:_retryTimeout forMode:NSRunLoopCommonModes];
+
+}
+
 
 - (void)setSelectedPort:(ORSSerialPort *)selectedPort {
     if (selectedPort == _selectedPort) {
@@ -75,6 +104,7 @@
         _selectedPort.parity = ORSSerialPortParityNone;
         _selectedPort.numberOfStopBits = 1;
         _selectedPort.usesRTSCTSFlowControl = NO;
+        _selectedPort.usesDTRDSRFlowControl = NO;
         _selectedPort.delegate = self;
         
         _openTimeout = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:15.0] interval:15.0 target:self selector:@selector(handleTimeout:) userInfo:nil repeats:NO];
@@ -90,21 +120,7 @@
         NSLog(@"port open timed out!");
         if (!_selectedPort.isOpen) {
             NSLog(@"Port is not open");
-            if (_retryPort == _selectedPort) {
-                _retryCount++;
-            } else {
-                _retryCount = 1;
-            }
-            
-            _retryPort = _selectedPort;
-            self.selectedPort = nil;
-            
-            double duration = 5.0 * _retryCount;
-            NSLog(@"Will retry port for %d time in %f seconds...", _retryCount, duration);
-            
-            _retryTimeout = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:duration] interval:duration target:self selector:@selector(handleRetryTimeout:) userInfo:nil repeats:NO];
-            
-            [[NSRunLoop currentRunLoop] addTimer:_retryTimeout forMode:NSRunLoopCommonModes];
+            [self reload];
         } else {
             NSLog(@"But port is open?!");
         }

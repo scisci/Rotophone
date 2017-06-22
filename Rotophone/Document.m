@@ -33,6 +33,7 @@ static void *RawSerialKVOContext = &RawSerialKVOContext;
     MockDevice* _mockDevice;
 }
 @property (retain) PdFile *file;
+@property (retain) PdFile *testGrain;
 @property (retain) MicrophoneEntity *microphone;
 @property (retain) SerialPortEntity *serialPortSettings;
 @property (retain) SerialPortHandler *serialPortHandler;
@@ -140,14 +141,34 @@ static void *RawSerialKVOContext = &RawSerialKVOContext;
         // Add your subclass-specific initialization here.
         // Create a microphone object
         
-                NSBundle* bundle = NSBundle.mainBundle;
+        NSBundle* bundle = NSBundle.mainBundle;
         NSString* filePath = bundle.resourcePath;
-        filePath = [filePath stringByAppendingPathComponent:@"Resources"];
-        self.file = [PdFile openFileNamed:@"testpatch-sine.pd" path:filePath];
+        NSString* resourcePath = [filePath stringByAppendingPathComponent:@"Resources"];
+        self.file = [PdFile openFileNamed:@"combined.pd" path:resourcePath];
+        //self.testGrain = [PdFile openFileNamed:@"testpatch-particle.pd" path:resourcePath];
         self.deviceSelector = [[DeviceProviderSelector alloc] init];
         
-            }
+        
+        NSString* soundsPath = [resourcePath stringByAppendingPathComponent:@"sounds"];
+        NSString* sample1Path = [soundsPath stringByAppendingPathComponent:@"potterybreak4.aif"];
+        /**/
+        NSString *loadSample1ParamName = [NSString stringWithFormat:@"%d-load_zample_1", _file.dollarZero];
+        
+
+        int result = [PdBase sendMessage:@"read"  withArguments:[NSArray arrayWithObjects:@"-resize", @"-maxsize", [NSNumber numberWithFloat:1e+07], sample1Path, @"1-zample", nil] toReceiver:loadSample1ParamName];
+
+        [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(startGrains:) userInfo:nil repeats:NO];
+    }
     return self;
+}
+
+- (void)startGrains:(id)sender {
+    NSString *sampleNumberParamName = [NSString stringWithFormat:@"%d-zample_idx_number", _file.dollarZero];
+    NSString *granGrainDBParamName = [NSString stringWithFormat:@"%d-grangain_db", _file.dollarZero];
+    NSString *granMuteParamName = [NSString stringWithFormat:@"%d-granmute", _file.dollarZero];
+    int result = [PdBase sendFloat:0 toReceiver:sampleNumberParamName];
+    result = [PdBase sendFloat:70 toReceiver:granGrainDBParamName];
+    result = [PdBase sendFloat:1 toReceiver:granMuteParamName];
 }
 
 

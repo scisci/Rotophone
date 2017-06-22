@@ -250,6 +250,12 @@ static void* DeviceKVOContext = &DeviceKVOContext;
     return self;
 }
 
+- (void)reloadDevice {
+    if (_deviceProvider != nil) {
+        [_deviceProvider reload];
+    }
+}
+
 - (NSObject<MicrophoneTransport> *)transport {
     return _transport;
 }

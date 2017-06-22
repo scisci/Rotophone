@@ -93,6 +93,8 @@
 
 @protocol DeviceProvider<NSObject>
 @property id<Device> device;
+
+- (void)reload;
 @end
 
 @interface RotoEventStream : NSObject<RotoEventSource, RotoEventHandler> {

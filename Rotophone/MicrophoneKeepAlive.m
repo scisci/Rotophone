@@ -32,6 +32,13 @@
         return;
     }
     
+    if ([_startTime timeIntervalSinceNow] < -20.0) {
+        if (_delegate != nil) {
+            NSLog(@"Requesting reload.");
+            [_delegate reloadDevice];
+        }
+    }
+    
     NSLog(@"Polling for device");
     _handshakeID = _nextHandShakeID;
     _nextHandShakeID = (_nextHandShakeID + 1) & 0xFF;
@@ -40,6 +47,8 @@
     } else {
         NSLog(@"No command writer to poll!");
     }
+    
+    
 }
 
 - (void)handleKeepAliveTimer:(id)sender {
@@ -117,6 +126,7 @@
 - (void)start {
     [self stop];
     
+    _startTime = [NSDate date];
     _handshakeTimer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval: 2.0
                                                        target: self
                                                      selector: @selector(handleHandshakeTimer:)
