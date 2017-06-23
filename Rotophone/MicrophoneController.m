@@ -301,9 +301,9 @@ static void* DeviceKVOContext = &DeviceKVOContext;
         target = 2 * M_PI;
     }
     
-    if (target == _entity.rotoTarget.floatValue) {
-        return;
-    }
+    //if (target == _entity.rotoTarget.floatValue) {
+    //    return;
+    //}
     
     _entity.rotoTarget = [NSNumber numberWithFloat:target];
     if (self.device != nil) {

@@ -32,9 +32,10 @@
 @end
 
 @interface SimulationController : NSObject<SimulationBodyDelegate, DebugGraphics> {
-
 }
+
 @property (retain) NSObject<Scene> * scene;
+
 - (id)initWithPatch:(PdFile *)patch;
 - (void)addMicrophone:(NSObject<MicrophoneProxy> *)proxy;
 - (void)addBody:(BodyEntity *)entity;

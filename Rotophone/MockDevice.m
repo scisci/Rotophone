@@ -146,6 +146,7 @@ static void *DeviceKVOContext = &DeviceKVOContext;
     }
     
     if (_rotation == _target) {
+        [_eventStream handleEvent:[[ConcreteUpdatePosEvent alloc] initWithTimestamp:0.0 rotoID:0 andPosition:_rotation]];
         return;
     }
     [self startRotationIfNecessary];

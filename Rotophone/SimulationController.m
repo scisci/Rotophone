@@ -358,6 +358,8 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     BOOL _started;
     BOOL _sceneDirty;
     BOOL _mixerDirty;
+    float _lastPosition;
+    NSDate *_lastUpdate;
 }
 
 @end
@@ -373,7 +375,8 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
         _intersection.contour = NULL;
         _intersection.hole = NULL;
         _intersection.num_contours = 0;
-
+        _lastPosition = 0;
+        _lastUpdate = nil;
         _performer = [[MicrophonePerformer alloc] init];
         _sceneDirty = true;
         _mixerDirty = true;
@@ -515,18 +518,46 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     _sceneDirty = YES;
 }
 
-
-
 - (void)updateSimulation:(id)sender {
     
     if (_microphone == nil) {
         return;
     }
     
+    
+    bool velocityValid = false;
+    double velocity = 0.0;
+    NSTimeInterval elapsed = -[_lastUpdate timeIntervalSinceNow];
+    if (elapsed < 1.5) {
+        double dist = _microphone.microphoneShape.microphoneRotation - _lastPosition;
+        if (dist > M_PI) {
+            dist -= 2 * M_PI;
+        } else if (dist < -M_PI) {
+            dist += 2 * M_PI;
+        }
+        
+        if (fabs(dist) > 0.0) {
+            _lastUpdate = [NSDate date];
+            _lastPosition = _microphone.microphoneShape.microphoneRotation;
+            velocity = dist / elapsed;
+            velocityValid = true;
+        }
+        
+        
+        
+        
+    } else {
+        _lastUpdate = [NSDate date];
+        _lastPosition = _microphone.microphoneShape.microphoneRotation;
+    }
+    
     if (_microphone->dirty) {
         [_microphone updatePoints];
     }
     
+    if (_performer != nil) {
+        [_performer updatePosition:_lastPosition andVelocity:velocity andValid:velocityValid];
+    }
     
     if (_sceneDirty) {
         // Check each body
@@ -566,14 +597,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
             }
             
             gpc_free_polygon(&_intersection);
-            
-            
-            
-
-            
-            
         }
-        
         
         // Update pd
         [self updatePD];

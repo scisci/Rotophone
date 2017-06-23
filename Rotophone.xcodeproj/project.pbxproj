@@ -33,6 +33,10 @@
 		4B60BA4F1EBD9DCF000FC8A5 /* ORSSerialPortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BA4B1EBD9DCF000FC8A5 /* ORSSerialPortManager.m */; };
 		4B60BA501EBD9DCF000FC8A5 /* ORSSerialRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BA4D1EBD9DCF000FC8A5 /* ORSSerialRequest.m */; };
 		4B60BA521EBD9EAD000FC8A5 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B60BA511EBD9EAD000FC8A5 /* IOKit.framework */; };
+		4B7C1A5D1EFD3AFC0064DF8F /* PerformMode.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7C1A5C1EFD3AFC0064DF8F /* PerformMode.m */; };
+		4B7C1A611EFD3B6B0064DF8F /* RandomPerformMode.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7C1A601EFD3B6B0064DF8F /* RandomPerformMode.m */; };
+		4B7C1A641EFD3BBE0064DF8F /* TargetMixPerformMode.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7C1A631EFD3BBE0064DF8F /* TargetMixPerformMode.m */; };
+		4B7C1A671EFD3D210064DF8F /* TargetScanPerformMode.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7C1A661EFD3D210064DF8F /* TargetScanPerformMode.m */; };
 		4BADEA531EF5A4A8003CF739 /* gpc.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BADEA4F1EF5A4A8003CF739 /* gpc.c */; };
 		4BADEA541EF5A4A8003CF739 /* GPCPolygon.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BADEA521EF5A4A8003CF739 /* GPCPolygon.m */; };
 		4BADEA5A1EF5DD79003CF739 /* SimulationAudioUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BADEA591EF5DD79003CF739 /* SimulationAudioUnit.m */; };
@@ -122,6 +126,14 @@
 		4B60BA4C1EBD9DCF000FC8A5 /* ORSSerialRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORSSerialRequest.h; sourceTree = "<group>"; };
 		4B60BA4D1EBD9DCF000FC8A5 /* ORSSerialRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ORSSerialRequest.m; sourceTree = "<group>"; };
 		4B60BA511EBD9EAD000FC8A5 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/IOKit.framework; sourceTree = DEVELOPER_DIR; };
+		4B7C1A5B1EFD3AFC0064DF8F /* PerformMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PerformMode.h; sourceTree = "<group>"; };
+		4B7C1A5C1EFD3AFC0064DF8F /* PerformMode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PerformMode.m; sourceTree = "<group>"; };
+		4B7C1A5F1EFD3B6B0064DF8F /* RandomPerformMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RandomPerformMode.h; sourceTree = "<group>"; };
+		4B7C1A601EFD3B6B0064DF8F /* RandomPerformMode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RandomPerformMode.m; sourceTree = "<group>"; };
+		4B7C1A621EFD3BBE0064DF8F /* TargetMixPerformMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TargetMixPerformMode.h; sourceTree = "<group>"; };
+		4B7C1A631EFD3BBE0064DF8F /* TargetMixPerformMode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TargetMixPerformMode.m; sourceTree = "<group>"; };
+		4B7C1A651EFD3D210064DF8F /* TargetScanPerformMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TargetScanPerformMode.h; sourceTree = "<group>"; };
+		4B7C1A661EFD3D210064DF8F /* TargetScanPerformMode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TargetScanPerformMode.m; sourceTree = "<group>"; };
 		4BADEA4F1EF5A4A8003CF739 /* gpc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gpc.c; sourceTree = "<group>"; };
 		4BADEA501EF5A4A8003CF739 /* gpc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gpc.h; sourceTree = "<group>"; };
 		4BADEA511EF5A4A8003CF739 /* GPCPolygon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPCPolygon.h; sourceTree = "<group>"; };
@@ -205,6 +217,14 @@
 				4BADEA521EF5A4A8003CF739 /* GPCPolygon.m */,
 				4BADEA5B1EF74051003CF739 /* MicrophonePerformer.h */,
 				4BADEA5C1EF74051003CF739 /* MicrophonePerformer.m */,
+				4B7C1A651EFD3D210064DF8F /* TargetScanPerformMode.h */,
+				4B7C1A661EFD3D210064DF8F /* TargetScanPerformMode.m */,
+				4B7C1A621EFD3BBE0064DF8F /* TargetMixPerformMode.h */,
+				4B7C1A631EFD3BBE0064DF8F /* TargetMixPerformMode.m */,
+				4B7C1A5F1EFD3B6B0064DF8F /* RandomPerformMode.h */,
+				4B7C1A601EFD3B6B0064DF8F /* RandomPerformMode.m */,
+				4B7C1A5B1EFD3AFC0064DF8F /* PerformMode.h */,
+				4B7C1A5C1EFD3AFC0064DF8F /* PerformMode.m */,
 				4BADEA581EF5DD79003CF739 /* SimulationAudioUnit.h */,
 				4BADEA591EF5DD79003CF739 /* SimulationAudioUnit.m */,
 				4B0FC7F41EDFD06A003CACD5 /* MicrophoneController.h */,
@@ -425,6 +445,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BCF703D1EDD032B001E1971 /* Protocol.c in Sources */,
+				4B7C1A611EFD3B6B0064DF8F /* RandomPerformMode.m in Sources */,
 				4B4DE5801EF4A45D000C9635 /* SimulationController.m in Sources */,
 				4BBE45F91EBC473000276A8A /* Document.m in Sources */,
 				4BBE45F61EBC473000276A8A /* ViewController.m in Sources */,
@@ -433,6 +454,7 @@
 				4B60BA4F1EBD9DCF000FC8A5 /* ORSSerialPortManager.m in Sources */,
 				4BADEA541EF5A4A8003CF739 /* GPCPolygon.m in Sources */,
 				4B60BA501EBD9DCF000FC8A5 /* ORSSerialRequest.m in Sources */,
+				4B7C1A5D1EFD3AFC0064DF8F /* PerformMode.m in Sources */,
 				4B0FC7F91EE1CC6A003CACD5 /* MicrophoneKeepAlive.m in Sources */,
 				4B60BA4E1EBD9DCF000FC8A5 /* ORSSerialPort.m in Sources */,
 				4B0FC7FF1EE5E365003CACD5 /* SerialPortDevice.m in Sources */,
@@ -445,6 +467,7 @@
 				4BCF708F1EDE59CC001E1971 /* Event.m in Sources */,
 				4B0FC7F61EDFD06A003CACD5 /* MicrophoneController.m in Sources */,
 				4BCF70931EDE723B001E1971 /* MicrophoneShapeAdapter.m in Sources */,
+				4B7C1A641EFD3BBE0064DF8F /* TargetMixPerformMode.m in Sources */,
 				4BBE45FC1EBC473000276A8A /* Document.xcdatamodeld in Sources */,
 				4BADEA5D1EF74051003CF739 /* MicrophonePerformer.m in Sources */,
 				4B3B91471EC362DB005C0A1A /* SceneViewController.m in Sources */,
@@ -455,6 +478,7 @@
 				4BADEA5A1EF5DD79003CF739 /* SimulationAudioUnit.m in Sources */,
 				4B4DE5771EECB781000C9635 /* MicrophoneControlPanelViewController.m in Sources */,
 				4BBE45F01EBC473000276A8A /* AppDelegate.m in Sources */,
+				4B7C1A671EFD3D210064DF8F /* TargetScanPerformMode.m in Sources */,
 				4BADEA531EF5A4A8003CF739 /* gpc.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
