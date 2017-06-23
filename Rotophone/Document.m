@@ -168,7 +168,7 @@ static void *RawSerialKVOContext = &RawSerialKVOContext;
     NSString *granMuteParamName = [NSString stringWithFormat:@"%d-granmute", _file.dollarZero];
     int result = [PdBase sendFloat:0 toReceiver:sampleNumberParamName];
     result = [PdBase sendFloat:70 toReceiver:granGrainDBParamName];
-    result = [PdBase sendFloat:1 toReceiver:granMuteParamName];
+    result = [PdBase sendFloat:0 toReceiver:granMuteParamName];
 }
 
 

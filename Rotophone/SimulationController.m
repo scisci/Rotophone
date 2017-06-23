@@ -172,6 +172,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     gpc_tristrip intersectionAreaRight;
     BOOL dirty;
     PerformanceTarget* target;
+    float _lastScanParam;
 }
 
 
@@ -225,6 +226,27 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     return _field.width.floatValue * _field.height.floatValue;
 }
 
+- (float)scanParam {
+    if ((_intersectionAreaLeft == 0 && _intersectionAreaRight == 0) || self.area == 0) {
+        return _lastScanParam;
+    }
+    
+    _lastScanParam = (_intersectionAreaLeft / (_intersectionAreaLeft + _intersectionAreaRight));
+    return _lastScanParam;
+}
+
+- (float)centerScanParam {
+    float param = [self scanParam];
+    float p = (1.0 - 2.0 * fabsf(0.5 - param)); // 0 - 1 where  1 is in center
+    
+    p *= 1.75;
+    if (p > 1.0) {
+        p = 1.0;
+    }
+    
+    return p;
+}
+
 - (float)parameterizedIntersection {
     float a = self.area;
     if (a <= 0) {
@@ -252,6 +274,54 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     
     return _field.pan.floatValue;
     //return panParam;
+}
+
+- (float)freq1 {
+    if ([_body.name isEqualToString:@"p1"]) {
+        return 77.78;
+    } else if ([_body.name isEqualToString:@"p2"]) {
+        return 58.27;
+    } else if ([_body.name isEqualToString:@"p3"]) {
+        return 98.0;
+    }
+    
+    return 155.56;
+}
+
+- (float)freq2 {
+    if ([_body.name isEqualToString:@"p1"]) {
+        return 466.16;
+    } else if ([_body.name isEqualToString:@"p2"]) {
+        return 174.61;
+    } else if ([_body.name isEqualToString:@"p3"]) {
+        return 233.08;
+    }
+    
+    return 466.16;
+}
+
+- (float)freq3 {
+    if ([_body.name isEqualToString:@"p1"]) {
+        return 1318.51;
+    } else if ([_body.name isEqualToString:@"p2"]) {
+        return 1661.22;
+    } else if ([_body.name isEqualToString:@"p3"]) {
+        return 2349.32;
+    }
+    
+    return 466.16;
+}
+
+- (float)freq1Param {
+    return [self freq1] * ([self centerScanParam] + 1.0);
+}
+
+- (float)freq2Param {
+    return [self freq2] * ([self centerScanParam] + 1.0) * 0.618;
+}
+
+- (float)freq3Param {
+    return [self freq3] * ([self centerScanParam] + 1.0) * 1.618;
 }
 
 - (void)updatePoints {
@@ -360,6 +430,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     BOOL _mixerDirty;
     float _lastPosition;
     NSDate *_lastUpdate;
+    
 }
 
 @end
@@ -380,6 +451,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
         _performer = [[MicrophonePerformer alloc] init];
         _sceneDirty = true;
         _mixerDirty = true;
+        
     }
     return self;
 }
@@ -615,12 +687,19 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
 - (void) updatePD {
     for (SimulationBody *body in _bodies) {
         NSString *paramName = [NSString stringWithFormat:@"%d-%@", _patch.dollarZero, body.body.name];
-        [PdBase sendFloat:body.parameterizedIntersection toReceiver:paramName];
         NSString *panName = [NSString stringWithFormat:@"%d-%@_pan", _patch.dollarZero, body.body.name];
-        [PdBase sendFloat:body.parameterizedPan toReceiver:panName];
+        NSString *f1Name = [NSString stringWithFormat:@"%d-%@_f1", _patch.dollarZero, body.body.name];
+        NSString *f2Name = [NSString stringWithFormat:@"%d-%@_f2", _patch.dollarZero, body.body.name];
+        NSString *f3Name = [NSString stringWithFormat:@"%d-%@_f3", _patch.dollarZero, body.body.name];
+        int result = [PdBase sendFloat:body.parameterizedIntersection toReceiver:paramName];
+        result = [PdBase sendFloat:body.parameterizedPan toReceiver:panName];
+        result = [PdBase sendFloat:[body freq1Param] toReceiver:f1Name];
+        result = [PdBase sendFloat:[body freq2Param] toReceiver:f2Name];
+        result = [PdBase sendFloat:[body freq3Param] toReceiver:f3Name];
     }
-
 }
+
+
 
 - (void)updateMixer {
     for (SimulationBody *body in _bodies) {
