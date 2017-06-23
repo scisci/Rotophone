@@ -8,21 +8,149 @@
 
 #import "MicrophonePerformer.h"
 
-@implementation PerformanceTarget
+@class PerformMode;
 
-@end
-
-@interface MicrophonePerformer () {
+@interface MicrophonePerformer() {
     NSTimer* _nextTimer;
     NSArray* _targets;
     int _nextTarget;
 }
 
+@property (retain) PerformMode* mode;
+
+- (void)endMode:(PerformMode *)mode;
 @end
+
+@interface PerformMode : NSObject{
+    NSTimer* _scheduler;
+    NSDate* _startTime;
+}
+
+@property (unsafe_unretained) MicrophonePerformer* performer;
+
+- (id)initWithPerformer:(MicrophonePerformer*)performer;
+- (void)begin; // called by performer
+- (void)update; // called by performer on angle change
+- (void)scheduleTimer:(NSTimeInterval)interval; // Schedules a callback
+- (void)clearTimer;
+- (void)handleTimer:(id)sender; // Called
+- (void)complete; // Calls performer when mode is done.
+- (NSTimeInterval)elapsedTime;
+@end
+
+@implementation PerformMode
+
+- (id)initWithPerformer:(MicrophonePerformer *)performer {
+    if (self = [super init]) {
+        self.performer = performer;
+    }
+    return self;
+}
+
+- (void)begin {
+    _startTime = [NSDate date];
+}
+
+- (void)end {
+    [self clearTimer];
+}
+
+- (NSTimeInterval)elapsedTime {
+    return -[_startTime timeIntervalSinceNow];
+}
+
+- (void)update {
+    // Imp
+}
+
+- (void)clearTimer {
+    if (_scheduler != nil) {
+        [_scheduler invalidate];
+        _scheduler = nil;
+    }
+}
+
+- (void)scheduleTimer:(NSTimeInterval)interval {
+    [self clearTimer];
+    
+    _scheduler = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:interval] interval:interval target:self selector:@selector(handleTimer:) userInfo:nil repeats:NO];
+    
+    [[NSRunLoop currentRunLoop] addTimer:_scheduler forMode:NSRunLoopCommonModes];
+}
+
+- (void)handleTimer:(id)sender {
+    // Imp
+}
+
+- (void)complete {
+    if (_performer == nil) {
+        return;
+    }
+    
+    [self clearTimer];
+    
+    [_performer endMode:self];
+}
+
+- (void)dealloc {
+    [self clearTimer];
+}
+
+@end
+
+
+@interface RandomPerformMode : PerformMode {
+    int _maxSteps;
+    int _step;
+}
+
+@end
+
+
+@implementation RandomPerformMode
+
+- (void)begin {
+    [super begin];
+    
+    _maxSteps = 1 + rand() % 8;
+    _step = 0;
+    
+    [self move];
+}
+
+- (float)chooseNextValue {
+    return ((float)rand() / RAND_MAX) * 2 * M_PI;
+}
+
+- (void)move {
+    
+    
+    [self.performer.microphone setRotoTarget:[self chooseNextValue]];
+    
+    if (++_step >= _maxSteps || [self elapsedTime] > 20.0) {
+        [self complete];
+    } else {
+        float nextTime = 0.1 + ((float)rand() / RAND_MAX) * 5.0;
+        [self scheduleTimer:nextTime];
+    }
+}
+
+- (void)handleTimer:(id)sender {
+    [self move];
+}
+
+@end
+
+
+@implementation PerformanceTarget
+
+@end
+
 
 
 @implementation MicrophonePerformer
 @synthesize microphone = _microphone;
+@synthesize mode = _mode;
 
 - (id)init {
     if (self = [super init]) {
@@ -54,17 +182,51 @@
     }
 }
 
+- (PerformMode *)chooseNextMode {
+    return [[RandomPerformMode alloc] initWithPerformer:self];
+}
+
+- (void)endMode:(PerformMode *)mode {
+    if (mode != _mode) {
+        return;
+    }
+    // Choose a random mode
+    
+    self.mode = [self chooseNextMode];
+    
+    
+}
+
+- (PerformMode *)mode {
+    return _mode;
+}
+
+- (void)setMode:(PerformMode *)mode {
+    if (mode == _mode) {
+        return;
+    }
+    
+    if (_mode != nil) {
+        [_mode end];
+    }
+    
+    _mode = mode;
+    
+    if (_mode != nil) {
+        [_mode begin];
+    }
+}
+
 - (NSObject<MicrophoneProxy> *)microphone {
     return _microphone;
 }
 
 - (void)start {
     
-    
-    [self moveToPosition:nil];
+    self.mode = [self chooseNextMode];
     
 }
-
+/*
 - (float)chooseNextValue {
     if (_targets.count == 0) {
         return 0;
@@ -108,16 +270,14 @@
     
     [[NSRunLoop currentRunLoop] addTimer:_nextTimer forMode:NSRunLoopCommonModes];
 }
-
+*/
 
 - (void)stop {
-    if (_nextTimer != nil) {
-        [_nextTimer invalidate];
-        _nextTimer = nil;
-    }
+    self.mode = nil;
 }
 
 - (void)dealloc {
+    self.mode = nil;
     self.microphone = nil;
 }
 @end
