@@ -148,19 +148,36 @@ static void *RawSerialKVOContext = &RawSerialKVOContext;
         //self.testGrain = [PdFile openFileNamed:@"testpatch-particle.pd" path:resourcePath];
         self.deviceSelector = [[DeviceProviderSelector alloc] init];
         
-        
-        NSString* soundsPath = [resourcePath stringByAppendingPathComponent:@"sounds"];
-        NSString* sample1Path = [soundsPath stringByAppendingPathComponent:@"potterybreak4.aif"];
-        /**/
-        NSString *loadSample1ParamName = [NSString stringWithFormat:@"%d-load_zample_1", _file.dollarZero];
+
         
         NSLog(@"loading samples");
-        int result = [PdBase sendMessage:@"read"  withArguments:[NSArray arrayWithObjects:@"-resize", @"-maxsize", [NSNumber numberWithFloat:1e+07], sample1Path, @"1-zample", nil] toReceiver:loadSample1ParamName];
-
-        [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(startGrains:) userInfo:nil repeats:NO];
-        NSLog(@"loaded samples");
+        [self loadSampleBank:[NSArray arrayWithObjects:@"bear.wav", @"tv.aif", @"volcano.wav", @"rocks.wav", @"violin1.aif", @"violin2.aif", @"horns.wav", @"whale2.wav", nil]];
     }
     return self;
+}
+
+- (void)loadSampleBank:(NSArray *)paths {
+    NSBundle* bundle = NSBundle.mainBundle;
+    NSString* filePath = bundle.resourcePath;
+    NSString* resourcePath = [filePath stringByAppendingPathComponent:@"Resources"];
+    NSString* soundsPath = [resourcePath stringByAppendingPathComponent:@"sounds"];
+    
+    int size = paths.count;
+    if (size > 8) {
+        size = 8;
+    }
+    for (int i = 0; i < size; i++) {
+        NSString* samplePath = [soundsPath stringByAppendingPathComponent: [paths objectAtIndex:i]];
+        NSString *loadSampleParamName = [NSString stringWithFormat:@"%d-load_zample_%d", _file.dollarZero, i + 1];
+        NSString *sampleName = [NSString stringWithFormat:@"%d-zample", i + 1];
+        int result = [PdBase sendMessage:@"read"  withArguments:[NSArray arrayWithObjects:@"-resize", @"-maxsize", [NSNumber numberWithFloat:1e+07], samplePath, sampleName, nil] toReceiver:loadSampleParamName];
+        if (result != 0) {
+            NSLog(@"failed to load sample %@", [paths objectAtIndex:i]);
+        }
+    }
+    
+    [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(startGrains:) userInfo:nil repeats:NO];
+
 }
 
 - (void)startGrains:(id)sender {
@@ -169,8 +186,8 @@ static void *RawSerialKVOContext = &RawSerialKVOContext;
     NSString *granGrainDBParamName = [NSString stringWithFormat:@"%d-grangain_db", _file.dollarZero];
     NSString *granMuteParamName = [NSString stringWithFormat:@"%d-granmute", _file.dollarZero];
     int result = [PdBase sendFloat:0 toReceiver:sampleNumberParamName];
-    result = [PdBase sendFloat:70 toReceiver:granGrainDBParamName];
-    result = [PdBase sendFloat:0 toReceiver:granMuteParamName];
+    result = [PdBase sendFloat:60 toReceiver:granGrainDBParamName];
+    result = [PdBase sendFloat:1 toReceiver:granMuteParamName];
 }
 
 

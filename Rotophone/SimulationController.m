@@ -280,7 +280,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     if ([_body.name isEqualToString:@"p1"]) {
         return 77.78;
     } else if ([_body.name isEqualToString:@"p2"]) {
-        return 58.27;
+        return 98.0;
     } else if ([_body.name isEqualToString:@"p3"]) {
         return 196.0;
     }
@@ -292,7 +292,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     if ([_body.name isEqualToString:@"p1"]) {
         return 466.16;
     } else if ([_body.name isEqualToString:@"p2"]) {
-        return 5587.65;
+        return 87.31;
     } else if ([_body.name isEqualToString:@"p3"]) {
         return 233.08;
     }
@@ -360,11 +360,12 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
         float dy = tp.y - micOrigin.y;
         
         angles[i] = 2 * M_PI - atan2f(dy, dx) + microphone.microphoneShape.rotation;
-        /*
+        angles[i] = fmodf(angles[i], 2 * M_PI);
+        
         if (angles[i] < 0) {
             angles[i] += 2 * M_PI;
         }
-         */
+        
         
         // Angle is in range -PI to PI
         
@@ -430,6 +431,10 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     BOOL _mixerDirty;
     float _lastPosition;
     NSDate *_lastUpdate;
+    SimulationBody *_currentTarget;
+    SimulationBody *_nextTarget;
+    NSTimer* _targetDebounceTimer;
+    NSArray* _sampleLookup;
     
 }
 
@@ -451,6 +456,8 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
         _performer = [[MicrophonePerformer alloc] init];
         _sceneDirty = true;
         _mixerDirty = true;
+        _currentTarget = NULL;
+        _sampleLookup = [NSArray arrayWithObjects:@"p1", @"tv", @"p2", @"p3", @"v1", @"v2", @"room1", @"room2", nil];
         
     }
     return self;
@@ -537,6 +544,12 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     [_simulationTimer invalidate];
     _simulationTimer = nil;
     
+    
+    if (_targetDebounceTimer != nil) {
+        [_targetDebounceTimer invalidate];
+        _targetDebounceTimer = nil;
+    }
+    
     [self updatePerformState];
 }
 
@@ -590,6 +603,44 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     _sceneDirty = YES;
 }
 
+- (int)sampleIndexForName:(NSString *)name {
+    for (int i = 0; i < _sampleLookup.count; i++) {
+        if ([[_sampleLookup objectAtIndex:i] isEqualToString:name]) {
+            return i;
+        }
+    }
+    
+    return -1;
+}
+
+- (void)updateCurrentTarget:(id)sender {
+    if (_nextTarget != _currentTarget) {
+        
+        if (_currentTarget != nil) {
+            NSLog(@"transitioning from %@", _currentTarget.body.name);
+        }
+        
+        _currentTarget = _nextTarget;
+        
+        if (_currentTarget != nil) {
+            NSLog(@"transitioned to %@", _currentTarget.body.name);
+            
+            int sampleIndex = [self sampleIndexForName:_currentTarget.body.name];
+            
+            if (sampleIndex < 0 || sampleIndex >= 8) {
+                return;
+            }
+            
+            
+            NSString *sampleNumberParamName = [NSString stringWithFormat:@"%d-zample_idx_number", _patch.dollarZero];
+            int result = [PdBase sendFloat:sampleIndex toReceiver:sampleNumberParamName];
+            if (result != 0) {
+                NSLog(@"error selecting sample");
+            }
+        }
+    }
+}
+
 - (void)updateSimulation:(id)sender {
     
     if (_microphone == nil) {
@@ -614,10 +665,6 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
             velocity = dist / elapsed;
             velocityValid = true;
         }
-        
-        
-        
-        
     } else {
         _lastUpdate = [NSDate date];
         _lastPosition = _microphone.microphoneShape.microphoneRotation;
@@ -633,6 +680,9 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     
     if (_sceneDirty) {
         // Check each body
+        SimulationBody* maxTarget = nil;
+        float maxTargetDist = CGFLOAT_MAX;
+        
         for (SimulationBody *body in _bodies) {
             if (body->dirty) {
                 [body updatePoints];
@@ -669,8 +719,33 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
             }
             
             gpc_free_polygon(&_intersection);
+            
+            
+            float center = (body->target.angleMin + body->target.angleMax) / 2.0;
+            float dist = (center - _microphone.microphoneShape.microphoneRotation);
+            if (dist > M_PI) {
+                dist -= 2 * M_PI;
+            } else if (dist < -M_PI) {
+                dist += 2 * M_PI;
+            }
+            
+            if (fabs(dist) < maxTargetDist) {
+                maxTarget = body;
+                maxTargetDist = fabs(dist);
+            }
         }
         
+        
+        if (maxTarget != _nextTarget) {
+            _nextTarget = maxTarget;
+            if (_targetDebounceTimer != nil) {
+                [_targetDebounceTimer invalidate];
+            }
+            _targetDebounceTimer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:0.5] interval:0.0 target:self selector:@selector(updateCurrentTarget:) userInfo:nil repeats:NO];
+            
+            [[NSRunLoop currentRunLoop] addTimer:_targetDebounceTimer forMode:NSRunLoopCommonModes];
+        }
+
         // Update pd
         [self updatePD];
     }

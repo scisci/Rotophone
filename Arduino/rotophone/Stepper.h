@@ -30,8 +30,8 @@ public:
    lastCalibrationTime_(-1),
    scanning_(false)
    {
-    stepper_.setMaxSpeed(1600);
-    stepper_.setAcceleration(100);
+    stepper_.setMaxSpeed(1800);
+    stepper_.setAcceleration(125);
 
   }
 
@@ -55,7 +55,7 @@ public:
   }
 
   void useRunSpeed() {
-    stepper_.setMaxSpeed(1700);
+    stepper_.setMaxSpeed(1800);
   }
 
 
