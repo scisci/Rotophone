@@ -154,15 +154,17 @@ static void *RawSerialKVOContext = &RawSerialKVOContext;
         /**/
         NSString *loadSample1ParamName = [NSString stringWithFormat:@"%d-load_zample_1", _file.dollarZero];
         
-
+        NSLog(@"loading samples");
         int result = [PdBase sendMessage:@"read"  withArguments:[NSArray arrayWithObjects:@"-resize", @"-maxsize", [NSNumber numberWithFloat:1e+07], sample1Path, @"1-zample", nil] toReceiver:loadSample1ParamName];
 
         [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(startGrains:) userInfo:nil repeats:NO];
+        NSLog(@"loaded samples");
     }
     return self;
 }
 
 - (void)startGrains:(id)sender {
+    NSLog(@"starting grains");
     NSString *sampleNumberParamName = [NSString stringWithFormat:@"%d-zample_idx_number", _file.dollarZero];
     NSString *granGrainDBParamName = [NSString stringWithFormat:@"%d-grangain_db", _file.dollarZero];
     NSString *granMuteParamName = [NSString stringWithFormat:@"%d-granmute", _file.dollarZero];
@@ -172,7 +174,8 @@ static void *RawSerialKVOContext = &RawSerialKVOContext;
 }
 
 
-- (void)setupSerialPort {
+- (void)setupSerialPort:(id)sender {
+    NSLog(@"setting up serial port");
     // If no serial port is selected, then try to pull one from
     // the saved state.
     if (_serialPortHandler.selectedPort == nil) {
@@ -204,8 +207,10 @@ static void *RawSerialKVOContext = &RawSerialKVOContext;
     self.serialPortHandler = appDelegate.serialPortHandler;
     self.simulationController = [[SimulationController alloc] initWithPatch:_file];
     
-    [self setupSerialPort];
-
+    
+    [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(setupSerialPort:) userInfo:nil repeats:NO];
+    
+ 
     
     // Create a window
     self.mainWindowController = [[MainWindowController alloc] init];

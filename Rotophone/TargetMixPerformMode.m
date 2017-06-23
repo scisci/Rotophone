@@ -144,7 +144,7 @@
         _targetInvalid = NO;
     }
     float boundary = 0.1;
-    float angle = target.angleMin + dist * boundary + dist * ((float)rand() / RAND_MAX) * (1 - boundary * 2);
+    float angle = target.angleMin + dist * 0.5;//target.angleMin + dist * boundary + dist * ((float)rand() / RAND_MAX) * (1 - boundary * 2);
     
     [self moveToPosition:angle];
 }

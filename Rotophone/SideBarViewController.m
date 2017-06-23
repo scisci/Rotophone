@@ -349,7 +349,7 @@ static void *TransportMockKVOContext = &TransportMockKVOContext;
     [sideBarView addSubview:sideBarView.rawView];
     
     [sideBarView.transportView.volumeSlider setMinValue:0.0];
-    [sideBarView.transportView.volumeSlider setMaxValue:1.0];
+    [sideBarView.transportView.volumeSlider setMaxValue:1.5];
 }
 
 - (void)handleRawData:(NSData *)rawData {

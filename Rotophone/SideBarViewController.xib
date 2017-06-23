@@ -75,7 +75,7 @@
                         <slider verticalHuggingPriority="750" misplaced="YES" id="47a-xp-bwq">
                             <rect key="frame" x="9" y="41" width="184" height="19"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="kbI-h3-9CC"/>
+                            <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="1.5" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="kbI-h3-9CC"/>
                             <connections>
                                 <action selector="handleVolumeSlider:" target="Tp6-Ge-sVn" id="vPZ-LI-bbg"/>
                             </connections>

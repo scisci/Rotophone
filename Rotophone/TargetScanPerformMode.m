@@ -18,7 +18,7 @@
     // Choose a random target
     _targetInvalid = NO;
     _scheduledNextStep = NO;
-    _maxReps = 2 + rand() % 8;
+    _maxReps = 2 + rand() % 12;
     _reps = 0;
     [self initTarget];
 }
@@ -142,7 +142,7 @@
     
     if (fabsf(dist) < 0.02) {
         _scheduledNextStep = YES;
-        [self scheduleTimer:_scanPos == 3 ? 3.0 + ((float)rand() / RAND_MAX) : 0.1];
+        [self scheduleTimer:_scanPos == 3 ? 3.0 + ((float)rand() / RAND_MAX) : 0.01];
     } else if (valid && velocity == 0) {
         // Not moving, maybe didn't receive last command
         [self moveToPosition:_currentTargetPosition];

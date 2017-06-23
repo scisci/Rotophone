@@ -239,7 +239,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     float param = [self scanParam];
     float p = (1.0 - 2.0 * fabsf(0.5 - param)); // 0 - 1 where  1 is in center
     
-    p *= 1.75;
+    p *= 2.5;
     if (p > 1.0) {
         p = 1.0;
     }
@@ -260,7 +260,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     } else if (p > 1) {
         p = 1;
     }
-    return p;
+    return p * 1.25;
 }
 
 - (float)parameterizedPan {
@@ -282,7 +282,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     } else if ([_body.name isEqualToString:@"p2"]) {
         return 58.27;
     } else if ([_body.name isEqualToString:@"p3"]) {
-        return 98.0;
+        return 196.0;
     }
     
     return 155.56;
@@ -292,7 +292,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     if ([_body.name isEqualToString:@"p1"]) {
         return 466.16;
     } else if ([_body.name isEqualToString:@"p2"]) {
-        return 174.61;
+        return 5587.65;
     } else if ([_body.name isEqualToString:@"p3"]) {
         return 233.08;
     }
@@ -304,7 +304,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     if ([_body.name isEqualToString:@"p1"]) {
         return 1318.51;
     } else if ([_body.name isEqualToString:@"p2"]) {
-        return 1661.22;
+        return 12543.84;
     } else if ([_body.name isEqualToString:@"p3"]) {
         return 2349.32;
     }
@@ -313,15 +313,15 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
 }
 
 - (float)freq1Param {
-    return [self freq1] * ([self centerScanParam] + 1.0);
+    return [self freq1];// * ([self centerScanParam] + 1.0);
 }
 
 - (float)freq2Param {
-    return [self freq2] * ([self centerScanParam] + 1.0) * 0.618;
+    return [self freq2];// * ([self centerScanParam] + 1.0);// * 0.618;
 }
 
 - (float)freq3Param {
-    return [self freq3] * ([self centerScanParam] + 1.0) * 1.618;
+    return [self freq3];// * ([self centerScanParam] + 1.0);// * 1.618;
 }
 
 - (void)updatePoints {

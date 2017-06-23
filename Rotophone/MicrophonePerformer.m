@@ -87,10 +87,10 @@
     } else if (p < 0.20) { // 10 %
         NSLog(@"wait mode");
         return [[WaitPerformMode alloc] initWithPerformer:self];
-    }else if (p < 0.50) { // 30 %
+    }else if (p < 0.55) { // 35 %
         NSLog(@"target scan mode");
         return [[TargetScanPerformMode alloc] initWithPerformer:self];
-    } else if (p < 0.80){ // 30 %
+    } else if (p < 0.80){ // 25 %
         NSLog(@"target mix mode");
         return [[TargetMixPerformMode alloc] initWithPerformer:self];
     } else { // 20%
