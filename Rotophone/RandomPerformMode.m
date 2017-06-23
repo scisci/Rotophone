@@ -9,6 +9,20 @@
 #import "RandomPerformMode.h"
 #import "MicrophonePerformer.h"
 
+@implementation WaitPerformMode
+- (void)begin {
+    [super begin];
+    
+    _waitInterval = 1.0 * ((float)rand() / RAND_MAX) * 10.0;
+    
+    [self scheduleTimer:_waitInterval];
+}
+
+- (void)handleTimer:(id)sender {
+    [self complete];
+}
+@end
+
 @implementation RandomPerformMode
 
 - (void)begin {

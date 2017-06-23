@@ -20,11 +20,14 @@
         // Can't work
         [self complete];
     } else {
+        if (maxTargets > 4) {
+            maxTargets = 4;
+        }
         _numTargets = 2 + (maxTargets == 2 ? 0 : (rand() % (maxTargets - 1)));
         
         int totalMotions = _numTargets * (_numTargets - 1);
         
-        _maxRepeats = rand() % (10 / totalMotions);
+        _maxRepeats = totalMotions > 10 ? 0 : rand() % (10 / totalMotions);
         _repeatCount = 0;
         
         // Copy in

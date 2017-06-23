@@ -11,6 +11,7 @@
 #import "RandomPerformMode.h"
 #import "TargetMixPerformMode.h"
 #import "TargetScanPerformMode.h"
+#import "RoomScanPerformMode.h"
 
 @class PerformMode;
 
@@ -76,17 +77,25 @@
 }
 
 - (PerformMode *)chooseNextMode {
-    //return [[TargetScanPerformMode alloc] initWithPerformer:self];
     float p = (float)rand() / RAND_MAX;
     
     NSLog(@"choosing perform mode, probability %f", p);
     
-    if (p < 0.2) { // 20 %
+    if (p < 0.10) { // 10 %
+        NSLog(@"random mode");
         return [[RandomPerformMode alloc] initWithPerformer:self];
-    } else if (p < 0.7) { // 50 %
+    } else if (p < 0.20) { // 10 %
+        NSLog(@"wait mode");
+        return [[WaitPerformMode alloc] initWithPerformer:self];
+    }else if (p < 0.50) { // 30 %
+        NSLog(@"target scan mode");
         return [[TargetScanPerformMode alloc] initWithPerformer:self];
-    } else { // 30 %
+    } else if (p < 0.80){ // 30 %
+        NSLog(@"target mix mode");
         return [[TargetMixPerformMode alloc] initWithPerformer:self];
+    } else { // 20%
+        NSLog(@"room scan mode");
+        return [[RoomScanPerformMode alloc] initWithPerformer:self];
     }
 }
 
@@ -109,8 +118,7 @@
     if (mode == _mode) {
         return;
     }
-    
-    NSLog(@"ending old mode");
+
     if (_mode != nil) {
         [_mode end];
     }
@@ -118,7 +126,6 @@
     _mode = mode;
     
     if (_mode != nil) {
-        NSLog(@"starting next mode");
         [_mode begin];
     }
 }

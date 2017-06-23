@@ -10,6 +10,11 @@
 
 #import "PerformMode.h"
 
+@interface WaitPerformMode : PerformMode {
+    NSTimeInterval _waitInterval;
+}
+@end
+
 @interface RandomPerformMode : PerformMode {
     int _maxSteps;
     int _step;
