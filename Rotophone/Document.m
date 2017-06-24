@@ -152,13 +152,12 @@ static void *RawSerialKVOContext = &RawSerialKVOContext;
         
         NSLog(@"loading samples");
         // goods
-        // whale1.wav
         // whale2.wav
         // tv.wav
         // lynch.aif
         // horns.wav
         // bell.aif
-        [self loadSampleBank:[NSArray arrayWithObjects:@"volcano.wav", @"tv_helicopter1.wav", @"firecrackle.wav", @"rocks.wav", @"glass.wav", @"pottery.aif", @"horns.wav", @"whale2.wav", nil]];
+        [self loadSampleBank:[NSArray arrayWithObjects:@"bell.aif", @"horns.wav", @"rocks1.wav", @"rocks.wav", @"glass.wav", @"pottery.aif", @"horns.wav", @"whale2.wav", nil]];
     }
     return self;
 }

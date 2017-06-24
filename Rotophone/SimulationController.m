@@ -141,13 +141,13 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     int result = 0;
     result = [PdBase sendFloat:270 toReceiver:_jitterParamName]; // 0 - 500
     result = [PdBase sendFloat:30 toReceiver:_voicesParamName]; // 1-32
-    result = [PdBase sendFloat:300 toReceiver:_scanSpeedParamName]; // 0 - 10,000 ?
-    result = [PdBase sendFloat:400 toReceiver:_sustainParamName]; // 0 - 5000
+    result = [PdBase sendFloat:50 toReceiver:_scanSpeedParamName]; // 0 - 10,000 ?
+    result = [PdBase sendFloat:800 toReceiver:_sustainParamName]; // 0 - 5000
     result = [PdBase sendFloat:0 toReceiver:_asynchParamName]; // 99 - 0
     result = [PdBase sendFloat:100 toReceiver:_envelopeParamName]; // 2 - 200
-    result = [PdBase sendFloat:200 toReceiver:_spreadParamName]; // 0 - 1000
-    result = [PdBase sendFloat:25 toReceiver:_envelopeSpreadParamName]; // 0 - 50
-    result = [PdBase sendFloat:40 toReceiver:_sustainSpreadParamName]; // 0 - 100
+    result = [PdBase sendFloat:250 toReceiver:_spreadParamName]; // 0 - 1000
+    result = [PdBase sendFloat:20 toReceiver:_envelopeSpreadParamName]; // 0 - 50
+    result = [PdBase sendFloat:35 toReceiver:_sustainSpreadParamName]; // 0 - 100
 }
 
 - (void)setSampleIndex:(int)index {
@@ -163,7 +163,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
 
 - (void)setVolumeParam:(float)volume {
     _volume = volume;
-    int result = [PdBase sendFloat:_volume * 60.0 toReceiver:_gainDBParamName];
+    int result = [PdBase sendFloat:_volume * 55.0 toReceiver:_gainDBParamName];
 }
 
 
@@ -172,6 +172,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     if (result != 0) {
         NSLog(@"failed to set position");
     }
+    result = [PdBase sendFloat:50 toReceiver:_scanSpeedParamName]; // 0 - 10,000 ?
     
     result =[PdBase sendFloat:pan * 120 toReceiver:_panParamName]; // 0 - 500
 }
@@ -377,12 +378,12 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     //float panParam = ;
     
     
-    if ([_body.name characterAtIndex:0] == 'p') {
+   // if ([_body.name characterAtIndex:0] == 'p') {
         return _field.pan.floatValue;
-    }
+    //}
     //return panParam;
     
-    return 1.0 - (_intersectionAreaLeft / (_intersectionAreaLeft + _intersectionAreaRight));
+    //return 1.0 - (_intersectionAreaLeft / (_intersectionAreaLeft + _intersectionAreaRight));
 }
 
 - (float)freq1 {
@@ -393,7 +394,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     } else if ([_body.name isEqualToString:@"p3"]) {
         return 196.0;
     } else if ([_body.name isEqualToString:@"tv"]) {
-        return 412.0;
+        return 212.0;
     } else if ([_body.name isEqualToString:@"v1"]) {
         return 16388.0;
     } else if ([_body.name isEqualToString:@"v2"]) {
@@ -580,7 +581,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
         _sampleLookup = [NSDictionary dictionaryWithObjectsAndKeys:
                           [NSNumber numberWithInt:0],@"p1",
                           [NSNumber numberWithInt:1],@"tv",
-                          [NSNumber numberWithInt:2],@"p2",
+                          [NSNumber numberWithInt:3],@"p2",
                           [NSNumber numberWithInt:3],@"p3",
                           [NSNumber numberWithInt:4],@"v1",
                           [NSNumber numberWithInt:5],@"v2",
@@ -753,7 +754,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
 
 - (void)doFadeCurrentTarget:(id)sender {
     if (_targetSwapState == 0) {
-        float nextVolume = _grain.volume * 0.75;
+        float nextVolume = _grain.volume * 0.6;
         if (nextVolume < 0.05) {
             nextVolume = 0;
         }
@@ -763,7 +764,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
             [self updateCurrentTarget:nil];
         }
     } else if (_targetSwapState == 1) {
-        float nextVolume = _grain.volume + (1 - _grain.volume) * 0.25;
+        float nextVolume = _grain.volume + (1 - _grain.volume) * 0.4;
         if (1 - _grain.volume < 0.05) {
             nextVolume = 1;
         }
@@ -920,17 +921,27 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
             gpc_free_polygon(&_intersection);
             
             
-            float center = (body->target.angleMin + body->target.angleMax) / 2.0;
-            float dist = (center - _microphone.microphoneShape.microphoneRotation);
-            if (dist > M_PI) {
-                dist -= 2 * M_PI;
-            } else if (dist < -M_PI) {
-                dist += 2 * M_PI;
+            float distMin = (body->target.angleMin - _microphone.microphoneShape.microphoneRotation);
+            float distMax = (body->target.angleMax - _microphone.microphoneShape.microphoneRotation);
+            if (distMin > M_PI) {
+                distMin -= 2 * M_PI;
+            } else if (distMin < -M_PI) {
+                distMin += 2 * M_PI;
+            }
+            if (distMax > M_PI) {
+                distMax -= 2 * M_PI;
+            } else if (distMax < -M_PI) {
+                distMax += 2 * M_PI;
             }
             
-            if (fabs(dist) < maxTargetDist) {
+            if (fabs(distMin) < maxTargetDist) {
                 maxTarget = body;
-                maxTargetDist = fabs(dist);
+                maxTargetDist = fabs(distMin);
+            }
+            
+            if (fabs(distMax) < maxTargetDist) {
+                maxTarget = body;
+                maxTargetDist = fabs(distMax);
             }
             
             
