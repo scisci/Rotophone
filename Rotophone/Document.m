@@ -151,7 +151,9 @@ static void *RawSerialKVOContext = &RawSerialKVOContext;
 
         
         NSLog(@"loading samples");
-        [self loadSampleBank:[NSArray arrayWithObjects:@"bear.wav", @"tv.aif", @"volcano.wav", @"rocks.wav", @"violin1.aif", @"violin2.aif", @"horns.wav", @"whale2.wav", nil]];
+        // goods
+        // whale2.wav
+        [self loadSampleBank:[NSArray arrayWithObjects:@"lynch.aif", @"whale1.wav", @"firecrackle.wav", @"rocks.wav", @"horns.wav", @"lynch.aif", @"horns.wav", @"whale2.wav", nil]];
     }
     return self;
 }
@@ -175,20 +177,10 @@ static void *RawSerialKVOContext = &RawSerialKVOContext;
             NSLog(@"failed to load sample %@", [paths objectAtIndex:i]);
         }
     }
-    
-    [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(startGrains:) userInfo:nil repeats:NO];
+
 
 }
 
-- (void)startGrains:(id)sender {
-    NSLog(@"starting grains");
-    NSString *sampleNumberParamName = [NSString stringWithFormat:@"%d-zample_idx_number", _file.dollarZero];
-    NSString *granGrainDBParamName = [NSString stringWithFormat:@"%d-grangain_db", _file.dollarZero];
-    NSString *granMuteParamName = [NSString stringWithFormat:@"%d-granmute", _file.dollarZero];
-    int result = [PdBase sendFloat:0 toReceiver:sampleNumberParamName];
-    result = [PdBase sendFloat:60 toReceiver:granGrainDBParamName];
-    result = [PdBase sendFloat:1 toReceiver:granMuteParamName];
-}
 
 
 - (void)setupSerialPort:(id)sender {

@@ -73,6 +73,111 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
 
 }
 
+
+@interface GrainController : NSObject {
+    PdFile *_patch;
+    NSString *_sampleNumberParamName;
+    NSString *_gainDBParamName;
+    NSString *_muteParamName;
+    NSString *_jitterParamName;
+    NSString *_samplePosParamName;
+    
+    NSString *_voicesParamName;
+    NSString *_scanSpeedParamName;
+    NSString *_sustainParamName;
+    NSString *_asynchParamName;
+    NSString *_envelopeParamName;
+    
+    NSString *_spreadParamName;
+    NSString *_panParamName;
+    NSString *_envelopeSpreadParamName;
+    NSString *_sustainSpreadParamName;
+    float _volume;
+}
+
+@end
+
+
+@implementation GrainController
+
+- (float)volume {
+    return _volume;
+}
+- (id)initWithPatch:(PdFile *)patch {
+    if (self = [super init]) {
+        _patch = patch;
+        
+        _sampleNumberParamName = [NSString stringWithFormat:@"%d-zample_idx_number", _patch.dollarZero];
+        _gainDBParamName = [NSString stringWithFormat:@"%d-grangain_db", _patch.dollarZero];
+        _muteParamName = [NSString stringWithFormat:@"%d-granmute", _patch.dollarZero];
+        
+        _jitterParamName = [NSString stringWithFormat:@"%d-zample_jitter", _patch.dollarZero];
+        _samplePosParamName = [NSString stringWithFormat:@"%d-zample_pos", _patch.dollarZero];
+        
+        _voicesParamName = [NSString stringWithFormat:@"%d-zample_voices", _patch.dollarZero];
+        _scanSpeedParamName = [NSString stringWithFormat:@"%d-zample_scan_speed", _patch.dollarZero];
+        _sustainParamName = [NSString stringWithFormat:@"%d-zample_sustain_min", _patch.dollarZero];
+        _asynchParamName = [NSString stringWithFormat:@"%d-zample_asynch", _patch.dollarZero];
+        _envelopeParamName = [NSString stringWithFormat:@"%d-zample_envelope_min", _patch.dollarZero];
+        _spreadParamName = [NSString stringWithFormat:@"%d-zample_spread", _patch.dollarZero];
+        _panParamName = [NSString stringWithFormat:@"%d-zample_pan", _patch.dollarZero];
+        _envelopeSpreadParamName = [NSString stringWithFormat:@"%d-zample_envelope_spread", _patch.dollarZero];
+        _sustainSpreadParamName = [NSString stringWithFormat:@"%d-zample_sustain_spread", _patch.dollarZero];
+        
+        _volume = 0;
+        
+        int result = 0;
+        result = [PdBase sendFloat:0 toReceiver:_gainDBParamName];
+        result = [PdBase sendFloat:1 toReceiver:_muteParamName];
+        
+        [self enterScanMode];
+    }
+    
+    return self;
+}
+
+
+- (void)enterScanMode {
+    int result = 0;
+    result = [PdBase sendFloat:250 toReceiver:_jitterParamName]; // 0 - 500
+    result = [PdBase sendFloat:31 toReceiver:_voicesParamName]; // 1-32
+    result = [PdBase sendFloat:300 toReceiver:_scanSpeedParamName]; // 0 - 10,000 ?
+    result = [PdBase sendFloat:1400 toReceiver:_sustainParamName]; // 0 - 5000
+    result = [PdBase sendFloat:0 toReceiver:_asynchParamName]; // 99 - 0
+    result = [PdBase sendFloat:100 toReceiver:_envelopeParamName]; // 2 - 200
+    result = [PdBase sendFloat:200 toReceiver:_spreadParamName]; // 0 - 1000
+    result = [PdBase sendFloat:25 toReceiver:_envelopeSpreadParamName]; // 0 - 50
+    result = [PdBase sendFloat:40 toReceiver:_sustainSpreadParamName]; // 0 - 100
+}
+
+- (void)setSampleIndex:(int)index {
+    if (index < 0 || index >= 8) {
+        return;
+    }
+    
+    int result = [PdBase sendFloat:index toReceiver:_sampleNumberParamName];
+    if (result != 0) {
+        NSLog(@"failed to set sample index");
+    }
+}
+
+- (void)setVolumeParam:(float)volume {
+    _volume = volume;
+    int result = [PdBase sendFloat:_volume * 60.0 toReceiver:_gainDBParamName];
+}
+
+
+- (void)setPosition:(float)param AndPan:(float)pan {
+    int result = [PdBase sendFloat:param * 1000 toReceiver:_samplePosParamName];
+    if (result != 0) {
+        NSLog(@"failed to set position");
+    }
+    
+    result =[PdBase sendFloat:pan * 120 toReceiver:_panParamName]; // 0 - 500
+}
+
+@end
+
 @interface SimulationMicrophone : NSObject {
     @public
     gpc_polygon polyLeft;
@@ -269,11 +374,15 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     }
     
     // Use this if you want to base pan of the idea of a stereo mic
-    //float panParam = 1.0 - (_intersectionAreaLeft / (_intersectionAreaLeft + _intersectionAreaRight));
+    //float panParam = ;
     
     
-    return _field.pan.floatValue;
+    if ([_body.name characterAtIndex:0] == 'p') {
+        return _field.pan.floatValue;
+    }
     //return panParam;
+    
+    return 1.0 - (_intersectionAreaLeft / (_intersectionAreaLeft + _intersectionAreaRight));
 }
 
 - (float)freq1 {
@@ -434,7 +543,10 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     SimulationBody *_currentTarget;
     SimulationBody *_nextTarget;
     NSTimer* _targetDebounceTimer;
-    NSArray* _sampleLookup;
+    NSDictionary* _sampleLookup;
+    GrainController* _grain;
+    
+    BOOL _targetSwapState;
     
 }
 
@@ -457,7 +569,18 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
         _sceneDirty = true;
         _mixerDirty = true;
         _currentTarget = NULL;
-        _sampleLookup = [NSArray arrayWithObjects:@"p1", @"tv", @"p2", @"p3", @"v1", @"v2", @"room1", @"room2", nil];
+        _grain = [[GrainController alloc] initWithPatch:_patch];
+       // _sampleLookup = [NSArray arrayWithObjects:@"p1", @"tv", @"p2", @"p3", @"v1", @"v2", @"room1", @"room2", nil];
+        _sampleLookup = [NSDictionary dictionaryWithObjectsAndKeys:
+                          [NSNumber numberWithInt:0],@"p1",
+                          [NSNumber numberWithInt:1],@"tv",
+                          [NSNumber numberWithInt:2],@"p2",
+                          [NSNumber numberWithInt:3],@"p3",
+                          [NSNumber numberWithInt:4],@"v1",
+                          [NSNumber numberWithInt:4],@"v2",
+                          [NSNumber numberWithInt:5],@"room1",
+                          [NSNumber numberWithInt:6],@"room2",
+                         nil];
         
     }
     return self;
@@ -604,40 +727,110 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
 }
 
 - (int)sampleIndexForName:(NSString *)name {
-    for (int i = 0; i < _sampleLookup.count; i++) {
-        if ([[_sampleLookup objectAtIndex:i] isEqualToString:name]) {
-            return i;
-        }
+    NSNumber* num = [_sampleLookup objectForKey:name];
+    if (num != nil) {
+        return (int)[num integerValue];
     }
     
     return -1;
 }
 
+- (void)fadeCurrentTarget {
+    if (_targetDebounceTimer != nil) {
+        [_targetDebounceTimer invalidate];
+    }
+    
+    _targetDebounceTimer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval:0.03 target:self selector:@selector(doFadeCurrentTarget:) userInfo:nil repeats:YES];
+    
+    [[NSRunLoop currentRunLoop] addTimer:_targetDebounceTimer forMode:NSRunLoopCommonModes];
+}
+
+- (void)doFadeCurrentTarget:(id)sender {
+    if (_targetSwapState == 0) {
+        float nextVolume = _grain.volume * 0.75;
+        if (nextVolume < 0.05) {
+            nextVolume = 0;
+        }
+        [_grain setVolumeParam:nextVolume];
+        if (nextVolume == 0) {
+            _targetSwapState = 1;
+            [self updateCurrentTarget:nil];
+        }
+    } else if (_targetSwapState == 1) {
+        float nextVolume = _grain.volume + (1 - _grain.volume) * 0.25;
+        if (1 - _grain.volume < 0.05) {
+            nextVolume = 1;
+        }
+        
+        [_grain setVolumeParam:nextVolume];
+        if (nextVolume == 1) {
+            _targetSwapState = 2;
+            [self updateCurrentTarget:nil];
+        }
+    } else {
+        if (_targetDebounceTimer != nil) {
+            [_targetDebounceTimer invalidate];
+        }
+    }
+}
+
+
+
 - (void)updateCurrentTarget:(id)sender {
-    if (_nextTarget != _currentTarget) {
-        
-        if (_currentTarget != nil) {
+    if (_targetDebounceTimer != nil) {
+        [_targetDebounceTimer invalidate];
+        _targetDebounceTimer = nil;
+    }
+    
+    
+    
+     if (_targetSwapState == 0) {
+         int sampleIndexCurrent = -1;
+         int sampleIndexNext = -1;
+         if (_currentTarget != nil) {
+             sampleIndexCurrent = [self sampleIndexForName:_currentTarget.body.name];
+         }
+         
+         if (_nextTarget != nil) {
+             sampleIndexNext = [self sampleIndexForName:_nextTarget.body.name];
+         }
+        if (sampleIndexCurrent != sampleIndexNext) {
             NSLog(@"transitioning from %@", _currentTarget.body.name);
+            // First fade down the volume
+            [self fadeCurrentTarget];
+            return;
+        } else {
+            _targetSwapState = 1;
         }
+     }
+    
         
-        _currentTarget = _nextTarget;
-        
+    if (_targetSwapState == 1) {
+        int sampleIndexCurrent = -1;
+        int sampleIndexNext = -1;
         if (_currentTarget != nil) {
-            NSLog(@"transitioned to %@", _currentTarget.body.name);
-            
-            int sampleIndex = [self sampleIndexForName:_currentTarget.body.name];
-            
-            if (sampleIndex < 0 || sampleIndex >= 8) {
-                return;
-            }
-            
-            
-            NSString *sampleNumberParamName = [NSString stringWithFormat:@"%d-zample_idx_number", _patch.dollarZero];
-            int result = [PdBase sendFloat:sampleIndex toReceiver:sampleNumberParamName];
-            if (result != 0) {
-                NSLog(@"error selecting sample");
-            }
+            sampleIndexCurrent = [self sampleIndexForName:_currentTarget.body.name];
         }
+        
+        if (_nextTarget != nil) {
+            sampleIndexNext = [self sampleIndexForName:_nextTarget.body.name];
+        }
+
+        _currentTarget = _nextTarget;
+
+        if (sampleIndexCurrent != sampleIndexNext) {
+            NSLog(@"transitioned to %@", _currentTarget.body.name);
+            [_grain setSampleIndex:sampleIndexNext];
+            
+            [self fadeCurrentTarget];
+            
+        } else {
+            _targetSwapState = 2;
+        }
+    }
+    
+    if (_targetSwapState == 2) {
+        NSLog(@"Transition complete.");
     }
 }
 
@@ -733,6 +926,16 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
                 maxTarget = body;
                 maxTargetDist = fabs(dist);
             }
+            
+            
+            if (body == _currentTarget && (body->target.angleMax != body->target.angleMin)) {
+                float pos = (_microphone.microphoneShape.microphoneRotation - body->target.angleMin) / (body->target.angleMax - body->target.angleMin);
+                if (pos < 0) {
+                    pos = 0;
+                }
+                
+                [_grain setPosition:pos AndPan:[body parameterizedPan]];
+            }
         }
         
         
@@ -741,10 +944,16 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
             if (_targetDebounceTimer != nil) {
                 [_targetDebounceTimer invalidate];
             }
-            _targetDebounceTimer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:0.5] interval:0.0 target:self selector:@selector(updateCurrentTarget:) userInfo:nil repeats:NO];
+            
+            _targetSwapState = 0;
+            
+            _targetDebounceTimer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:0.25] interval:0.0 target:self selector:@selector(updateCurrentTarget:) userInfo:nil repeats:NO];
             
             [[NSRunLoop currentRunLoop] addTimer:_targetDebounceTimer forMode:NSRunLoopCommonModes];
         }
+        
+        
+
 
         // Update pd
         [self updatePD];

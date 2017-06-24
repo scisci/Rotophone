@@ -285,19 +285,19 @@
 6 7 0 8 -262144 -1 -1 5900 1;
 #X obj 1412 174 nbx 5 14 0 100 0 1 1-zample_sustain_sprd empty range
 60 8 0 10 -262144 -1 -1 43 256;
-#X obj 1304 194 hsl 100 15 0 100 0 1 1-zample_gain_min 20-midi gain
+#X obj 1302 195 hsl 100 15 0 100 0 1 1-zample_gain_min 20-midi gain
 6 7 0 8 -262144 -1 -1 1800 1;
 #X obj 1412 195 nbx 5 14 0 100 0 1 1-zample_gain_sprd empty range 60
 8 0 10 -262144 -1 -1 0 256;
-#X obj 1304 214 hsl 100 15 0 100 0 1 1-zample_pan_sprd empty stereo_spread
+#X obj 1294 220 hsl 100 15 0 100 0 1 1-zample_pan_sprd empty stereo_spread
 6 7 0 8 -262144 -1 -1 2000 1;
 #X obj 1415 214 hsl 75 15 0 120 0 1 gran1pan empty pan 1 8 0 8 -262144
 -1 -1 2100 1;
-#X obj 1415 233 hsl 75 15 1 32 0 1 1-zample_voices empty vox 15 9 0
+#X obj 1419 249 hsl 75 15 1 32 0 1 1-zample_voices empty vox 15 9 0
 8 -262144 -1 -1 3000 1;
-#X obj 1304 233 hsl 100 15 99 0 0 1 1-zample_asynch empty asynch 15
+#X obj 1318 282 hsl 100 15 99 0 0 1 1-zample_asynch empty asynch 15
 9 0 8 -262144 -1 -1 9900 1;
-#X obj 1282 470 hradio 15 1 1 8 empty empty sample_number 20 7 0 8
+#X obj 1371 553 hradio 15 1 1 8 empty empty sample_number 20 7 0 8
 -262144 -1 -1 0;
 #X obj 1513 214 nbx 5 14 0 10000 0 1 readspread empty grain_spread
 60 7 0 10 -262144 -1 -1 374 256;
@@ -621,8 +621,8 @@ in learning more.;
 #X obj 1685 431 cnv 15 200 40 empty empty empty 8 12 0 18 -233017 -66577
 0;
 #X text 1776 454 derek@umatic.nl;
-#X floatatom 1320 377 5 0 0 0 - - -, f 5;
-#X floatatom 1473 343 5 0 0 0 - - -, f 5;
+#X floatatom 1344 374 5 0 0 0 - - -, f 5;
+#X floatatom 1477 368 5 0 0 0 - - -, f 5;
 #X obj 1396 340 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;
 #X obj 1077 344 r gran1gain;
@@ -764,6 +764,46 @@ in learning more.;
 #X obj 581 292 *~ 0.03;
 #X obj 395 315 *~ 1.9;
 #X obj 477 291 *~ 0.9;
+#X obj 1237 305 r \$0-zample_pos;
+#X obj 1466 277 r \$0-zample_scan_speed;
+#X obj 1210 653 r \$0-zample_asynch;
+#X obj 1209 729 s 1-zample_asynch;
+#X obj 1211 679 pack 0 100;
+#X obj 1212 704 line;
+#X obj 1239 361 line;
+#X obj 1238 336 pack 0 50;
+#X obj 1463 335 line;
+#X obj 1462 310 pack 0 50;
+#X obj 1417 647 r \$0-zample_voices;
+#X obj 1416 723 s 1-zample_voices;
+#X obj 1630 641 pack 0 100;
+#X obj 1631 666 line;
+#X obj 1629 615 r \$0-zample_sustain_min;
+#X obj 1628 691 s 1-zample_sustain_min;
+#X obj 1562 507 pack 0 100;
+#X obj 1563 532 line;
+#X obj 1561 481 r \$0-zample_envelope_min;
+#X obj 1560 557 s 1-zample_envelope_min;
+#X obj 1318 453 pack 0 100;
+#X obj 1319 478 line;
+#X obj 1317 427 r \$0-zample_jitter;
+#X obj 1316 503 s 1-zample_jitter;
+#X obj 822 666 pack 0 100;
+#X obj 823 691 line;
+#X obj 821 640 r \$0-zample_spread;
+#X obj 820 716 s readspread;
+#X obj 658 708 line;
+#X obj 656 657 r \$0-zample_pan;
+#X obj 655 733 s gran1pan;
+#X obj 657 683 pack 0 300;
+#X obj 932 574 pack 0 100;
+#X obj 933 599 line;
+#X obj 931 548 r \$0-zample_envelope_spread;
+#X obj 930 624 s 1-zample_envelope_sprd;
+#X obj 954 715 pack 0 100;
+#X obj 951 742 line;
+#X obj 953 689 r \$0-zample_sustain_spread;
+#X obj 952 765 s 1-zample_sustain_sprd;
 #X connect 1 0 2 0;
 #X connect 2 0 139 0;
 #X connect 3 0 13 0;
@@ -870,3 +910,34 @@ in learning more.;
 #X connect 141 0 125 1;
 #X connect 142 0 101 0;
 #X connect 143 0 125 0;
+#X connect 144 0 151 0;
+#X connect 145 0 153 0;
+#X connect 146 0 148 0;
+#X connect 148 0 149 0;
+#X connect 149 0 147 0;
+#X connect 150 0 58 0;
+#X connect 151 0 150 0;
+#X connect 152 0 59 0;
+#X connect 153 0 152 0;
+#X connect 154 0 155 0;
+#X connect 156 0 157 0;
+#X connect 157 0 159 0;
+#X connect 158 0 156 0;
+#X connect 160 0 161 0;
+#X connect 161 0 163 0;
+#X connect 162 0 160 0;
+#X connect 164 0 165 0;
+#X connect 165 0 167 0;
+#X connect 166 0 164 0;
+#X connect 168 0 169 0;
+#X connect 169 0 171 0;
+#X connect 170 0 168 0;
+#X connect 172 0 174 0;
+#X connect 173 0 175 0;
+#X connect 175 0 172 0;
+#X connect 176 0 177 0;
+#X connect 177 0 179 0;
+#X connect 178 0 176 0;
+#X connect 180 0 181 0;
+#X connect 181 0 183 0;
+#X connect 182 0 180 0;
