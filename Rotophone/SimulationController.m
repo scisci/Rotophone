@@ -139,10 +139,10 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
 
 - (void)enterScanMode {
     int result = 0;
-    result = [PdBase sendFloat:250 toReceiver:_jitterParamName]; // 0 - 500
-    result = [PdBase sendFloat:31 toReceiver:_voicesParamName]; // 1-32
+    result = [PdBase sendFloat:270 toReceiver:_jitterParamName]; // 0 - 500
+    result = [PdBase sendFloat:30 toReceiver:_voicesParamName]; // 1-32
     result = [PdBase sendFloat:300 toReceiver:_scanSpeedParamName]; // 0 - 10,000 ?
-    result = [PdBase sendFloat:1400 toReceiver:_sustainParamName]; // 0 - 5000
+    result = [PdBase sendFloat:400 toReceiver:_sustainParamName]; // 0 - 5000
     result = [PdBase sendFloat:0 toReceiver:_asynchParamName]; // 99 - 0
     result = [PdBase sendFloat:100 toReceiver:_envelopeParamName]; // 2 - 200
     result = [PdBase sendFloat:200 toReceiver:_spreadParamName]; // 0 - 1000
@@ -392,6 +392,12 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
         return 98.0;
     } else if ([_body.name isEqualToString:@"p3"]) {
         return 196.0;
+    } else if ([_body.name isEqualToString:@"tv"]) {
+        return 412.0;
+    } else if ([_body.name isEqualToString:@"v1"]) {
+        return 16388.0;
+    } else if ([_body.name isEqualToString:@"v2"]) {
+        return 3847.0;
     }
     
     return 155.56;
@@ -577,7 +583,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
                           [NSNumber numberWithInt:2],@"p2",
                           [NSNumber numberWithInt:3],@"p3",
                           [NSNumber numberWithInt:4],@"v1",
-                          [NSNumber numberWithInt:4],@"v2",
+                          [NSNumber numberWithInt:5],@"v2",
                           [NSNumber numberWithInt:5],@"room1",
                           [NSNumber numberWithInt:6],@"room2",
                          nil];
