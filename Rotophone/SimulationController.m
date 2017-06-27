@@ -141,7 +141,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     int result = 0;
     result = [PdBase sendFloat:270 toReceiver:_jitterParamName]; // 0 - 500
     result = [PdBase sendFloat:30 toReceiver:_voicesParamName]; // 1-32
-    result = [PdBase sendFloat:50 toReceiver:_scanSpeedParamName]; // 0 - 10,000 ?
+    result = [PdBase sendFloat:40 toReceiver:_scanSpeedParamName]; // 0 - 10,000 ?
     result = [PdBase sendFloat:800 toReceiver:_sustainParamName]; // 0 - 5000
     result = [PdBase sendFloat:0 toReceiver:_asynchParamName]; // 99 - 0
     result = [PdBase sendFloat:100 toReceiver:_envelopeParamName]; // 2 - 200
@@ -172,7 +172,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     if (result != 0) {
         NSLog(@"failed to set position");
     }
-    result = [PdBase sendFloat:50 toReceiver:_scanSpeedParamName]; // 0 - 10,000 ?
+    result = [PdBase sendFloat:40 toReceiver:_scanSpeedParamName]; // 0 - 10,000 ?
     
     result =[PdBase sendFloat:pan * 120 toReceiver:_panParamName]; // 0 - 500
 }
@@ -625,6 +625,8 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
                                                 userInfo: nil
                                                  repeats: YES];
     [[NSRunLoop currentRunLoop] addTimer:_simulationTimer forMode:NSRunLoopCommonModes];
+    
+    [_grain enterScanMode];
     
     [self updatePerformState];
 }
