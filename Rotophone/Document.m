@@ -10,6 +10,7 @@
 #import "Entities.h"
 #import "AppDelegate.h"
 #import "MainWindowController.h"
+#import "VideoWindowController.h"
 #import "objc/PdFile.h"
 #import "SerialPortHandler.h"
 #import "MicrophoneShapeAdapter.h"
@@ -17,6 +18,10 @@
 #import "MockDevice.h"
 #import "SimulationController.h"
 #import "PdBase.h"
+
+// Video stuff
+#import "SandboxFileManager.h"
+
 
 #define USE_MOCK_DEVICE
 
@@ -39,8 +44,10 @@ static void *RawSerialKVOContext = &RawSerialKVOContext;
 @property (retain) SerialPortHandler *serialPortHandler;
 @property (retain) MicrophoneController *microphoneController;
 @property (retain) MainWindowController *mainWindowController;
+@property (retain) VideoWindowController *videoWindowController;
 @property (retain) SimulationController *simulationController;
 @property (retain) DeviceProviderSelector *deviceSelector;
+@property (retain) SandboxFileManager *sandboxFileManager;
 @end
 
 @implementation Document
@@ -148,7 +155,7 @@ static void *RawSerialKVOContext = &RawSerialKVOContext;
         //self.testGrain = [PdFile openFileNamed:@"testpatch-particle.pd" path:resourcePath];
         self.deviceSelector = [[DeviceProviderSelector alloc] init];
         
-
+        self.sandboxFileManager = [[SandboxFileManager alloc] initWithPrefix:@"roto"];
         
         NSLog(@"loading samples");
         // goods
@@ -229,6 +236,17 @@ static void *RawSerialKVOContext = &RawSerialKVOContext;
     self.mainWindowController = [[MainWindowController alloc] init];
     _mainWindowController.mainViewController.document = self;
     [self addWindowController:_mainWindowController];
+  
+    self.videoWindowController = [[VideoWindowController alloc] init];
+    [self addWindowController:_videoWindowController];
+  
+    NSURL *fileUrl = [NSURL fileURLWithPath:@"/Users/scisci/xcode/VideoMixerTest/3chseq.mov"];
+    [_sandboxFileManager openUrl:fileUrl withCompletion:^(URLResource *resource) {
+      if (resource != nil) {
+        [self->_videoWindowController.videoViewController openVideo: resource];
+        [_simulationController setAVMixer:[self->_videoWindowController.videoViewController mixer]];
+      }
+    }];
     
     
     _mainWindowController.mainViewController.toolViewController.delegate = self;

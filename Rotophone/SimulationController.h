@@ -10,6 +10,7 @@
 #import "Shape.h"
 #import "Entities.h"
 #import "MicrophoneController.h"
+#import "MultiChannelAudioTrackMixer.h"
 #import "PdFile.h"
 
 @class SimulationBody;
@@ -37,6 +38,7 @@
 @property (retain) NSObject<Scene> * scene;
 
 - (id)initWithPatch:(PdFile *)patch;
+- (void)setAVMixer:(MultiChannelAudioTrackMixer *)mixer;
 - (void)addMicrophone:(NSObject<MicrophoneProxy> *)proxy;
 - (void)addBody:(BodyEntity *)entity;
 - (void)removeShape:(id<Shape>) shape;

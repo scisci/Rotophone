@@ -328,6 +328,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     }
     return self;
 }
+
 - (float)area {
     return _field.width.floatValue * _field.height.floatValue;
 }
@@ -552,6 +553,8 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     NSTimer* _targetDebounceTimer;
     NSDictionary* _sampleLookup;
     GrainController* _grain;
+    MultiChannelAudioTrackMixer *_avMixer;
+    MixerInput *_avMix;
     
     BOOL _targetSwapState;
     
@@ -576,8 +579,9 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
         _sceneDirty = true;
         _mixerDirty = true;
         _currentTarget = NULL;
+        _avMixer = NULL;
+        _avMix = NULL;
         _grain = [[GrainController alloc] initWithPatch:_patch];
-       // _sampleLookup = [NSArray arrayWithObjects:@"p1", @"tv", @"p2", @"p3", @"v1", @"v2", @"room1", @"room2", nil];
         _sampleLookup = [NSDictionary dictionaryWithObjectsAndKeys:
                           [NSNumber numberWithInt:0],@"p1",
                           [NSNumber numberWithInt:1],@"tv",
@@ -604,6 +608,12 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     if (_scene != nil) {
         [_scene addDebugGraphics:self];
     }
+}
+
+- (void)setAVMixer:(MultiChannelAudioTrackMixer *)mixer
+{
+  _avMixer = mixer;
+  _avMix = [mixer mix];
 }
 
 - (void)dealloc {
@@ -987,27 +997,51 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     
 }
 
+
+
 - (void) updatePD {
-    for (SimulationBody *body in _bodies) {
-        NSString *paramName = [NSString stringWithFormat:@"%d-%@", _patch.dollarZero, body.body.name];
-        NSString *panName = [NSString stringWithFormat:@"%d-%@_pan", _patch.dollarZero, body.body.name];
-        NSString *f1Name = [NSString stringWithFormat:@"%d-%@_f1", _patch.dollarZero, body.body.name];
-        NSString *f2Name = [NSString stringWithFormat:@"%d-%@_f2", _patch.dollarZero, body.body.name];
-        NSString *f3Name = [NSString stringWithFormat:@"%d-%@_f3", _patch.dollarZero, body.body.name];
-        int result = [PdBase sendFloat:body.parameterizedIntersection toReceiver:paramName];
-        result = [PdBase sendFloat:body.parameterizedPan toReceiver:panName];
-        result = [PdBase sendFloat:[body freq1Param] toReceiver:f1Name];
-        result = [PdBase sendFloat:[body freq2Param] toReceiver:f2Name];
-        result = [PdBase sendFloat:[body freq3Param] toReceiver:f3Name];
+  bool avChanged = false;
+  for (SimulationBody *body in _bodies) {
+    if ([body.body.name hasPrefix:@"vch"]) {
+      if (_avMix != NULL) {
+        // Parse out the channel
+        NSString *chString = [body.body.name substringFromIndex:3];
+        int ch = [chString intValue];
+        if (ch > 0 && ch <= 16) {
+          [_avMix setVolume:body.parameterizedIntersection * 0.75 forChannel:ch-1];
+          avChanged = true;
+        }
+      }
+      // Its a video channel
+    } else {
+      NSString *paramName = [NSString stringWithFormat:@"%d-%@", _patch.dollarZero, body.body.name];
+      NSString *panName = [NSString stringWithFormat:@"%d-%@_pan", _patch.dollarZero, body.body.name];
+      NSString *f1Name = [NSString stringWithFormat:@"%d-%@_f1", _patch.dollarZero, body.body.name];
+      NSString *f2Name = [NSString stringWithFormat:@"%d-%@_f2", _patch.dollarZero, body.body.name];
+      NSString *f3Name = [NSString stringWithFormat:@"%d-%@_f3", _patch.dollarZero, body.body.name];
+      int result = [PdBase sendFloat:body.parameterizedIntersection toReceiver:paramName];
+      result = [PdBase sendFloat:body.parameterizedPan toReceiver:panName];
+      result = [PdBase sendFloat:[body freq1Param] toReceiver:f1Name];
+      result = [PdBase sendFloat:[body freq2Param] toReceiver:f2Name];
+      result = [PdBase sendFloat:[body freq3Param] toReceiver:f3Name];
     }
+  }
+  
+  if (avChanged && _avMixer != nil) {
+    [_avMixer setMix:_avMix];
+  }
 }
 
 
 
 - (void)updateMixer {
     for (SimulationBody *body in _bodies) {
+      if ([body.body.name hasPrefix:@"vch"]) {
+      
+      } else {
         NSString *paramName = [NSString stringWithFormat:@"%d-%@_pan", _patch.dollarZero, body.body.name];
         [PdBase sendFloat:body.field.pan.floatValue toReceiver:paramName];
+      }
     }
 }
 

@@ -11,6 +11,18 @@
 		4B0FC7F91EE1CC6A003CACD5 /* MicrophoneKeepAlive.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B0FC7F81EE1CC6A003CACD5 /* MicrophoneKeepAlive.m */; };
 		4B0FC7FF1EE5E365003CACD5 /* SerialPortDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B0FC7FE1EE5E365003CACD5 /* SerialPortDevice.m */; };
 		4B2567061EBCC0D000BCE2B8 /* Resources in Resources */ = {isa = PBXBuildFile; fileRef = 4B2567051EBCC0D000BCE2B8 /* Resources */; };
+		4B2FD1F621A60CB8009FA1A0 /* MultiChannelAudioTrackMixer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B2FD1F021A60CB7009FA1A0 /* MultiChannelAudioTrackMixer.m */; };
+		4B2FD1F721A60CB8009FA1A0 /* SandboxFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B2FD1F221A60CB7009FA1A0 /* SandboxFileManager.m */; };
+		4B2FD1F821A60CB8009FA1A0 /* VideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B2FD1F321A60CB7009FA1A0 /* VideoViewController.m */; };
+		4B2FD1F921A60CB8009FA1A0 /* VideoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B2FD1F421A60CB8009FA1A0 /* VideoViewController.xib */; };
+		4B2FD1FB21A60D1D009FA1A0 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B2FD1FA21A60D1D009FA1A0 /* Accelerate.framework */; };
+		4B2FD1FE21A60D28009FA1A0 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B2FD1FC21A60D28009FA1A0 /* AVFoundation.framework */; };
+		4B2FD1FF21A60D28009FA1A0 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B2FD1FD21A60D28009FA1A0 /* AVKit.framework */; };
+		4B2FD20121A60D30009FA1A0 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B2FD20021A60D30009FA1A0 /* AudioToolbox.framework */; };
+		4B2FD20321A60D38009FA1A0 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B2FD20221A60D38009FA1A0 /* AudioUnit.framework */; };
+		4B2FD20521A60D48009FA1A0 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B2FD20421A60D48009FA1A0 /* IOKit.framework */; };
+		4B2FD20721A60D51009FA1A0 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B2FD20621A60D51009FA1A0 /* Cocoa.framework */; };
+		4B2FD20921A62EE4009FA1A0 /* VideoWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B2FD20821A62EE4009FA1A0 /* VideoWindowController.m */; };
 		4B3B91431EC3545A005C0A1A /* SerialPortHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B3B91421EC3545A005C0A1A /* SerialPortHandler.m */; };
 		4B3B91471EC362DB005C0A1A /* SceneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B3B91451EC362DB005C0A1A /* SceneViewController.m */; };
 		4B3B91481EC362DB005C0A1A /* SceneViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B3B91461EC362DB005C0A1A /* SceneViewController.xib */; };
@@ -32,7 +44,6 @@
 		4B60BA4E1EBD9DCF000FC8A5 /* ORSSerialPort.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BA491EBD9DCF000FC8A5 /* ORSSerialPort.m */; };
 		4B60BA4F1EBD9DCF000FC8A5 /* ORSSerialPortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BA4B1EBD9DCF000FC8A5 /* ORSSerialPortManager.m */; };
 		4B60BA501EBD9DCF000FC8A5 /* ORSSerialRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B60BA4D1EBD9DCF000FC8A5 /* ORSSerialRequest.m */; };
-		4B60BA521EBD9EAD000FC8A5 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B60BA511EBD9EAD000FC8A5 /* IOKit.framework */; };
 		4B7C1A5D1EFD3AFC0064DF8F /* PerformMode.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7C1A5C1EFD3AFC0064DF8F /* PerformMode.m */; };
 		4B7C1A611EFD3B6B0064DF8F /* RandomPerformMode.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7C1A601EFD3B6B0064DF8F /* RandomPerformMode.m */; };
 		4B7C1A641EFD3BBE0064DF8F /* TargetMixPerformMode.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7C1A631EFD3BBE0064DF8F /* TargetMixPerformMode.m */; };
@@ -50,9 +61,6 @@
 		4BBE45FE1EBC473000276A8A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4BBE45FD1EBC473000276A8A /* Assets.xcassets */; };
 		4BBE460F1EBC497100276A8A /* RootView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BBE460D1EBC497100276A8A /* RootView.m */; };
 		4BCC701C1ECBF83600E2BB37 /* libpd-osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BCC701B1ECBF7E300E2BB37 /* libpd-osx.a */; };
-		4BCC70221ECC02FC00E2BB37 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BCC70211ECC02FC00E2BB37 /* AudioUnit.framework */; };
-		4BCC702D1ECC0C1100E2BB37 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BCC702C1ECC0C1100E2BB37 /* AudioToolbox.framework */; };
-		4BCDE0441EBD767E005764A7 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BCDE0431EBD767E005764A7 /* Cocoa.framework */; };
 		4BCF703D1EDD032B001E1971 /* Protocol.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BCF703B1EDD032B001E1971 /* Protocol.c */; };
 		4BCF70401EDD0BDD001E1971 /* Entities.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCF703F1EDD0BDD001E1971 /* Entities.m */; };
 		4BCF708C1EDD217C001E1971 /* MainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCF708B1EDD217C001E1971 /* MainWindowController.m */; };
@@ -92,6 +100,22 @@
 		4B0FC7FD1EE5E365003CACD5 /* SerialPortDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SerialPortDevice.h; sourceTree = "<group>"; };
 		4B0FC7FE1EE5E365003CACD5 /* SerialPortDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SerialPortDevice.m; sourceTree = "<group>"; };
 		4B2567051EBCC0D000BCE2B8 /* Resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources; sourceTree = "<group>"; };
+		4B2FD1EE21A60CB7009FA1A0 /* SandboxFileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SandboxFileManager.h; sourceTree = "<group>"; };
+		4B2FD1F021A60CB7009FA1A0 /* MultiChannelAudioTrackMixer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiChannelAudioTrackMixer.m; sourceTree = "<group>"; };
+		4B2FD1F121A60CB7009FA1A0 /* VideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoViewController.h; sourceTree = "<group>"; };
+		4B2FD1F221A60CB7009FA1A0 /* SandboxFileManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SandboxFileManager.m; sourceTree = "<group>"; };
+		4B2FD1F321A60CB7009FA1A0 /* VideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoViewController.m; sourceTree = "<group>"; };
+		4B2FD1F421A60CB8009FA1A0 /* VideoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VideoViewController.xib; sourceTree = "<group>"; };
+		4B2FD1F521A60CB8009FA1A0 /* MultiChannelAudioTrackMixer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiChannelAudioTrackMixer.h; sourceTree = "<group>"; };
+		4B2FD1FA21A60D1D009FA1A0 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		4B2FD1FC21A60D28009FA1A0 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		4B2FD1FD21A60D28009FA1A0 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
+		4B2FD20021A60D30009FA1A0 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		4B2FD20221A60D38009FA1A0 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
+		4B2FD20421A60D48009FA1A0 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		4B2FD20621A60D51009FA1A0 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		4B2FD20821A62EE4009FA1A0 /* VideoWindowController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoWindowController.m; sourceTree = "<group>"; };
+		4B2FD20A21A62EF4009FA1A0 /* VideoWindowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoWindowController.h; sourceTree = "<group>"; };
 		4B3B91411EC3545A005C0A1A /* SerialPortHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SerialPortHandler.h; sourceTree = "<group>"; };
 		4B3B91421EC3545A005C0A1A /* SerialPortHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SerialPortHandler.m; sourceTree = "<group>"; };
 		4B3B91441EC362DB005C0A1A /* SceneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneViewController.h; sourceTree = "<group>"; };
@@ -182,11 +206,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4BCC702D1ECC0C1100E2BB37 /* AudioToolbox.framework in Frameworks */,
-				4BCC70221ECC02FC00E2BB37 /* AudioUnit.framework in Frameworks */,
+				4B2FD20721A60D51009FA1A0 /* Cocoa.framework in Frameworks */,
+				4B2FD20521A60D48009FA1A0 /* IOKit.framework in Frameworks */,
+				4B2FD20321A60D38009FA1A0 /* AudioUnit.framework in Frameworks */,
+				4B2FD20121A60D30009FA1A0 /* AudioToolbox.framework in Frameworks */,
+				4B2FD1FE21A60D28009FA1A0 /* AVFoundation.framework in Frameworks */,
+				4B2FD1FF21A60D28009FA1A0 /* AVKit.framework in Frameworks */,
+				4B2FD1FB21A60D1D009FA1A0 /* Accelerate.framework in Frameworks */,
 				4BCC701C1ECBF83600E2BB37 /* libpd-osx.a in Frameworks */,
-				4B60BA521EBD9EAD000FC8A5 /* IOKit.framework in Frameworks */,
-				4BCDE0441EBD767E005764A7 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -214,6 +241,13 @@
 		4BBE45ED1EBC473000276A8A /* Rotophone */ = {
 			isa = PBXGroup;
 			children = (
+				4B2FD1F521A60CB8009FA1A0 /* MultiChannelAudioTrackMixer.h */,
+				4B2FD1F021A60CB7009FA1A0 /* MultiChannelAudioTrackMixer.m */,
+				4B2FD1EE21A60CB7009FA1A0 /* SandboxFileManager.h */,
+				4B2FD1F221A60CB7009FA1A0 /* SandboxFileManager.m */,
+				4B2FD1F121A60CB7009FA1A0 /* VideoViewController.h */,
+				4B2FD1F321A60CB7009FA1A0 /* VideoViewController.m */,
+				4B2FD1F421A60CB8009FA1A0 /* VideoViewController.xib */,
 				4BADEA4F1EF5A4A8003CF739 /* gpc.c */,
 				4BADEA501EF5A4A8003CF739 /* gpc.h */,
 				4BADEA511EF5A4A8003CF739 /* GPCPolygon.h */,
@@ -281,6 +315,8 @@
 				4B3B914F1EC4058F005C0A1A /* SideBarViewController.m */,
 				4B3B91441EC362DB005C0A1A /* SceneViewController.h */,
 				4B3B91451EC362DB005C0A1A /* SceneViewController.m */,
+				4B2FD20A21A62EF4009FA1A0 /* VideoWindowController.h */,
+				4B2FD20821A62EE4009FA1A0 /* VideoWindowController.m */,
 				4BCF70901EDE7162001E1971 /* Shape.h */,
 				4B4DE5711EECB3F6000C9635 /* Shape.m */,
 				4B60BA2B1EBD87B7000FC8A5 /* MainViewController.h */,
@@ -320,6 +356,13 @@
 		4BCDE0421EBD767E005764A7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4B2FD20621A60D51009FA1A0 /* Cocoa.framework */,
+				4B2FD20421A60D48009FA1A0 /* IOKit.framework */,
+				4B2FD20221A60D38009FA1A0 /* AudioUnit.framework */,
+				4B2FD20021A60D30009FA1A0 /* AudioToolbox.framework */,
+				4B2FD1FC21A60D28009FA1A0 /* AVFoundation.framework */,
+				4B2FD1FD21A60D28009FA1A0 /* AVKit.framework */,
+				4B2FD1FA21A60D1D009FA1A0 /* Accelerate.framework */,
 				4BCC702C1ECC0C1100E2BB37 /* AudioToolbox.framework */,
 				4BCC70211ECC02FC00E2BB37 /* AudioUnit.framework */,
 				4BCC701F1ECC020700E2BB37 /* AVFoundation.framework */,
@@ -421,6 +464,7 @@
 				4B2567061EBCC0D000BCE2B8 /* Resources in Resources */,
 				4B3B91521EC4058F005C0A1A /* SideBarViewController.xib in Resources */,
 				4B60BA2A1EBD84DC000FC8A5 /* MainMenu.xib in Resources */,
+				4B2FD1F921A60CB8009FA1A0 /* VideoViewController.xib in Resources */,
 				4B60BA2F1EBD87B7000FC8A5 /* MainViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -440,7 +484,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cp \"$SRCROOT\"/Arduino/rotophone/Protocol.h \"$SRCROOT\"/Rotophone/Protocol.h\ncp \"$SRCROOT\"/Arduino/rotophone/Protocol.c \"$SRCROOT\"/Rotophone/Protocol.c";
+			shellScript = "cp \"$SRCROOT\"/Arduino/rotophone/Protocol.h \"$SRCROOT\"/Rotophone/Protocol.h\ncp \"$SRCROOT\"/Arduino/rotophone/Protocol.c \"$SRCROOT\"/Rotophone/Protocol.c\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -456,7 +500,9 @@
 				4BBE45F61EBC473000276A8A /* ViewController.m in Sources */,
 				4B7C1A6A1EFD4A640064DF8F /* RoomScanPerformMode.m in Sources */,
 				4B60BA2E1EBD87B7000FC8A5 /* MainViewController.m in Sources */,
+				4B2FD1F721A60CB8009FA1A0 /* SandboxFileManager.m in Sources */,
 				4B4DE57D1EF498A1000C9635 /* FieldShapeAdapter.m in Sources */,
+				4B2FD1F621A60CB8009FA1A0 /* MultiChannelAudioTrackMixer.m in Sources */,
 				4B60BA4F1EBD9DCF000FC8A5 /* ORSSerialPortManager.m in Sources */,
 				4BADEA541EF5A4A8003CF739 /* GPCPolygon.m in Sources */,
 				4B60BA501EBD9DCF000FC8A5 /* ORSSerialRequest.m in Sources */,
@@ -477,6 +523,7 @@
 				4BBE45FC1EBC473000276A8A /* Document.xcdatamodeld in Sources */,
 				4BADEA5D1EF74051003CF739 /* MicrophonePerformer.m in Sources */,
 				4B3B91471EC362DB005C0A1A /* SceneViewController.m in Sources */,
+				4B2FD1F821A60CB8009FA1A0 /* VideoViewController.m in Sources */,
 				4B3B91431EC3545A005C0A1A /* SerialPortHandler.m in Sources */,
 				4B4DE5721EECB54E000C9635 /* Shape.m in Sources */,
 				4B4DE56C1EE66D3F000C9635 /* MockDevice.m in Sources */,
@@ -486,6 +533,7 @@
 				4BBE45F01EBC473000276A8A /* AppDelegate.m in Sources */,
 				4B7C1A671EFD3D210064DF8F /* TargetScanPerformMode.m in Sources */,
 				4BADEA531EF5A4A8003CF739 /* gpc.c in Sources */,
+				4B2FD20921A62EE4009FA1A0 /* VideoWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -616,7 +664,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.SciSci.Rotophone;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx10.7;
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -641,7 +689,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.SciSci.Rotophone;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx10.7;
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
