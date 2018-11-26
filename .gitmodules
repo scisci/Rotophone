@@ -1,3 +1,9 @@
 [submodule "libpd"]
 	path = libpd
 	url = https://github.com/libpd/libpd
+[submodule "extern/htreecpp"]
+	path = extern/htreecpp
+	url = ../../scisci/htreecpp.git
+[submodule "extern/MIKMIDI"]
+	path = extern/MIKMIDI
+	url = ../../mixedinkey-opensource/MIKMIDI.git

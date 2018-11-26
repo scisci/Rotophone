@@ -7,11 +7,11 @@
 //
 
 #import "AppDelegate.h"
-#import "MainViewController.h"
+
 
 #import "ORSSerialPort.h"
 #import "Document.h"
-#import "SimulationAudioUnit.h"
+#import "PdAudioUnit.h"
 
 @interface SerialPortMenuItem : NSObject
 @property NSMenuItem *menuItem;
@@ -31,7 +31,7 @@
 @end
 
 @interface AppDelegate ()
-@property (retain) SimulationAudioUnit *pdAudioUnit;
+@property (retain) PdAudioUnit *pdAudioUnit;
 @property (readwrite) BOOL appStarted;
 @property (unsafe_unretained) IBOutlet NSApplication *application;
 
@@ -50,10 +50,18 @@ static void *SelectedPortKVOContext = &SelectedPortKVOContext;
         self.appStarted = false;
         self.serialPortManager = [ORSSerialPortManager sharedSerialPortManager];
         self.serialPortHandler = [[SerialPortHandler alloc] init];
-        self.pdAudioUnit = [[SimulationAudioUnit alloc] init];
+        self.pdAudioUnit = [[PdAudioUnit alloc] init];
         int result = [_pdAudioUnit configureWithSampleRate:44100.0 numberChannels:2 inputEnabled:NO];
     }
     return self;
+}
+- (IBAction)audioMidiButtonDidPress:(id)sender {
+  if (_audioMidiWindowController == nil) {
+    self.audioMidiWindowController = [[AudioMidiWindowController alloc] init];
+  }
+  
+  [self.audioMidiWindowController showWindow:nil];
+  NSLog(@"audio midi button pressed");
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {

@@ -1,0 +1,725 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		5A2C217F48FD45C0A098E8CC /* ALL_BUILD */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 4FAFD7A24D0B4AF2B4A660F4 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */;
+			buildPhases = (
+				941AD15AF89B4345B12535A0 /* CMake Rules */,
+			);
+			dependencies = (
+				6346010A7DE74E4BB04FB829 /* PBXTargetDependency */,
+				53322FA53DDD44A7912B2041 /* PBXTargetDependency */,
+			);
+			name = ALL_BUILD;
+			productName = ALL_BUILD;
+		};
+		5A8BD729EEE244DE9D7B45BC /* ZERO_CHECK */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = ED538B77C8284E24A39E8A89 /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */;
+			buildPhases = (
+				C344B1D9ECB047838108D5AB /* CMake Rules */,
+			);
+			dependencies = (
+			);
+			name = ZERO_CHECK;
+			productName = ZERO_CHECK;
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		0577004348C545EFAE23E692 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Golden.cpp */ = {isa = PBXBuildFile; fileRef = D6C8B3C2411A4C7497E4C507 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Golden.cpp */; };
+		09262EF3430C462A87336B66 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Expr.cpp */ = {isa = PBXBuildFile; fileRef = 53A936189D26414E95F9CAA7 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Expr.cpp */; };
+		2A6E567432AC45F5B6F36A18 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Ratios.cpp */ = {isa = PBXBuildFile; fileRef = 77CA7EBB23964CEA8E63ABAD /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Ratios.cpp */; };
+		46F7D5EBA4E04894BA98C0C9 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/RegionIterator.cpp */ = {isa = PBXBuildFile; fileRef = B79245BAFF284806A7F86FA5 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/RegionIterator.cpp */; };
+		4A011FC551DD44BDB25C0624 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/TreeBuilder.cpp */ = {isa = PBXBuildFile; fileRef = FC788A804C2A4D8C828E89F4 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/TreeBuilder.cpp */; };
+		5FA268FA36C44CC498C4990D /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/RatioSource.cpp */ = {isa = PBXBuildFile; fileRef = AB50FF6111E04092B01C5ADA /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/RatioSource.cpp */; };
+		71767FE779E3403F97120053 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/CMakeLists.txt */ = {isa = PBXBuildFile; fileRef = C4E1D4A031544CEB86D4BCF0 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/CMakeLists.txt */; };
+		7F380C0DD201453EB1261A6A /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/EdgePathAttributer.cpp */ = {isa = PBXBuildFile; fileRef = EEFB4CD6064F4629A9C08FDA /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/EdgePathAttributer.cpp */; };
+		9003CAA8066D4C8E9B55D68C /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Utils.cpp */ = {isa = PBXBuildFile; fileRef = A273B71F014946E8B13319D5 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Utils.cpp */; };
+		A425C0E8AF214AC784E8524B /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Geometry.cpp */ = {isa = PBXBuildFile; fileRef = C7A7AE5356754DC7BE7A3016 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Geometry.cpp */; };
+		ABE246CE00044C1CA7BC0842 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/RandomBasicGenerator.cpp */ = {isa = PBXBuildFile; fileRef = 5B84DCDC64484A919A8EEC68 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/RandomBasicGenerator.cpp */; };
+		BFFA7F40E885411F8C8FACA6 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/SimpleTree.cpp */ = {isa = PBXBuildFile; fileRef = 6F6009B429EF418D8479DBC8 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/SimpleTree.cpp */; };
+		D49E81C112C149398E104AA6 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/GridTree.cpp */ = {isa = PBXBuildFile; fileRef = 2287617B0848409F9CD3C090 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/GridTree.cpp */; };
+		DEFD97553E7D4285B19824E9 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Region.cpp */ = {isa = PBXBuildFile; fileRef = 70F59777F5CC46A08DE5A20D /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Region.cpp */; };
+		E0FC335AA3DF4A0784D419F3 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/NodeIterator.cpp */ = {isa = PBXBuildFile; fileRef = C250B90E76234F7284892E88 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/NodeIterator.cpp */; };
+		EC031A70C5994241BA6C8FE8 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Split.cpp */ = {isa = PBXBuildFile; fileRef = 24B8148B6D5841F6AD62E911 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Split.cpp */; };
+		EDAB8CCD1D0041A48A108866 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Complements.cpp */ = {isa = PBXBuildFile; fileRef = FB1FB24C52C648D48D87C335 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Complements.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXBuildStyle section */
+		1A172FB22BA548EB92F5F6D7 /* Release */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Release;
+		};
+		5136212787634F6897BB253B /* RelWithDebInfo */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = RelWithDebInfo;
+		};
+		6B822D5DCC6244D38158FF7B /* Debug */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Debug;
+		};
+		A0020896D97B48D1811002C1 /* MinSizeRel */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = MinSizeRel;
+		};
+/* End PBXBuildStyle section */
+
+/* Begin PBXContainerItemProxy section */
+		1A16768FDB6E4F4192D664BE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A3495FF7A4184BAC981E8D8C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F63EE700A8844194BC5A8D51;
+			remoteInfo = htree;
+		};
+		680C264D28114EAD82413F8E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A3495FF7A4184BAC981E8D8C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5A8BD729EEE244DE9D7B45BC;
+			remoteInfo = ZERO_CHECK;
+		};
+		918FA3B21D8844F2BA157558 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A3495FF7A4184BAC981E8D8C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5A8BD729EEE244DE9D7B45BC;
+			remoteInfo = ZERO_CHECK;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		2287617B0848409F9CD3C090 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/GridTree.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = GridTree.cpp; path = extern/htreecpp/htree/src/GridTree.cpp; sourceTree = SOURCE_ROOT; };
+		24B8148B6D5841F6AD62E911 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Split.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Split.cpp; path = extern/htreecpp/htree/src/Split.cpp; sourceTree = SOURCE_ROOT; };
+		49039366D25249BFB5CC8D42 /* /Users/scisci/xcode/Rotophone/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		53A936189D26414E95F9CAA7 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Expr.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Expr.cpp; path = extern/htreecpp/htree/src/Expr.cpp; sourceTree = SOURCE_ROOT; };
+		5B84DCDC64484A919A8EEC68 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/RandomBasicGenerator.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = RandomBasicGenerator.cpp; path = extern/htreecpp/htree/src/RandomBasicGenerator.cpp; sourceTree = SOURCE_ROOT; };
+		6F6009B429EF418D8479DBC8 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/SimpleTree.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = SimpleTree.cpp; path = extern/htreecpp/htree/src/SimpleTree.cpp; sourceTree = SOURCE_ROOT; };
+		70F59777F5CC46A08DE5A20D /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Region.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Region.cpp; path = extern/htreecpp/htree/src/Region.cpp; sourceTree = SOURCE_ROOT; };
+		77CA7EBB23964CEA8E63ABAD /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Ratios.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Ratios.cpp; path = extern/htreecpp/htree/src/Ratios.cpp; sourceTree = SOURCE_ROOT; };
+		A273B71F014946E8B13319D5 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Utils.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Utils.cpp; path = extern/htreecpp/htree/src/Utils.cpp; sourceTree = SOURCE_ROOT; };
+		AB50FF6111E04092B01C5ADA /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/RatioSource.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = RatioSource.cpp; path = extern/htreecpp/htree/src/RatioSource.cpp; sourceTree = SOURCE_ROOT; };
+		B79245BAFF284806A7F86FA5 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/RegionIterator.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = RegionIterator.cpp; path = extern/htreecpp/htree/src/RegionIterator.cpp; sourceTree = SOURCE_ROOT; };
+		C250B90E76234F7284892E88 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/NodeIterator.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = NodeIterator.cpp; path = extern/htreecpp/htree/src/NodeIterator.cpp; sourceTree = SOURCE_ROOT; };
+		C4C085FAE5034E2EAD704CA1 /* htree */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libhtree.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C4E1D4A031544CEB86D4BCF0 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = extern/htreecpp/htree/CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		C7A7AE5356754DC7BE7A3016 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Geometry.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Geometry.cpp; path = extern/htreecpp/htree/src/Geometry.cpp; sourceTree = SOURCE_ROOT; };
+		D6C8B3C2411A4C7497E4C507 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Golden.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Golden.cpp; path = extern/htreecpp/htree/src/Golden.cpp; sourceTree = SOURCE_ROOT; };
+		DE7EA60E046A4C4087453AAD /* /Users/scisci/xcode/Rotophone/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		EEFB4CD6064F4629A9C08FDA /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/EdgePathAttributer.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = EdgePathAttributer.cpp; path = extern/htreecpp/htree/src/EdgePathAttributer.cpp; sourceTree = SOURCE_ROOT; };
+		FB1FB24C52C648D48D87C335 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Complements.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Complements.cpp; path = extern/htreecpp/htree/src/Complements.cpp; sourceTree = SOURCE_ROOT; };
+		FC788A804C2A4D8C828E89F4 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/TreeBuilder.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = TreeBuilder.cpp; path = extern/htreecpp/htree/src/TreeBuilder.cpp; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		0CD6E3144D5E4A15809449F7 /* htree */ = {
+			isa = PBXGroup;
+			children = (
+				A41577AF605E4824867B3EAA /* Source Files */,
+				C4E1D4A031544CEB86D4BCF0 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/CMakeLists.txt */,
+			);
+			name = htree;
+			sourceTree = "<group>";
+		};
+		2468DEE22EA54FA8AF9BC137 /* CMake Rules */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "CMake Rules";
+			sourceTree = "<group>";
+		};
+		28127EBF91A24C8E9DDC520A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C4C085FAE5034E2EAD704CA1 /* htree */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		29A90885DF424B1E8AFCC8A4 /* ZERO_CHECK */ = {
+			isa = PBXGroup;
+			children = (
+				2468DEE22EA54FA8AF9BC137 /* CMake Rules */,
+				DE7EA60E046A4C4087453AAD /* /Users/scisci/xcode/Rotophone/CMakeLists.txt */,
+			);
+			name = ZERO_CHECK;
+			sourceTree = "<group>";
+		};
+		4C0E0F914D254407AF39008F /* CMake Rules */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "CMake Rules";
+			sourceTree = "<group>";
+		};
+		A41577AF605E4824867B3EAA /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				FB1FB24C52C648D48D87C335 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Complements.cpp */,
+				EEFB4CD6064F4629A9C08FDA /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/EdgePathAttributer.cpp */,
+				53A936189D26414E95F9CAA7 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Expr.cpp */,
+				C7A7AE5356754DC7BE7A3016 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Geometry.cpp */,
+				D6C8B3C2411A4C7497E4C507 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Golden.cpp */,
+				2287617B0848409F9CD3C090 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/GridTree.cpp */,
+				C250B90E76234F7284892E88 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/NodeIterator.cpp */,
+				5B84DCDC64484A919A8EEC68 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/RandomBasicGenerator.cpp */,
+				AB50FF6111E04092B01C5ADA /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/RatioSource.cpp */,
+				77CA7EBB23964CEA8E63ABAD /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Ratios.cpp */,
+				70F59777F5CC46A08DE5A20D /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Region.cpp */,
+				B79245BAFF284806A7F86FA5 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/RegionIterator.cpp */,
+				6F6009B429EF418D8479DBC8 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/SimpleTree.cpp */,
+				24B8148B6D5841F6AD62E911 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Split.cpp */,
+				FC788A804C2A4D8C828E89F4 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/TreeBuilder.cpp */,
+				A273B71F014946E8B13319D5 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Utils.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		BF8B16301C3144ADAF7BAD6A /* ALL_BUILD */ = {
+			isa = PBXGroup;
+			children = (
+				4C0E0F914D254407AF39008F /* CMake Rules */,
+				49039366D25249BFB5CC8D42 /* /Users/scisci/xcode/Rotophone/CMakeLists.txt */,
+			);
+			name = ALL_BUILD;
+			sourceTree = "<group>";
+		};
+		E905F2891D9A4BADBC97636D = {
+			isa = PBXGroup;
+			children = (
+				BF8B16301C3144ADAF7BAD6A /* ALL_BUILD */,
+				29A90885DF424B1E8AFCC8A4 /* ZERO_CHECK */,
+				0CD6E3144D5E4A15809449F7 /* htree */,
+				28127EBF91A24C8E9DDC520A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F63EE700A8844194BC5A8D51 /* htree */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 771FB606D06445FF908E6B32 /* Build configuration list for PBXNativeTarget "htree" */;
+			buildPhases = (
+				FC0BF61E56524DA680821AA0 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				61317507B3B2497FA42FA8FA /* PBXTargetDependency */,
+			);
+			name = htree;
+			productName = htree;
+			productReference = C4C085FAE5034E2EAD704CA1 /* htree */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A3495FF7A4184BAC981E8D8C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1010;
+			};
+			buildConfigurationList = A908A2323B6B4F438AC119C2 /* Build configuration list for PBXProject "htreedeps" */;
+			buildSettings = {
+			};
+			buildStyles = (
+				6B822D5DCC6244D38158FF7B /* Debug */,
+				1A172FB22BA548EB92F5F6D7 /* Release */,
+				A0020896D97B48D1811002C1 /* MinSizeRel */,
+				5136212787634F6897BB253B /* RelWithDebInfo */,
+			);
+			compatibilityVersion = "Xcode 3.2";
+			hasScannedForEncodings = 0;
+			mainGroup = E905F2891D9A4BADBC97636D;
+			projectDirPath = ../;
+			projectRoot = "";
+			targets = (
+				5A2C217F48FD45C0A098E8CC /* ALL_BUILD */,
+				5A8BD729EEE244DE9D7B45BC /* ZERO_CHECK */,
+				F63EE700A8844194BC5A8D51 /* htree */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		941AD15AF89B4345B12535A0 /* CMake Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake Rules";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "make -C /Users/scisci/xcode/Rotophone/cmakeproj -f /Users/scisci/xcode/Rotophone/cmakeproj/CMakeScripts/ALL_BUILD_cmakeRulesBuildPhase.make$CONFIGURATION all";
+			showEnvVarsInLog = 0;
+		};
+		AD99E1E90547478CB427D042 = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# shell script goes here
+exit 0";
+			showEnvVarsInLog = 0;
+		};
+		C297BB81FDB5432DBCC5391E = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# shell script goes here
+exit 0";
+			showEnvVarsInLog = 0;
+		};
+		C344B1D9ECB047838108D5AB /* CMake Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake Rules";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "make -C /Users/scisci/xcode/Rotophone/cmakeproj -f /Users/scisci/xcode/Rotophone/cmakeproj/CMakeScripts/ZERO_CHECK_cmakeRulesBuildPhase.make$CONFIGURATION all";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FC0BF61E56524DA680821AA0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EDAB8CCD1D0041A48A108866 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Complements.cpp */,
+				7F380C0DD201453EB1261A6A /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/EdgePathAttributer.cpp */,
+				09262EF3430C462A87336B66 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Expr.cpp */,
+				A425C0E8AF214AC784E8524B /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Geometry.cpp */,
+				0577004348C545EFAE23E692 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Golden.cpp */,
+				D49E81C112C149398E104AA6 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/GridTree.cpp */,
+				E0FC335AA3DF4A0784D419F3 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/NodeIterator.cpp */,
+				ABE246CE00044C1CA7BC0842 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/RandomBasicGenerator.cpp */,
+				5FA268FA36C44CC498C4990D /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/RatioSource.cpp */,
+				2A6E567432AC45F5B6F36A18 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Ratios.cpp */,
+				DEFD97553E7D4285B19824E9 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Region.cpp */,
+				46F7D5EBA4E04894BA98C0C9 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/RegionIterator.cpp */,
+				BFFA7F40E885411F8C8FACA6 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/SimpleTree.cpp */,
+				EC031A70C5994241BA6C8FE8 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Split.cpp */,
+				4A011FC551DD44BDB25C0624 /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/TreeBuilder.cpp */,
+				9003CAA8066D4C8E9B55D68C /* /Users/scisci/xcode/Rotophone/extern/htreecpp/htree/src/Utils.cpp */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		53322FA53DDD44A7912B2041 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F63EE700A8844194BC5A8D51 /* htree */;
+			targetProxy = 1A16768FDB6E4F4192D664BE /* PBXContainerItemProxy */;
+		};
+		61317507B3B2497FA42FA8FA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5A8BD729EEE244DE9D7B45BC /* ZERO_CHECK */;
+			targetProxy = 918FA3B21D8844F2BA157558 /* PBXContainerItemProxy */;
+		};
+		6346010A7DE74E4BB04FB829 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5A8BD729EEE244DE9D7B45BC /* ZERO_CHECK */;
+			targetProxy = 680C264D28114EAD82413F8E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0A23FF28EFBE45FBBEC854D0 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (/Users/scisci/xcode/Rotophone/extern/htreecpp/htree/include);
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = "    -DNDEBUG '-std=c++11'  ";
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = htree;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/scisci/xcode/Rotophone/cmakeproj/extern/htreecpp/htree;
+				SYSTEM_HEADER_SEARCH_PATHS = (/usr/local/include/eigen3,/usr/local/include);
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		0BFBEBDDA9C04D208A8AC397 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (/Users/scisci/xcode/Rotophone/extern/htreecpp/htree/include);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/scisci/xcode/Rotophone/cmakeproj;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Release;
+		};
+		1B296AE2ABCF49FFBD612BDE /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
+				SYMROOT = /Users/scisci/xcode/Rotophone/cmakeproj/build;
+			};
+			name = RelWithDebInfo;
+		};
+		35948F5C5BC84A7497427FCF /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (/Users/scisci/xcode/Rotophone/extern/htreecpp/htree/include);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/scisci/xcode/Rotophone/cmakeproj;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		37EFB80E8AD840A8A9AD0636 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (/Users/scisci/xcode/Rotophone/extern/htreecpp/htree/include);
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = "    -DNDEBUG '-std=c++11'  ";
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = htree;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/scisci/xcode/Rotophone/cmakeproj/extern/htreecpp/htree;
+				SYSTEM_HEADER_SEARCH_PATHS = (/usr/local/include/eigen3,/usr/local/include);
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Release;
+		};
+		42DEDB66B1514588B34F8A31 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (/Users/scisci/xcode/Rotophone/extern/htreecpp/htree/include);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/scisci/xcode/Rotophone/cmakeproj;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		56B6477F82164793B488FBB9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (/Users/scisci/xcode/Rotophone/extern/htreecpp/htree/include);
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = "   '-std=c++11'  ";
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = htree;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/scisci/xcode/Rotophone/cmakeproj/extern/htreecpp/htree;
+				SYSTEM_HEADER_SEARCH_PATHS = (/usr/local/include/eigen3,/usr/local/include);
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Debug;
+		};
+		56D1E1800C294871915661E1 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
+				SYMROOT = /Users/scisci/xcode/Rotophone/cmakeproj/build;
+			};
+			name = MinSizeRel;
+		};
+		6834A6314EC044A5AEE8D3EE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (/Users/scisci/xcode/Rotophone/extern/htreecpp/htree/include);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/scisci/xcode/Rotophone/cmakeproj;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Debug;
+		};
+		6AC16E8CA9C34372AEEE03D2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (/Users/scisci/xcode/Rotophone/extern/htreecpp/htree/include);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/scisci/xcode/Rotophone/cmakeproj;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Debug;
+		};
+		A6BBD1E4E8DF42288B8F3818 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
+				SYMROOT = /Users/scisci/xcode/Rotophone/cmakeproj/build;
+			};
+			name = Release;
+		};
+		A7651772462147E28BAF2A44 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (/Users/scisci/xcode/Rotophone/extern/htreecpp/htree/include);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/scisci/xcode/Rotophone/cmakeproj;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Release;
+		};
+		B5291BE7120C45EA8E4E25F6 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (/Users/scisci/xcode/Rotophone/extern/htreecpp/htree/include);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/scisci/xcode/Rotophone/cmakeproj;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		B59BA49F205046C193D52FD4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
+				SYMROOT = /Users/scisci/xcode/Rotophone/cmakeproj/build;
+			};
+			name = Debug;
+		};
+		DAFEF7974DD64F9E8EDC778C /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (/Users/scisci/xcode/Rotophone/extern/htreecpp/htree/include);
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = "       -DNDEBUG '-std=c++11'  ";
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = htree;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/scisci/xcode/Rotophone/cmakeproj/extern/htreecpp/htree;
+				SYSTEM_HEADER_SEARCH_PATHS = (/usr/local/include/eigen3,/usr/local/include);
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		EE9634280FBD4600AC3326D7 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (/Users/scisci/xcode/Rotophone/extern/htreecpp/htree/include);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/scisci/xcode/Rotophone/cmakeproj;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4FAFD7A24D0B4AF2B4A660F4 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6834A6314EC044A5AEE8D3EE /* Debug */,
+				0BFBEBDDA9C04D208A8AC397 /* Release */,
+				EE9634280FBD4600AC3326D7 /* MinSizeRel */,
+				42DEDB66B1514588B34F8A31 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		771FB606D06445FF908E6B32 /* Build configuration list for PBXNativeTarget "htree" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				56B6477F82164793B488FBB9 /* Debug */,
+				37EFB80E8AD840A8A9AD0636 /* Release */,
+				0A23FF28EFBE45FBBEC854D0 /* MinSizeRel */,
+				DAFEF7974DD64F9E8EDC778C /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A908A2323B6B4F438AC119C2 /* Build configuration list for PBXProject "htreedeps" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B59BA49F205046C193D52FD4 /* Debug */,
+				A6BBD1E4E8DF42288B8F3818 /* Release */,
+				56D1E1800C294871915661E1 /* MinSizeRel */,
+				1B296AE2ABCF49FFBD612BDE /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		ED538B77C8284E24A39E8A89 /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6AC16E8CA9C34372AEEE03D2 /* Debug */,
+				A7651772462147E28BAF2A44 /* Release */,
+				B5291BE7120C45EA8E4E25F6 /* MinSizeRel */,
+				35948F5C5BC84A7497427FCF /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A3495FF7A4184BAC981E8D8C /* Project object */;
+}

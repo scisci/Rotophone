@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "SerialPortHandler.h"
 #import "ORSSerialPortManager.h"
+#import "AudioMidiWindowController.h"
 
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
@@ -16,5 +17,6 @@
 - (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender;
 @property (retain) SerialPortHandler* serialPortHandler;
 @property (retain) ORSSerialPortManager* serialPortManager;
+@property (retain) AudioMidiWindowController* audioMidiWindowController;
 @end
 

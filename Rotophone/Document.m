@@ -11,7 +11,7 @@
 #import "AppDelegate.h"
 #import "MainWindowController.h"
 #import "VideoWindowController.h"
-#import "objc/PdFile.h"
+#import "PdFile.h"
 #import "SerialPortHandler.h"
 #import "MicrophoneShapeAdapter.h"
 #import "MicrophoneController.h"
@@ -175,7 +175,7 @@ static void *RawSerialKVOContext = &RawSerialKVOContext;
     NSString* resourcePath = [filePath stringByAppendingPathComponent:@"Resources"];
     NSString* soundsPath = [resourcePath stringByAppendingPathComponent:@"sounds"];
     
-    int size = paths.count;
+    unsigned long size = paths.count;
     if (size > 8) {
         size = 8;
     }
