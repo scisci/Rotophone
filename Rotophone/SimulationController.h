@@ -12,6 +12,7 @@
 #import "MicrophoneController.h"
 #import "MultiChannelAudioTrackMixer.h"
 #import "PdFile.h"
+#import "SimulationComposition.h"
 
 @class SimulationBody;
 @class SimulationMicrophone;
@@ -32,7 +33,7 @@
 - (void)removeDebugGraphics:(NSObject<DebugGraphics> *)debugGraphics;
 @end
 
-@interface SimulationController : NSObject<SimulationBodyDelegate, DebugGraphics> {
+@interface SimulationController : NSObject<SimulationBodyDelegate, DebugGraphics, SimulationCompositionDelegate> {
 }
 
 @property (retain) NSObject<Scene> * scene;

@@ -8,12 +8,15 @@
 
 #import "AudioMidiViewController.h"
 #import "AudioMidiSettingsManager.h"
-#import <MIKMIDI/MIKMIDI.h>
+#import "RtMidi.h"
 
 static void *AvailablePortsKVOContext = &AvailablePortsKVOContext;
 static void *SelectedPortKVOContext = &SelectedPortKVOContext;
 
 @interface AudioMidiViewController ()
+{
+
+}
 
 @property (weak) IBOutlet NSPopUpButton *midiPortPopupButton;
 @end
@@ -30,13 +33,13 @@ static void *SelectedPortKVOContext = &SelectedPortKVOContext;
                    options:(NSKeyValueObservingOptionNew |
                             NSKeyValueObservingOptionOld)
                    context:SelectedPortKVOContext];
-  
+  /*
     [[MIKMIDIDeviceManager sharedDeviceManager] addObserver:self
                 forKeyPath:@"availableDevices"
                    options:(NSKeyValueObservingOptionNew |
                             NSKeyValueObservingOptionOld)
                    context:AvailablePortsKVOContext];
-  
+  */
 
     [self handlePortsChanged];
     [self handleSelectedPortChanged];
@@ -46,8 +49,9 @@ static void *SelectedPortKVOContext = &SelectedPortKVOContext;
 {
   [[AudioMidiSettingsManager sharedManager] removeObserver:self forKeyPath:@"selectedMidiPort"];
   
-  [[MIKMIDIDeviceManager sharedDeviceManager] removeObserver:self forKeyPath:@"availableDevices"];
+  //[[MIKMIDIDeviceManager sharedDeviceManager] removeObserver:self forKeyPath:@"availableDevices"];
 }
+
 - (IBAction)popupButtonSelectionDidChange:(id)sender {
   NSLog(@"popup button changed %@", sender);
   int selectedIndex = (int)_midiPortPopupButton.indexOfSelectedItem - 1;
@@ -58,24 +62,23 @@ static void *SelectedPortKVOContext = &SelectedPortKVOContext;
 
 - (void)handlePortsChanged
 {
-  NSArray *devices = [[MIKMIDIDeviceManager sharedDeviceManager] availableDevices];
-  
+  NSArray *portNames = [[AudioMidiSettingsManager sharedManager] listMidiPorts];
+
   [_midiPortPopupButton removeAllItems];
-  
   [_midiPortPopupButton addItemWithTitle: @"No Midi"];
   
-  for (int i = 0; i < devices.count; i++) {
-    MIKMIDIDevice *device = [devices objectAtIndex:i];
-    [_midiPortPopupButton addItemWithTitle:[NSString stringWithFormat:@"%d %@ - %@", i+1, device.manufacturer, device.model]];
+  for (int i = 0; i < portNames.count; i++) {
+    NSString *portName = [portNames objectAtIndex:i];
+    [_midiPortPopupButton addItemWithTitle:[NSString stringWithFormat:@"%d %@", i+1, portName]];
   }
 }
 
 - (void)handleSelectedPortChanged
 {
   AudioMidiSettingsManager* settings = [AudioMidiSettingsManager sharedManager];
-  NSArray *devices = [[MIKMIDIDeviceManager sharedDeviceManager] availableDevices];
+  NSArray *portNames = [[AudioMidiSettingsManager sharedManager] listMidiPorts];
   int index = settings.selectedMidiPort;
-  if (index < 0 || index >= devices.count) {
+  if (index < 0 || index >= portNames.count) {
     index = -1;
   }
   

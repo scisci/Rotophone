@@ -15,6 +15,20 @@
 #import "PdFile.h"
 #import "PdBase.h"
 #import "MicrophonePerformer.h"
+#import "SimulationComposition.h"
+#import "AudioMidiSettingsManager.h"
+
+enum SimBodyType {
+  kSimBodyTypeSample,
+  kSimBodyTypeVideoChannel,
+  kSimBodyTypeMidiChannel
+};
+
+struct SimBodyMapping {
+  enum SimBodyType type;
+  int video_channel;
+  int midi_channel;
+};
 
 
 static void* SimBodyKVOContext = &SimBodyKVOContext;
@@ -279,6 +293,9 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     BOOL dirty;
     PerformanceTarget* target;
     float _lastScanParam;
+  
+    NSString *_mappingName;
+    struct SimBodyMapping _mapping;
 }
 
 
@@ -328,6 +345,37 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     }
     return self;
 }
+
+- (struct SimBodyMapping*)mapping {
+  if (_mappingName == nil || ![_mappingName isEqualToString:_body.name]) {
+    _mappingName = [_body.name copy];
+    _mapping.type = kSimBodyTypeSample;
+    _mapping.video_channel = -1;
+    _mapping.midi_channel = -1;
+    
+    if ([_body.name hasPrefix:@"vch"]) {
+      _mapping.type = kSimBodyTypeVideoChannel;
+      _mapping.video_channel = [[_body.name substringFromIndex:3] intValue] - 1;
+      if (_mapping.video_channel >= 0 && _mapping.video_channel < 16) {
+        return &_mapping;
+      }
+    }
+    
+    if ([_body.name hasPrefix:@"mch"]) {
+      _mapping.type = kSimBodyTypeMidiChannel;
+      _mapping.midi_channel = [[self.body.name substringFromIndex:3] intValue] - 1;
+      if (_mapping.midi_channel >= 0 && _mapping.midi_channel < 16) {
+        return &_mapping;
+      }
+    }
+    
+    _mapping.type = kSimBodyTypeSample;
+  }
+  
+  return &_mapping;
+};
+
+
 
 - (float)area {
     return _field.width.floatValue * _field.height.floatValue;
@@ -555,6 +603,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     GrainController* _grain;
     MultiChannelAudioTrackMixer *_avMixer;
     MixerInput *_avMix;
+    SimulationComposition *_simComp;
     
     BOOL _targetSwapState;
     
@@ -581,6 +630,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
         _currentTarget = NULL;
         _avMixer = NULL;
         _avMix = NULL;
+        _simComp = [[SimulationComposition alloc] initWithDelegate:self];
         _grain = [[GrainController alloc] initWithPatch:_patch];
         _sampleLookup = [NSDictionary dictionaryWithObjectsAndKeys:
                           [NSNumber numberWithInt:0],@"p1",
@@ -862,7 +912,12 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     
     bool velocityValid = false;
     double velocity = 0.0;
-    NSTimeInterval elapsed = -[_lastUpdate timeIntervalSinceNow];
+    const NSTimeInterval elapsed = -[_lastUpdate timeIntervalSinceNow];
+  
+    // If we haven't had an update within 1.5 seconds, maybe system was paused
+    // so we treat that as a different case, i.e. we forget about the last
+    // position and just start from scratch. In these cases the velocity is
+    // invalid because we don't really know the last position.
     if (elapsed < 1.5) {
         double dist = _microphone.microphoneShape.microphoneRotation - _lastPosition;
         if (dist > M_PI) {
@@ -885,104 +940,113 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     if (_microphone->dirty) {
         [_microphone updatePoints];
     }
-    
+  
+    // Update the robot
     if (_performer != nil) {
         [_performer updatePosition:_lastPosition andVelocity:velocity andValid:velocityValid];
     }
-    
+  
+    if (_simComp != nil) {
+      [_simComp updatePosition:_lastPosition andVelocity:velocity andValid:velocityValid];
+    }
+  
+    // Update the rendering and audio
     if (_sceneDirty) {
         // Check each body
         SimulationBody* maxTarget = nil;
         float maxTargetDist = CGFLOAT_MAX;
         
         for (SimulationBody *body in _bodies) {
-            if (body->dirty) {
-                [body updatePoints];
-                
-                // Update the targets
-                [body updateTargets:_microphone];
-            }
+          if (body->dirty) {
+            [body updatePoints];
+          
+            // Update the targets
+            [body updateTargets:_microphone];
+          }
+          
+          initPolyWithPoints(&_intersection, NULL, 0);
+          
+          gpc_polygon_clip(GPC_INT, &body->poly, &_microphone->polyLeft, &_intersection);
+          gpc_free_tristrip(&body->intersectionAreaLeft);
+          if (_intersection.contour != NULL) {
+              gpc_polygon_to_tristrip(&_intersection, &body->intersectionAreaLeft);
+              body.intersectionAreaLeft = triStripArea(&body->intersectionAreaLeft);
+          } else {
+              body.intersectionAreaLeft = 0.0;
+          }
+          
+          gpc_free_polygon(&_intersection);
+          
+          
+          
+          initPolyWithPoints(&_intersection, NULL, 0);
+          
+          gpc_polygon_clip(GPC_INT, &body->poly, &_microphone->polyRight, &_intersection);
+          gpc_free_tristrip(&body->intersectionAreaRight);
+          if (_intersection.contour != NULL) {
+              gpc_polygon_to_tristrip(&_intersection, &body->intersectionAreaRight);
+              body.intersectionAreaRight = triStripArea(&body->intersectionAreaRight);
             
-            initPolyWithPoints(&_intersection, NULL, 0);
-            
-            gpc_polygon_clip(GPC_INT, &body->poly, &_microphone->polyLeft, &_intersection);
-            gpc_free_tristrip(&body->intersectionAreaLeft);
-            if (_intersection.contour != NULL) {
-                gpc_polygon_to_tristrip(&_intersection, &body->intersectionAreaLeft);
-                body.intersectionAreaLeft = triStripArea(&body->intersectionAreaLeft);
-            } else {
-                body.intersectionAreaLeft = 0.0;
-            }
-            
-            gpc_free_polygon(&_intersection);
-            
-            
-            
-            initPolyWithPoints(&_intersection, NULL, 0);
-            
-            gpc_polygon_clip(GPC_INT, &body->poly, &_microphone->polyRight, &_intersection);
-            gpc_free_tristrip(&body->intersectionAreaRight);
-            if (_intersection.contour != NULL) {
-                gpc_polygon_to_tristrip(&_intersection, &body->intersectionAreaRight);
-                body.intersectionAreaRight = triStripArea(&body->intersectionAreaRight);
-                
-            } else {
-                body.intersectionAreaRight = 0.0;
-            }
-            
-            gpc_free_polygon(&_intersection);
-            
-            
+          } else {
+              body.intersectionAreaRight = 0.0;
+          }
+          
+          gpc_free_polygon(&_intersection);
+          
+          // Find the object that is closest to the microphone angle
+          // this only matters for sample objects
+          struct SimBodyMapping* mapping = [body mapping];
+          if (mapping->type == kSimBodyTypeSample) {
             float distMin = (body->target.angleMin - _microphone.microphoneShape.microphoneRotation);
             float distMax = (body->target.angleMax - _microphone.microphoneShape.microphoneRotation);
             if (distMin > M_PI) {
-                distMin -= 2 * M_PI;
+              distMin -= 2 * M_PI;
             } else if (distMin < -M_PI) {
-                distMin += 2 * M_PI;
+              distMin += 2 * M_PI;
             }
             if (distMax > M_PI) {
-                distMax -= 2 * M_PI;
+              distMax -= 2 * M_PI;
             } else if (distMax < -M_PI) {
-                distMax += 2 * M_PI;
+              distMax += 2 * M_PI;
             }
             
             if (fabs(distMin) < maxTargetDist) {
-                maxTarget = body;
-                maxTargetDist = fabs(distMin);
+              maxTarget = body;
+              maxTargetDist = fabs(distMin);
             }
             
             if (fabs(distMax) < maxTargetDist) {
-                maxTarget = body;
-                maxTargetDist = fabs(distMax);
+              maxTarget = body;
+              maxTargetDist = fabs(distMax);
             }
             
             
+            // If this was the last closest target and selected as the current
+            // target, then we should also animate the grain position
             if (body == _currentTarget && (body->target.angleMax != body->target.angleMin)) {
-                float pos = (_microphone.microphoneShape.microphoneRotation - body->target.angleMin) / (body->target.angleMax - body->target.angleMin);
-                if (pos < 0) {
-                    pos = 0;
-                }
-                
-                [_grain setPosition:pos AndPan:[body parameterizedPan]];
+              float pos = (_microphone.microphoneShape.microphoneRotation - body->target.angleMin) / (body->target.angleMax - body->target.angleMin);
+              if (pos < 0) {
+                pos = 0;
+              }
+            
+              [_grain setPosition:pos AndPan:[body parameterizedPan]];
             }
+          }
         }
         
         
         if (maxTarget != _nextTarget) {
-            _nextTarget = maxTarget;
-            if (_targetDebounceTimer != nil) {
-                [_targetDebounceTimer invalidate];
-            }
-            
-            _targetSwapState = 0;
-            
-            _targetDebounceTimer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:0.25] interval:0.0 target:self selector:@selector(updateCurrentTarget:) userInfo:nil repeats:NO];
-            
-            [[NSRunLoop currentRunLoop] addTimer:_targetDebounceTimer forMode:NSRunLoopCommonModes];
+          _nextTarget = maxTarget;
+          if (_targetDebounceTimer != nil) {
+            [_targetDebounceTimer invalidate];
+          }
+          
+          _targetSwapState = 0;
+          
+          _targetDebounceTimer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:0.25] interval:0.0 target:self selector:@selector(updateCurrentTarget:) userInfo:nil repeats:NO];
+          
+          [[NSRunLoop currentRunLoop] addTimer:_targetDebounceTimer forMode:NSRunLoopCommonModes];
         }
-        
-        
-
 
         // Update pd
         [self updatePD];
@@ -990,6 +1054,10 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     
     if (_mixerDirty) {
         [self updateMixer];
+    }
+  
+    if (_simComp != nil) {
+      [_simComp flush];
     }
     
     _mixerDirty = false;
@@ -1001,29 +1069,33 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
 
 - (void) updatePD {
   bool avChanged = false;
+  bool midiChanged = false;
   for (SimulationBody *body in _bodies) {
-    if ([body.body.name hasPrefix:@"vch"]) {
-      if (_avMix != NULL) {
-        // Parse out the channel
-        NSString *chString = [body.body.name substringFromIndex:3];
-        int ch = [chString intValue];
-        if (ch > 0 && ch <= 16) {
-          [_avMix setVolume:body.parameterizedIntersection * 0.75 forChannel:ch-1];
+    struct SimBodyMapping* mapping = [body mapping];
+    switch (mapping->type) {
+      case kSimBodyTypeVideoChannel:
+        if (_avMix != NULL) {
+          [_avMix setVolume:body.parameterizedIntersection * 0.75 forChannel:mapping->video_channel];
           avChanged = true;
         }
-      }
-      // Its a video channel
-    } else {
-      NSString *paramName = [NSString stringWithFormat:@"%d-%@", _patch.dollarZero, body.body.name];
-      NSString *panName = [NSString stringWithFormat:@"%d-%@_pan", _patch.dollarZero, body.body.name];
-      NSString *f1Name = [NSString stringWithFormat:@"%d-%@_f1", _patch.dollarZero, body.body.name];
-      NSString *f2Name = [NSString stringWithFormat:@"%d-%@_f2", _patch.dollarZero, body.body.name];
-      NSString *f3Name = [NSString stringWithFormat:@"%d-%@_f3", _patch.dollarZero, body.body.name];
-      int result = [PdBase sendFloat:body.parameterizedIntersection toReceiver:paramName];
-      result = [PdBase sendFloat:body.parameterizedPan toReceiver:panName];
-      result = [PdBase sendFloat:[body freq1Param] toReceiver:f1Name];
-      result = [PdBase sendFloat:[body freq2Param] toReceiver:f2Name];
-      result = [PdBase sendFloat:[body freq3Param] toReceiver:f3Name];
+        break;
+      case kSimBodyTypeMidiChannel:
+        // TODO: midi channel
+        break;
+      case kSimBodyTypeSample:
+        {
+          NSString *paramName = [NSString stringWithFormat:@"%d-%@", _patch.dollarZero, body.body.name];
+          NSString *panName = [NSString stringWithFormat:@"%d-%@_pan", _patch.dollarZero, body.body.name];
+          NSString *f1Name = [NSString stringWithFormat:@"%d-%@_f1", _patch.dollarZero, body.body.name];
+          NSString *f2Name = [NSString stringWithFormat:@"%d-%@_f2", _patch.dollarZero, body.body.name];
+          NSString *f3Name = [NSString stringWithFormat:@"%d-%@_f3", _patch.dollarZero, body.body.name];
+          int result = [PdBase sendFloat:body.parameterizedIntersection toReceiver:paramName];
+          result = [PdBase sendFloat:body.parameterizedPan toReceiver:panName];
+          result = [PdBase sendFloat:[body freq1Param] toReceiver:f1Name];
+          result = [PdBase sendFloat:[body freq2Param] toReceiver:f2Name];
+          result = [PdBase sendFloat:[body freq3Param] toReceiver:f3Name];
+        }
+        break;
     }
   }
   
@@ -1035,14 +1107,13 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
 
 
 - (void)updateMixer {
-    for (SimulationBody *body in _bodies) {
-      if ([body.body.name hasPrefix:@"vch"]) {
-      
-      } else {
-        NSString *paramName = [NSString stringWithFormat:@"%d-%@_pan", _patch.dollarZero, body.body.name];
-        [PdBase sendFloat:body.field.pan.floatValue toReceiver:paramName];
-      }
+  for (SimulationBody *body in _bodies) {
+    struct SimBodyMapping* mapping = [body mapping];
+    if (mapping->type == kSimBodyTypeSample) {
+      NSString *paramName = [NSString stringWithFormat:@"%d-%@_pan", _patch.dollarZero, body.body.name];
+      [PdBase sendFloat:body.field.pan.floatValue toReceiver:paramName];
     }
+  }
 }
 
 - (void)addBody:(BodyEntity *)entity {
@@ -1074,4 +1145,11 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     
     _sceneDirty = YES;
 }
+
+
+
+- (void)sendMidiData:(nonnull const unsigned char *)data ofSize:(size_t)dataSize {
+  [[AudioMidiSettingsManager sharedManager] sendMidiData:data ofSize:dataSize];
+}
+
 @end

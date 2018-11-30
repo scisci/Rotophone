@@ -22,9 +22,6 @@
 // Video stuff
 #import "SandboxFileManager.h"
 
-
-#define USE_MOCK_DEVICE
-
 static void *SelectedPortKVOContext = &SelectedPortKVOContext;
 static void *MicrophoneConnectedKVOContext = &MicrophoneConnectedKVOContext;
 static void *VolumeKVOContext = &VolumeKVOContext;
@@ -139,7 +136,6 @@ static void *RawSerialKVOContext = &RawSerialKVOContext;
     }
     
     return [results objectAtIndex:0];
-
 }
 
 - (instancetype)init {
@@ -227,7 +223,7 @@ static void *RawSerialKVOContext = &RawSerialKVOContext;
     self.serialPortHandler = appDelegate.serialPortHandler;
     self.simulationController = [[SimulationController alloc] initWithPatch:_file];
     
-    
+    // Initializes serial port possibly using above saved settings
     [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(setupSerialPort:) userInfo:nil repeats:NO];
     
  
@@ -250,24 +246,15 @@ static void *RawSerialKVOContext = &RawSerialKVOContext;
     
     
     _mainWindowController.mainViewController.toolViewController.delegate = self;
-    /*
-#ifdef USE_MOCK_DEVICE
-    
-#else
-    
-#endif
-    */
    
     self.microphoneController = [[MicrophoneController alloc] initWithEntity:_microphone andDeviceProvider:_deviceSelector];
     
-    [_microphoneController addObserver:self
-                         forKeyPath:@"status"
-                         options:(NSKeyValueObservingOptionNew |
-                                  NSKeyValueObservingOptionOld)
-                         context:MicrophoneConnectedKVOContext];
+    [_microphoneController  addObserver:self
+                            forKeyPath:@"status"
+                            options: (NSKeyValueObservingOptionNew |
+                                      NSKeyValueObservingOptionOld)
+                            context:MicrophoneConnectedKVOContext];
 
-    
-    
     // Create a shape for the microphone
     SceneEntity *sceneEntity = [self getOrCreateScene];
     
@@ -289,11 +276,7 @@ static void *RawSerialKVOContext = &RawSerialKVOContext;
     sideBarView.statusView.status = _microphoneController.status;
     
     sideBarView.transportView.transport = _microphoneController.transport;
- 
-    
-    
-   // [_simulationController start];
-    
+
     // Listen to changes to the transport and update
     [_microphoneController.transport addObserver:self forKeyPath:@"volume" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:VolumeKVOContext];
     [_microphoneController.transport addObserver:self forKeyPath:@"isMuted" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:MuteKVOContext];

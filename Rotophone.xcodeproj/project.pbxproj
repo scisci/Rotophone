@@ -49,13 +49,12 @@
 		4B7C1A641EFD3BBE0064DF8F /* TargetMixPerformMode.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7C1A631EFD3BBE0064DF8F /* TargetMixPerformMode.m */; };
 		4B7C1A671EFD3D210064DF8F /* TargetScanPerformMode.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7C1A661EFD3D210064DF8F /* TargetScanPerformMode.m */; };
 		4B7C1A6A1EFD4A640064DF8F /* RoomScanPerformMode.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7C1A691EFD4A640064DF8F /* RoomScanPerformMode.m */; };
-		4BA2EC8921AA3D0200663DF4 /* ObjCppTest.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4BA2EC8821AA3D0200663DF4 /* ObjCppTest.mm */; };
 		4BA2EC8A21AA3DB700663DF4 /* libhtree.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BA2EC8221AA39E200663DF4 /* libhtree.a */; };
-		4BA2EC9721AB873700663DF4 /* MIKMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BA2EC9221AB871900663DF4 /* MIKMIDI.framework */; };
-		4BA2ECA121AB962100663DF4 /* AudioMidiSettingsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BA2ECA021AB962100663DF4 /* AudioMidiSettingsManager.m */; };
-		4BA2ECA521AB977500663DF4 /* AudioMidiViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BA2ECA321AB977500663DF4 /* AudioMidiViewController.m */; };
+		4BA2ECA121AB962100663DF4 /* AudioMidiSettingsManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4BA2ECA021AB962100663DF4 /* AudioMidiSettingsManager.mm */; };
+		4BA2ECA521AB977500663DF4 /* AudioMidiViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4BA2ECA321AB977500663DF4 /* AudioMidiViewController.mm */; };
 		4BA2ECA621AB977500663DF4 /* AudioMidiViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BA2ECA421AB977500663DF4 /* AudioMidiViewController.xib */; };
 		4BA2ECA921AB97B800663DF4 /* AudioMidiWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BA2ECA821AB97B800663DF4 /* AudioMidiWindowController.m */; };
+		4BAD3C8021ADB7CC0060B02D /* SimulationComposition.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4BAD3C7F21ADB7CC0060B02D /* SimulationComposition.mm */; };
 		4BADEA531EF5A4A8003CF739 /* gpc.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BADEA4F1EF5A4A8003CF739 /* gpc.c */; };
 		4BADEA541EF5A4A8003CF739 /* GPCPolygon.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BADEA521EF5A4A8003CF739 /* GPCPolygon.m */; };
 		4BADEA5D1EF74051003CF739 /* MicrophonePerformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BADEA5C1EF74051003CF739 /* MicrophonePerformer.m */; };
@@ -66,6 +65,11 @@
 		4BBE45FC1EBC473000276A8A /* Document.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4BBE45FA1EBC473000276A8A /* Document.xcdatamodeld */; };
 		4BBE45FE1EBC473000276A8A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4BBE45FD1EBC473000276A8A /* Assets.xcassets */; };
 		4BBE460F1EBC497100276A8A /* RootView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BBE460D1EBC497100276A8A /* RootView.m */; };
+		4BC9CD8A21B112C100122D2F /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC9CD6721B112C100122D2F /* CoreMIDI.framework */; };
+		4BC9CD8B21B112C100122D2F /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC9CD8721B112C100122D2F /* CoreAudio.framework */; };
+		4BC9CD8C21B112C100122D2F /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC9CD8821B112C100122D2F /* CoreFoundation.framework */; };
+		4BC9CD8D21B112C100122D2F /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC9CD8921B112C100122D2F /* CoreServices.framework */; };
+		4BC9CD8E21B112CF00122D2F /* librtmidi_static.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BC9CD8121B112C100122D2F /* librtmidi_static.a */; };
 		4BCC701C1ECBF83600E2BB37 /* libpd-osx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BCC701B1ECBF7E300E2BB37 /* libpd-osx.a */; };
 		4BCF703D1EDD032B001E1971 /* Protocol.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BCF703B1EDD032B001E1971 /* Protocol.c */; };
 		4BCF70401EDD0BDD001E1971 /* Entities.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCF703F1EDD0BDD001E1971 /* Entities.m */; };
@@ -100,29 +104,64 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 4BA2EC7B21AA39E200663DF4 /* htreedeps.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = F63EE700A8844194BC5A8D51;
+			remoteGlobalIDString = 9F832C9C847046DCA24FEB2B;
 			remoteInfo = htree;
 		};
-		4BA2EC9121AB871900663DF4 /* PBXContainerItemProxy */ = {
+		4BC9CD7421B112C100122D2F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 4BA2EC8B21AB871900663DF4 /* MIKMIDI.xcodeproj */;
+			containerPortal = 4BA2EC7B21AA39E200663DF4 /* htreedeps.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 9D74EEA517A7129300BEE89F;
-			remoteInfo = MIKMIDI;
+			remoteGlobalIDString = F6E669DAD9F342BA8EB280DC;
+			remoteInfo = cmidiin;
 		};
-		4BA2EC9321AB871900663DF4 /* PBXContainerItemProxy */ = {
+		4BC9CD7621B112C100122D2F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 4BA2EC8B21AB871900663DF4 /* MIKMIDI.xcodeproj */;
+			containerPortal = 4BA2EC7B21AA39E200663DF4 /* htreedeps.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 9DAF8B061A7AFF1100F46528;
-			remoteInfo = "MIKMIDI-iOS";
+			remoteGlobalIDString = 041439BE49AD4B43B328F5BE;
+			remoteInfo = midiclock;
 		};
-		4BA2EC9521AB871900663DF4 /* PBXContainerItemProxy */ = {
+		4BC9CD7821B112C100122D2F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 4BA2EC8B21AB871900663DF4 /* MIKMIDI.xcodeproj */;
+			containerPortal = 4BA2EC7B21AA39E200663DF4 /* htreedeps.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 9D4DF13A1AAB57430065F004;
-			remoteInfo = "MIKMIDI Tests";
+			remoteGlobalIDString = DFB27A89004B4B2FA180A76B;
+			remoteInfo = midiout;
+		};
+		4BC9CD7A21B112C100122D2F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4BA2EC7B21AA39E200663DF4 /* htreedeps.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B1B55398F178408DBF4E2A2F;
+			remoteInfo = midiprobe;
+		};
+		4BC9CD7C21B112C100122D2F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4BA2EC7B21AA39E200663DF4 /* htreedeps.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0217B15844F045B392F9B388;
+			remoteInfo = qmidiin;
+		};
+		4BC9CD7E21B112C100122D2F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4BA2EC7B21AA39E200663DF4 /* htreedeps.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 07BD9778E62440DBA4420859;
+			remoteInfo = rtmidi;
+		};
+		4BC9CD8021B112C100122D2F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4BA2EC7B21AA39E200663DF4 /* htreedeps.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8A5AD51FABF347128B637C09;
+			remoteInfo = rtmidi_static;
+		};
+		4BC9CD8221B112C100122D2F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4BA2EC7B21AA39E200663DF4 /* htreedeps.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 47D09C3CD1894771BAB90A80;
+			remoteInfo = sysextest;
 		};
 		4BCC70181ECBF7E300E2BB37 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -217,15 +256,15 @@
 		4B7C1A681EFD4A640064DF8F /* RoomScanPerformMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RoomScanPerformMode.h; sourceTree = "<group>"; };
 		4B7C1A691EFD4A640064DF8F /* RoomScanPerformMode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RoomScanPerformMode.m; sourceTree = "<group>"; };
 		4BA2EC7B21AA39E200663DF4 /* htreedeps.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = htreedeps.xcodeproj; path = cmakeproj/htreedeps.xcodeproj; sourceTree = "<group>"; };
-		4BA2EC8821AA3D0200663DF4 /* ObjCppTest.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ObjCppTest.mm; sourceTree = "<group>"; };
-		4BA2EC8B21AB871900663DF4 /* MIKMIDI.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MIKMIDI.xcodeproj; path = extern/MIKMIDI/Framework/MIKMIDI.xcodeproj; sourceTree = "<group>"; };
 		4BA2EC9F21AB962100663DF4 /* AudioMidiSettingsManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioMidiSettingsManager.h; sourceTree = "<group>"; };
-		4BA2ECA021AB962100663DF4 /* AudioMidiSettingsManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioMidiSettingsManager.m; sourceTree = "<group>"; };
+		4BA2ECA021AB962100663DF4 /* AudioMidiSettingsManager.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AudioMidiSettingsManager.mm; sourceTree = "<group>"; };
 		4BA2ECA221AB977500663DF4 /* AudioMidiViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioMidiViewController.h; sourceTree = "<group>"; };
-		4BA2ECA321AB977500663DF4 /* AudioMidiViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioMidiViewController.m; sourceTree = "<group>"; };
+		4BA2ECA321AB977500663DF4 /* AudioMidiViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AudioMidiViewController.mm; sourceTree = "<group>"; };
 		4BA2ECA421AB977500663DF4 /* AudioMidiViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AudioMidiViewController.xib; sourceTree = "<group>"; };
 		4BA2ECA721AB97B800663DF4 /* AudioMidiWindowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioMidiWindowController.h; sourceTree = "<group>"; };
 		4BA2ECA821AB97B800663DF4 /* AudioMidiWindowController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioMidiWindowController.m; sourceTree = "<group>"; };
+		4BAD3C7E21ADB7CC0060B02D /* SimulationComposition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimulationComposition.h; sourceTree = "<group>"; };
+		4BAD3C7F21ADB7CC0060B02D /* SimulationComposition.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = SimulationComposition.mm; sourceTree = "<group>"; };
 		4BADEA4F1EF5A4A8003CF739 /* gpc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gpc.c; sourceTree = "<group>"; };
 		4BADEA501EF5A4A8003CF739 /* gpc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gpc.h; sourceTree = "<group>"; };
 		4BADEA511EF5A4A8003CF739 /* GPCPolygon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPCPolygon.h; sourceTree = "<group>"; };
@@ -245,6 +284,10 @@
 		4BBE46021EBC473000276A8A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4BBE460C1EBC497100276A8A /* RootView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootView.h; sourceTree = "<group>"; };
 		4BBE460D1EBC497100276A8A /* RootView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootView.m; sourceTree = "<group>"; };
+		4BC9CD6721B112C100122D2F /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = System/Library/Frameworks/CoreMIDI.framework; sourceTree = SDKROOT; };
+		4BC9CD8721B112C100122D2F /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		4BC9CD8821B112C100122D2F /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		4BC9CD8921B112C100122D2F /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		4BCC70131ECBF7E300E2BB37 /* libpd.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libpd.xcodeproj; path = libpd/libpd.xcodeproj; sourceTree = "<group>"; };
 		4BCC701F1ECC020700E2BB37 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/AVFoundation.framework; sourceTree = DEVELOPER_DIR; };
 		4BCC70211ECC02FC00E2BB37 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/AudioUnit.framework; sourceTree = DEVELOPER_DIR; };
@@ -269,7 +312,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4BA2EC9721AB873700663DF4 /* MIKMIDI.framework in Frameworks */,
+				4BC9CD8E21B112CF00122D2F /* librtmidi_static.a in Frameworks */,
+				4BC9CD8A21B112C100122D2F /* CoreMIDI.framework in Frameworks */,
+				4BC9CD8B21B112C100122D2F /* CoreAudio.framework in Frameworks */,
+				4BC9CD8C21B112C100122D2F /* CoreFoundation.framework in Frameworks */,
+				4BC9CD8D21B112C100122D2F /* CoreServices.framework in Frameworks */,
 				4BA2EC8A21AA3DB700663DF4 /* libhtree.a in Frameworks */,
 				4B2FD20721A60D51009FA1A0 /* Cocoa.framework in Frameworks */,
 				4B2FD20521A60D48009FA1A0 /* IOKit.framework in Frameworks */,
@@ -289,16 +336,14 @@
 			isa = PBXGroup;
 			children = (
 				4BA2EC8221AA39E200663DF4 /* libhtree.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		4BA2EC8C21AB871900663DF4 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				4BA2EC9221AB871900663DF4 /* MIKMIDI.framework */,
-				4BA2EC9421AB871900663DF4 /* MIKMIDI.framework */,
-				4BA2EC9621AB871900663DF4 /* MIKMIDI Tests.xctest */,
+				4BC9CD7521B112C100122D2F /* cmidiin */,
+				4BC9CD7721B112C100122D2F /* midiclock */,
+				4BC9CD7921B112C100122D2F /* midiout */,
+				4BC9CD7B21B112C100122D2F /* midiprobe */,
+				4BC9CD7D21B112C100122D2F /* qmidiin */,
+				4BC9CD7F21B112C100122D2F /* librtmidi.dylib */,
+				4BC9CD8121B112C100122D2F /* librtmidi_static.a */,
+				4BC9CD8321B112C100122D2F /* sysextest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -308,7 +353,6 @@
 			children = (
 				4BCC70131ECBF7E300E2BB37 /* libpd.xcodeproj */,
 				4BA2EC7B21AA39E200663DF4 /* htreedeps.xcodeproj */,
-				4BA2EC8B21AB871900663DF4 /* MIKMIDI.xcodeproj */,
 				4BBE45ED1EBC473000276A8A /* Rotophone */,
 				4BBE45EC1EBC473000276A8A /* Products */,
 				4BCDE0421EBD767E005764A7 /* Frameworks */,
@@ -339,7 +383,6 @@
 				4BADEA521EF5A4A8003CF739 /* GPCPolygon.m */,
 				4BADEA5B1EF74051003CF739 /* MicrophonePerformer.h */,
 				4BADEA5C1EF74051003CF739 /* MicrophonePerformer.m */,
-				4BA2EC8821AA3D0200663DF4 /* ObjCppTest.mm */,
 				4B7C1A651EFD3D210064DF8F /* TargetScanPerformMode.h */,
 				4B7C1A661EFD3D210064DF8F /* TargetScanPerformMode.m */,
 				4B7C1A621EFD3BBE0064DF8F /* TargetMixPerformMode.h */,
@@ -407,12 +450,14 @@
 				4B60BA2C1EBD87B7000FC8A5 /* MainViewController.m */,
 				4B4DE5811EF4B624000C9635 /* BodyControlPanel.h */,
 				4B4DE5821EF4B624000C9635 /* BodyControlPanel.m */,
+				4BAD3C7E21ADB7CC0060B02D /* SimulationComposition.h */,
+				4BAD3C7F21ADB7CC0060B02D /* SimulationComposition.mm */,
 				4B4DE5751EECB781000C9635 /* MicrophoneControlPanelViewController.h */,
 				4B4DE5761EECB781000C9635 /* MicrophoneControlPanelViewController.m */,
 				4BA2EC9F21AB962100663DF4 /* AudioMidiSettingsManager.h */,
-				4BA2ECA021AB962100663DF4 /* AudioMidiSettingsManager.m */,
+				4BA2ECA021AB962100663DF4 /* AudioMidiSettingsManager.mm */,
 				4BA2ECA221AB977500663DF4 /* AudioMidiViewController.h */,
-				4BA2ECA321AB977500663DF4 /* AudioMidiViewController.m */,
+				4BA2ECA321AB977500663DF4 /* AudioMidiViewController.mm */,
 				4BA2ECA721AB97B800663DF4 /* AudioMidiWindowController.h */,
 				4BA2ECA821AB97B800663DF4 /* AudioMidiWindowController.m */,
 				4BA2ECA421AB977500663DF4 /* AudioMidiViewController.xib */,
@@ -449,6 +494,10 @@
 		4BCDE0421EBD767E005764A7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4BC9CD8721B112C100122D2F /* CoreAudio.framework */,
+				4BC9CD8821B112C100122D2F /* CoreFoundation.framework */,
+				4BC9CD6721B112C100122D2F /* CoreMIDI.framework */,
+				4BC9CD8921B112C100122D2F /* CoreServices.framework */,
 				4B2FD20621A60D51009FA1A0 /* Cocoa.framework */,
 				4B2FD20421A60D48009FA1A0 /* IOKit.framework */,
 				4B2FD20221A60D38009FA1A0 /* AudioUnit.framework */,
@@ -524,10 +573,6 @@
 					ProductGroup = 4BCC70141ECBF7E300E2BB37 /* Products */;
 					ProjectRef = 4BCC70131ECBF7E300E2BB37 /* libpd.xcodeproj */;
 				},
-				{
-					ProductGroup = 4BA2EC8C21AB871900663DF4 /* Products */;
-					ProjectRef = 4BA2EC8B21AB871900663DF4 /* MIKMIDI.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -558,25 +603,61 @@
 			remoteRef = 4BA2EC8121AA39E200663DF4 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		4BA2EC9221AB871900663DF4 /* MIKMIDI.framework */ = {
+		4BC9CD7521B112C100122D2F /* cmidiin */ = {
 			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = MIKMIDI.framework;
-			remoteRef = 4BA2EC9121AB871900663DF4 /* PBXContainerItemProxy */;
+			fileType = "compiled.mach-o.executable";
+			path = cmidiin;
+			remoteRef = 4BC9CD7421B112C100122D2F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		4BA2EC9421AB871900663DF4 /* MIKMIDI.framework */ = {
+		4BC9CD7721B112C100122D2F /* midiclock */ = {
 			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = MIKMIDI.framework;
-			remoteRef = 4BA2EC9321AB871900663DF4 /* PBXContainerItemProxy */;
+			fileType = "compiled.mach-o.executable";
+			path = midiclock;
+			remoteRef = 4BC9CD7621B112C100122D2F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		4BA2EC9621AB871900663DF4 /* MIKMIDI Tests.xctest */ = {
+		4BC9CD7921B112C100122D2F /* midiout */ = {
 			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "MIKMIDI Tests.xctest";
-			remoteRef = 4BA2EC9521AB871900663DF4 /* PBXContainerItemProxy */;
+			fileType = "compiled.mach-o.executable";
+			path = midiout;
+			remoteRef = 4BC9CD7821B112C100122D2F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4BC9CD7B21B112C100122D2F /* midiprobe */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = midiprobe;
+			remoteRef = 4BC9CD7A21B112C100122D2F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4BC9CD7D21B112C100122D2F /* qmidiin */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = qmidiin;
+			remoteRef = 4BC9CD7C21B112C100122D2F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4BC9CD7F21B112C100122D2F /* librtmidi.dylib */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.dylib";
+			name = librtmidi.dylib;
+			path = librtmidi.4.0.0.dylib;
+			remoteRef = 4BC9CD7E21B112C100122D2F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4BC9CD8121B112C100122D2F /* librtmidi_static.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = librtmidi_static.a;
+			remoteRef = 4BC9CD8021B112C100122D2F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4BC9CD8321B112C100122D2F /* sysextest */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = sysextest;
+			remoteRef = 4BC9CD8221B112C100122D2F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		4BCC70191ECBF7E300E2BB37 /* libpd-ios.a */ = {
@@ -663,7 +744,7 @@
 				4B4DE5841EF4B624000C9635 /* BodyControlPanel.m in Sources */,
 				4BA2ECA921AB97B800663DF4 /* AudioMidiWindowController.m in Sources */,
 				4BCF708F1EDE59CC001E1971 /* Event.m in Sources */,
-				4BA2ECA121AB962100663DF4 /* AudioMidiSettingsManager.m in Sources */,
+				4BA2ECA121AB962100663DF4 /* AudioMidiSettingsManager.mm in Sources */,
 				4B0FC7F61EDFD06A003CACD5 /* MicrophoneController.m in Sources */,
 				4BCF70931EDE723B001E1971 /* MicrophoneShapeAdapter.m in Sources */,
 				4B7C1A641EFD3BBE0064DF8F /* TargetMixPerformMode.m in Sources */,
@@ -674,14 +755,14 @@
 				4B3B91431EC3545A005C0A1A /* SerialPortHandler.m in Sources */,
 				4B4DE5721EECB54E000C9635 /* Shape.m in Sources */,
 				4B4DE56C1EE66D3F000C9635 /* MockDevice.m in Sources */,
-				4BA2ECA521AB977500663DF4 /* AudioMidiViewController.m in Sources */,
+				4BA2ECA521AB977500663DF4 /* AudioMidiViewController.mm in Sources */,
 				4B3B914C1EC4056C005C0A1A /* ToolViewController.m in Sources */,
 				4B4DE5771EECB781000C9635 /* MicrophoneControlPanelViewController.m in Sources */,
-				4BA2EC8921AA3D0200663DF4 /* ObjCppTest.mm in Sources */,
 				4BBE45F01EBC473000276A8A /* AppDelegate.m in Sources */,
 				4B7C1A671EFD3D210064DF8F /* TargetScanPerformMode.m in Sources */,
 				4BADEA531EF5A4A8003CF739 /* gpc.c in Sources */,
 				4B2FD20921A62EE4009FA1A0 /* VideoWindowController.m in Sources */,
+				4BAD3C8021ADB7CC0060B02D /* SimulationComposition.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -806,6 +887,7 @@
 				HEADER_SEARCH_PATHS = (
 					./libpd/objc,
 					./extern/htreecpp/htree/include,
+					./extern/rtmidi,
 				);
 				INFOPLIST_FILE = Rotophone/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
@@ -834,6 +916,7 @@
 				HEADER_SEARCH_PATHS = (
 					./libpd/objc,
 					./extern/htreecpp/htree/include,
+					./extern/rtmidi,
 				);
 				INFOPLIST_FILE = Rotophone/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
