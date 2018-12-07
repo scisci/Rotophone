@@ -12,6 +12,7 @@
 #import "ORSSerialPort.h"
 #import "Document.h"
 #import "PdAudioUnit.h"
+#import "AudioMidiSettingsManager.h"
 
 @interface SerialPortMenuItem : NSObject
 @property NSMenuItem *menuItem;
@@ -47,11 +48,12 @@ static void *SelectedPortKVOContext = &SelectedPortKVOContext;
 
 - (id)init {
     if (self = [super init]) {
+        Float64 sampleRate = AudioMidiSettingsManager.sharedManager.sampleRate;
         self.appStarted = false;
         self.serialPortManager = [ORSSerialPortManager sharedSerialPortManager];
         self.serialPortHandler = [[SerialPortHandler alloc] init];
         self.pdAudioUnit = [[PdAudioUnit alloc] init];
-        int result = [_pdAudioUnit configureWithSampleRate:44100.0 numberChannels:2 inputEnabled:NO];
+        int result = [_pdAudioUnit configureWithSampleRate:sampleRate numberChannels:2 inputEnabled:NO];
     }
     return self;
 }

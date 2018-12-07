@@ -243,6 +243,13 @@ static void *RawSerialKVOContext = &RawSerialKVOContext;
         [_simulationController setAVMixer:[self->_videoWindowController.videoViewController mixer]];
       }
     }];
+  
+    NSURL *midiUrl = [NSURL fileURLWithPath:@"/Users/scisci/xcode/VideoMixerTest/test.mid"];
+    [_sandboxFileManager openUrl:midiUrl withCompletion:^(URLResource *resource) {
+      if (resource != nil) {
+        [_simulationController loadMidiResource: resource];
+      }
+    }];
     
     
     _mainWindowController.mainViewController.toolViewController.delegate = self;

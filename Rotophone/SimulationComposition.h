@@ -18,9 +18,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SimulationComposition : NSObject
 
-- (instancetype)initWithDelegate:(id<SimulationCompositionDelegate>)delegate;
+- (instancetype)initWithDelegate:(id<SimulationCompositionDelegate>)delegate andFreqs:(NSArray *)freqs;
+- (void)loadMidiFile:(NSString *)path;
 - (void)updatePosition:(double)position andVelocity:(double)velocity andValid:(bool)velocityValid;
-- (void)flush;
+- (void)refresh;
 @end
 
 NS_ASSUME_NONNULL_END

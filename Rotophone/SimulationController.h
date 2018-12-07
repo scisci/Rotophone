@@ -13,6 +13,7 @@
 #import "MultiChannelAudioTrackMixer.h"
 #import "PdFile.h"
 #import "SimulationComposition.h"
+#import "SandboxFileManager.h"
 
 @class SimulationBody;
 @class SimulationMicrophone;
@@ -40,6 +41,7 @@
 
 - (id)initWithPatch:(PdFile *)patch;
 - (void)setAVMixer:(MultiChannelAudioTrackMixer *)mixer;
+- (void)loadMidiResource:(URLResource *)resource;
 - (void)addMicrophone:(NSObject<MicrophoneProxy> *)proxy;
 - (void)addBody:(BodyEntity *)entity;
 - (void)removeShape:(id<Shape>) shape;

@@ -606,7 +606,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     SimulationComposition *_simComp;
     
     BOOL _targetSwapState;
-    
+    NSDate *_lastCompositionRefresh;
 }
 
 @end
@@ -624,13 +624,19 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
         _intersection.num_contours = 0;
         _lastPosition = 0;
         _lastUpdate = nil;
+        _lastCompositionRefresh = [NSDate date];
         _performer = [[MicrophonePerformer alloc] init];
         _sceneDirty = true;
         _mixerDirty = true;
         _currentTarget = NULL;
         _avMixer = NULL;
         _avMix = NULL;
-        _simComp = [[SimulationComposition alloc] initWithDelegate:self];
+        _simComp = [[SimulationComposition alloc] initWithDelegate:self andFreqs:[NSArray arrayWithObjects: [NSNumber numberWithDouble: 77.78],
+            [NSNumber numberWithDouble: 98.0],
+            [NSNumber numberWithDouble: 196.0],
+            [NSNumber numberWithDouble: 212.0],
+            nil]];
+
         _grain = [[GrainController alloc] initWithPatch:_patch];
         _sampleLookup = [NSDictionary dictionaryWithObjectsAndKeys:
                           [NSNumber numberWithInt:0],@"p1",
@@ -664,6 +670,14 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
 {
   _avMixer = mixer;
   _avMix = [mixer mix];
+}
+
+- (void)loadMidiResource:(URLResource *)resource
+{
+  NSString *path = [resource.url path];
+  if (path != nil) {
+    [_simComp loadMidiFile:path];
+  }
 }
 
 - (void)dealloc {
@@ -914,6 +928,11 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     double velocity = 0.0;
     const NSTimeInterval elapsed = -[_lastUpdate timeIntervalSinceNow];
   
+    if (-[_lastCompositionRefresh timeIntervalSinceNow] > 10.0) {
+      _lastCompositionRefresh = [NSDate date];
+      [_simComp refresh];
+    }
+  
     // If we haven't had an update within 1.5 seconds, maybe system was paused
     // so we treat that as a different case, i.e. we forget about the last
     // position and just start from scratch. In these cases the velocity is
@@ -1055,10 +1074,6 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     if (_mixerDirty) {
         [self updateMixer];
     }
-  
-    if (_simComp != nil) {
-      [_simComp flush];
-    }
     
     _mixerDirty = false;
     _sceneDirty = false;
@@ -1084,6 +1099,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
         break;
       case kSimBodyTypeSample:
         {
+        /*
           NSString *paramName = [NSString stringWithFormat:@"%d-%@", _patch.dollarZero, body.body.name];
           NSString *panName = [NSString stringWithFormat:@"%d-%@_pan", _patch.dollarZero, body.body.name];
           NSString *f1Name = [NSString stringWithFormat:@"%d-%@_f1", _patch.dollarZero, body.body.name];
@@ -1094,6 +1110,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
           result = [PdBase sendFloat:[body freq1Param] toReceiver:f1Name];
           result = [PdBase sendFloat:[body freq2Param] toReceiver:f2Name];
           result = [PdBase sendFloat:[body freq3Param] toReceiver:f3Name];
+          */
         }
         break;
     }
@@ -1110,8 +1127,8 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
   for (SimulationBody *body in _bodies) {
     struct SimBodyMapping* mapping = [body mapping];
     if (mapping->type == kSimBodyTypeSample) {
-      NSString *paramName = [NSString stringWithFormat:@"%d-%@_pan", _patch.dollarZero, body.body.name];
-      [PdBase sendFloat:body.field.pan.floatValue toReceiver:paramName];
+     // NSString *paramName = [NSString stringWithFormat:@"%d-%@_pan", _patch.dollarZero, body.body.name];
+     // [PdBase sendFloat:body.field.pan.floatValue toReceiver:paramName];
     }
   }
 }

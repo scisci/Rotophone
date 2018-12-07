@@ -76,6 +76,9 @@
 		4BCF708C1EDD217C001E1971 /* MainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCF708B1EDD217C001E1971 /* MainWindowController.m */; };
 		4BCF708F1EDE59CC001E1971 /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCF708E1EDE59CC001E1971 /* Event.m */; };
 		4BCF70931EDE723B001E1971 /* MicrophoneShapeAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCF70921EDE723B001E1971 /* MicrophoneShapeAdapter.m */; };
+		4BE9F2EC21BA378200A5EAA4 /* MidiCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4BE9F2EB21BA378200A5EAA4 /* MidiCore.cpp */; };
+		4BE9F2EF21BA390C00A5EAA4 /* MidiFileIn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4BE9F2EE21BA390C00A5EAA4 /* MidiFileIn.cpp */; };
+		4BE9F2F221BA3D1600A5EAA4 /* MidiFileSequenceReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4BE9F2F021BA3D1600A5EAA4 /* MidiFileSequenceReader.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -305,6 +308,13 @@
 		4BCF70901EDE7162001E1971 /* Shape.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Shape.h; sourceTree = "<group>"; };
 		4BCF70911EDE7197001E1971 /* MicrophoneShapeAdapter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MicrophoneShapeAdapter.h; sourceTree = "<group>"; };
 		4BCF70921EDE723B001E1971 /* MicrophoneShapeAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MicrophoneShapeAdapter.m; sourceTree = "<group>"; };
+		4BE9F2DA21BA363A00A5EAA4 /* MidiFileIn.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MidiFileIn.hpp; sourceTree = "<group>"; };
+		4BE9F2EA21BA375500A5EAA4 /* MidiCore.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MidiCore.hpp; sourceTree = "<group>"; };
+		4BE9F2EB21BA378200A5EAA4 /* MidiCore.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MidiCore.cpp; sourceTree = "<group>"; };
+		4BE9F2ED21BA37E400A5EAA4 /* MidiDeviceJuno106.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MidiDeviceJuno106.hpp; sourceTree = "<group>"; };
+		4BE9F2EE21BA390C00A5EAA4 /* MidiFileIn.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MidiFileIn.cpp; sourceTree = "<group>"; };
+		4BE9F2F021BA3D1600A5EAA4 /* MidiFileSequenceReader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MidiFileSequenceReader.cpp; sourceTree = "<group>"; };
+		4BE9F2F121BA3D1600A5EAA4 /* MidiFileSequenceReader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MidiFileSequenceReader.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -452,6 +462,13 @@
 				4B4DE5821EF4B624000C9635 /* BodyControlPanel.m */,
 				4BAD3C7E21ADB7CC0060B02D /* SimulationComposition.h */,
 				4BAD3C7F21ADB7CC0060B02D /* SimulationComposition.mm */,
+				4BE9F2EA21BA375500A5EAA4 /* MidiCore.hpp */,
+				4BE9F2ED21BA37E400A5EAA4 /* MidiDeviceJuno106.hpp */,
+				4BE9F2EB21BA378200A5EAA4 /* MidiCore.cpp */,
+				4BE9F2F021BA3D1600A5EAA4 /* MidiFileSequenceReader.cpp */,
+				4BE9F2F121BA3D1600A5EAA4 /* MidiFileSequenceReader.hpp */,
+				4BE9F2DA21BA363A00A5EAA4 /* MidiFileIn.hpp */,
+				4BE9F2EE21BA390C00A5EAA4 /* MidiFileIn.cpp */,
 				4B4DE5751EECB781000C9635 /* MicrophoneControlPanelViewController.h */,
 				4B4DE5761EECB781000C9635 /* MicrophoneControlPanelViewController.m */,
 				4BA2EC9F21AB962100663DF4 /* AudioMidiSettingsManager.h */,
@@ -732,8 +749,10 @@
 				4B60BA4F1EBD9DCF000FC8A5 /* ORSSerialPortManager.m in Sources */,
 				4BADEA541EF5A4A8003CF739 /* GPCPolygon.m in Sources */,
 				4B60BA501EBD9DCF000FC8A5 /* ORSSerialRequest.m in Sources */,
+				4BE9F2F221BA3D1600A5EAA4 /* MidiFileSequenceReader.cpp in Sources */,
 				4B7C1A5D1EFD3AFC0064DF8F /* PerformMode.m in Sources */,
 				4B0FC7F91EE1CC6A003CACD5 /* MicrophoneKeepAlive.m in Sources */,
+				4BE9F2EF21BA390C00A5EAA4 /* MidiFileIn.cpp in Sources */,
 				4B60BA4E1EBD9DCF000FC8A5 /* ORSSerialPort.m in Sources */,
 				4B0FC7FF1EE5E365003CACD5 /* SerialPortDevice.m in Sources */,
 				4BBE460F1EBC497100276A8A /* RootView.m in Sources */,
@@ -742,6 +761,7 @@
 				4BBE45F31EBC473000276A8A /* main.m in Sources */,
 				4BCF70401EDD0BDD001E1971 /* Entities.m in Sources */,
 				4B4DE5841EF4B624000C9635 /* BodyControlPanel.m in Sources */,
+				4BE9F2EC21BA378200A5EAA4 /* MidiCore.cpp in Sources */,
 				4BA2ECA921AB97B800663DF4 /* AudioMidiWindowController.m in Sources */,
 				4BCF708F1EDE59CC001E1971 /* Event.m in Sources */,
 				4BA2ECA121AB962100663DF4 /* AudioMidiSettingsManager.mm in Sources */,
@@ -903,6 +923,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.SciSci.Rotophone;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				SYSTEM_HEADER_SEARCH_PATHS = /usr/local/include/eigen3;
 			};
 			name = Debug;
 		};
@@ -932,6 +953,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.SciSci.Rotophone;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				SYSTEM_HEADER_SEARCH_PATHS = /usr/local/include/eigen3;
 			};
 			name = Release;
 		};

@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (AudioMidiSettingsManager *)sharedManager;
 
 - (NSArray *)listMidiPorts;
+- (Float64)sampleRate;
 - (void)sendMidiData:(const unsigned char *)data ofSize:(size_t)dataSize;
 
 @property (readwrite) int selectedMidiPort;

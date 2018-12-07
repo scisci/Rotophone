@@ -7,454 +7,446 @@
 //
 
 #import "SimulationComposition.h"
+#include "htree/Tree.hpp"
+#include "htree/RandomBasicGenerator.hpp"
+#include "htree/Golden.hpp"
+#include "htree/RegionIterator.hpp"
+#include "htree/Geometry.hpp"
 #include <vector>
 #include <set>
+#include <random>
 
-enum MidiCommand {
-  kMidiCommandNoteOff = 0x80,
-  kMidiCommandNoteOn = 0x90,
-  kMidiCommandAftertouch = 0xA0,
-  kMidiCommandControlChange = 0xB0,
-  kMidiCommandProgramChange = 0xC0,
-  kMidiCommandChannelPressure = 0xD0,
-  kMidiCommandPitchBend = 0xE0,
-};
+#include "MidiCore.hpp"
+#include "MidiFileSequenceReader.hpp"
 
 
-
-class MidiMessage {
+class MidiSequenceScrubber {
 public:
-  MidiMessage(std::vector<unsigned char> data)
-  :data_(data)
+  MidiSequenceScrubber()
+  :position_(-1),
+   dir_(0)
   {}
   
-  MidiMessage(int byte1, int byte2) noexcept
-  :data_({(unsigned char)byte1, (unsigned char)byte2})
-  {}
-  
-  MidiMessage(int byte1, int byte2, int byte3) noexcept
-  :data_({(unsigned char)byte1, (unsigned char)byte2, (unsigned char)byte3})
-  {}
-  
-  const std::vector<unsigned char>& Data() const
+  void SetSequence(const MidiMessageSequence& seq)
   {
-    return data_;
+    seq_ = seq;
+    seq_inv_ = MidiMessageSequenceBuilder::Invert(seq_);
   }
   
-  bool IsCommand(MidiCommand command) const noexcept
+  int64_t Position() const
   {
-    return !data_.empty() && data_[0] & command;
+    return position_;
+  }
+ 
+  int64_t Duration() const
+  {
+    return seq_.Duration();
   }
   
-  bool IsNoteOff() const noexcept
+  MidiMessageSequence::EventList Update(int64_t position)
   {
-    return IsCommand(kMidiCommandNoteOff);
-  }
-  
-  bool IsNoteOn() const noexcept
-  {
-    return IsCommand(kMidiCommandNoteOn);
-  }
-  
-  int Channel() const noexcept
-  {
-    if (data_.empty()) {
-      return 0;
+    MidiMessageSequence::EventList events;
+    
+    const int64_t last_position = position_;
+    const int last_dir = dir_;
+    position_ = position;
+
+    if (position_ == last_position || last_position == -1) {
+      return events;
     }
     
-    return data_[0] & 0xF;
-  }
-  
-  int NoteVelocity() const noexcept
-  {
-    if (data_.size() < 3) {
-      return 0;
+    // Decide the direction we are going in, it is the shortest path between position_ and position
+    // If the direction changed then start from the current position
+    // otherwise the current position was already played so start
+    // one tick in.
+    const int64_t duration = Duration();
+    int64_t start = last_position;
+    int64_t end = position_;
+
+    // If the distance traveled is longer than half the sequence
+    // then we should go the other way
+    const int64_t dist = (end < start ? (end + duration) : end) - start;
+    dir_ = (dist > duration / 2) ? -1 : 1;
+    
+    // If its going in the same direction as last time, then the note is already played
+    if (last_dir == dir_) {
+      start = (start + 1) % duration;
     }
     
-    return data_[2];
-  }
+    const MidiMessageSequence* seq = &seq_;
+    if (dir_ == -1) {
+      seq = &seq_inv_;
+      start = duration - start;
+      end = duration - end;
+    }
   
-  int NoteNumber() const noexcept
-  {
-    if (data_.size() < 2) {
-      return 0;
+    if (end < start) {
+      MidiMessageSequence::EventList end_events = seq->GetEventsInRange(start, duration);
+      MidiMessageSequence::EventList start_events = seq->GetEventsInRange(0, end);
+      events.insert(events.end(), end_events.begin(), end_events.end());
+      events.insert(events.end(), start_events.begin(), start_events.end());
+    } else {
+      MidiMessageSequence::EventList elapsed_events = seq->GetEventsInRange(start, end);
+      events.insert(events.end(), elapsed_events.begin(), elapsed_events.end());
     }
     
-    return data_[1];
-  }
-  
-  bool IsProgramChange() const noexcept
-  {
-    return IsCommand(kMidiCommandProgramChange);
-  }
-  
-  bool IsControlChange() const noexcept
-  {
-    return IsCommand(kMidiCommandControlChange);
-  }
-  
-  static MidiMessage NoteOff(int channel, int note_num, int velocity) noexcept
-  {
-    return MidiMessage(kMidiCommandNoteOff | (channel & 0xF), note_num, velocity);
-  }
-  
-  static MidiMessage NoteOn(int channel, int note_num, int velocity) noexcept
-  {
-    return MidiMessage(kMidiCommandNoteOn | (channel & 0xF), note_num, velocity);
-  }
-  
-  static MidiMessage ControlChange(int channel, int control_num, int control_val) noexcept
-  {
-    return MidiMessage(kMidiCommandControlChange | (channel & 0xF), control_num, control_val);
-  }
-  
-  static MidiMessage ProgramChange(int channel, int program_num) noexcept
-  {
-    return MidiMessage(kMidiCommandProgramChange | (channel & 0xF), program_num);
-  }
-  
-  static MidiMessage AllNotesOff(int channel) noexcept
-  {
-    return ControlChange(channel, 0x7B, 0);
-  }
-  
-  static MidiMessage AllSoundOff(int channel) noexcept
-  {
-    return ControlChange(channel, 0x78, 0);
-  }
-private:
-  std::vector<unsigned char> data_;
-};
-
-
-
-class SysExWriter {
-public:
-  SysExWriter(){}
-  
-  void Begin(unsigned char manufacturer_id) noexcept(false)
-  {
-    if (!data_.empty()) {
-      throw "SysEx not empty";
-    }
-    
-    data_.push_back(0xF0);
-    data_.push_back(manufacturer_id);
-  }
-  
-  void Push(unsigned char byte)
-  {
-    if (data_.empty()) {
-      throw "SysEx empty";
-    }
-    data_.push_back(byte);
-  }
-  
-  void Push(const unsigned char *bytes, size_t data_size)
-  {
-    data_.insert(data_.end(), bytes, bytes + data_size);
-  }
-  
-  MidiMessage End() noexcept(false)
-  {
-    if (data_.empty()) {
-      throw "SysEx empty";
-    }
-    
-    data_.push_back(0xF7);
-    MidiMessage m(std::move(data_));
-    return m;
-  }
-  
-private:
-  std::vector<unsigned char> data_;
-};
-
-enum Juno106ControlNum {
-  kJuno106ControlLFORate = 0x00,
-  kJuno106ControlLFODelayTime = 0x01,
-  kJuno106ControlDCOLFO = 0x02,
-  kJuno106ControlDCOPWM = 0x03,
-  kJuno106ControlDCONoise = 0x04,
-  kJuno106ControlVCFFreq = 0x05,
-  kJuno106ControlVCFRes = 0x06,
-  kJuno106ControlVCFEnv = 0x07,
-  kJuno106ControlVCFLFO = 0x08,
-  kJuno106ControlVCFKybd = 0x09,
-  kJuno106ControlVCALevel = 0x0A,
-  kJuno106ControlEnvAttack = 0x0B,
-  kJuno106ControlEnvDecay = 0x0C,
-  kJuno106ControlEnvSustain = 0x0D,
-  kJuno106ControlEnvRelease = 0x0E,
-  kJuno106ControlDCOSub = 0x0F,
-  kJuno106ControlSwitch1 = 0x10,
-  kJuno106ControlSwitch2 = 0x11,
-};
-
-
-static const unsigned char kJuno106Switch1Octave16 = 1 << 0;
-static const unsigned char kJuno106Switch1Octave8 = 1 << 1;
-static const unsigned char kJuno106Switch1Octave4 = 1 << 2;
-static const unsigned char kJuno106Switch1Pulse = 1 << 3;
-static const unsigned char kJuno106Switch1Tri = 1 << 4;
-static const unsigned char kJuno106Switch1ChorusOff = 1 << 5;
-static const unsigned char kJuno106Switch1Chorus2Off = 1 << 6;
-
-static const unsigned char kJuno106Switch2LFO = 0;
-static const unsigned char kJuno106Switch2Manual = 1 << 0;
-static const unsigned char kJuno106Switch2Env = 0;
-static const unsigned char kJuno106Switch2Gate = 1 << 1;
-static const unsigned char kJuno106Switch2PolPos = 0;
-static const unsigned char kJuno106Switch2PolNeg = 1 << 2;
-static const unsigned char kJuno106Switch2HPF3 = 0;
-static const unsigned char kJuno106Switch2HPF2 = 0x01 << 3;
-static const unsigned char kJuno106Switch2HPF1 = 0x02 << 3;
-static const unsigned char kJuno106Switch2HPF0 = 0x03 << 3;
-
-class Juno106Patch {
-public:
-  Juno106Patch(int patch)
-  :patch(patch) {
-    values[kJuno106ControlLFORate] = 0;
-    values[kJuno106ControlLFODelayTime] = 0;
-    values[kJuno106ControlDCOLFO] = 0;
-    values[kJuno106ControlDCOPWM] = 0;
-    values[kJuno106ControlDCONoise] = 0;
-    values[kJuno106ControlVCFFreq] = 0x40;
-    values[kJuno106ControlVCFRes] = 0;
-    values[kJuno106ControlVCFEnv] = 0;
-    values[kJuno106ControlVCFLFO] = 0;
-    values[kJuno106ControlVCFKybd] = 0x7F;
-    values[kJuno106ControlVCALevel] = 0x7F;
-    values[kJuno106ControlEnvAttack] = 0;
-    values[kJuno106ControlEnvDecay] = 0x40;
-    values[kJuno106ControlEnvSustain] = 0x40;
-    values[kJuno106ControlEnvRelease] = 0x40;
-    values[kJuno106ControlDCOSub] = 0x7F;
-    values[kJuno106ControlSwitch1] = kJuno106Switch1Octave8 | kJuno106Switch1Pulse | kJuno106Switch1Tri;
-    values[kJuno106ControlSwitch2] = kJuno106Switch2Manual | kJuno106Switch2Env | kJuno106Switch2PolPos | kJuno106Switch2HPF0;
-  }
-
-  unsigned char patch;
-  unsigned char values[18];
-};
-
-class Juno106SysExWriter : public SysExWriter {
-public:
-  Juno106SysExWriter()
-  :SysExWriter() {}
-  
-  MidiMessage ControlChange(int channel, Juno106ControlNum control_num, int control_value) noexcept(false)
-  {
-    Begin(0x41);
-    Push(0x32); // Control change
-    Push(channel & 0xF); // Channel
-    Push(control_num);
-    Push(control_value);
-    return End();
-  }
-  
-  MidiMessage PatchChange(int channel, int patch) noexcept(false)
-  {
-    Begin(0x41);
-    Push(0x30);
-    Push(channel & 0xF);
-    Push(patch & 0xF);
-    return End();
-  }
-  
-  MidiMessage ManualPatchChange(int channel, const Juno106Patch& patch) noexcept(false)
-  {
-    Begin(0x41);
-    Push(0x31);
-    Push(channel & 0xF);
-    Push(patch.patch);
-    Push(&patch.values[0], sizeof(patch.values));
-    return End();
-  }
-};
-
-class MidiMessageEvent {
-public:
-  MidiMessageEvent(int64_t timestamp, MidiMessage&& message)
-  :MidiMessageEvent(timestamp, std::move(message), nullptr)
-  {}
-  
-  MidiMessageEvent(int64_t timestamp, MidiMessage&& message, std::shared_ptr<const MidiMessageEvent> note_off)
-  :message_(std::move(message)),
-   timestamp_(timestamp),
-   note_off_(note_off)
-  {}
-  
-  const MidiMessage& Message() const
-  {
-    return message_;
-  }
-  
-  int64_t Timestamp() const
-  {
-    return timestamp_;
-  }
-  
-  std::shared_ptr<const MidiMessageEvent> NoteOffEvent() const
-  {
-    return note_off_;
-  }
-
-private:
-  friend struct MidiMessageEventCompare;
-  std::shared_ptr<const MidiMessageEvent> note_off_;
-  MidiMessage message_;
-  int64_t timestamp_;
-};
-
-struct MidiMessageEventCompare
-{
-  bool operator()(const std::shared_ptr<MidiMessageEvent>& lhs, const std::shared_ptr<MidiMessageEvent>& rhs)
-  {
-    if (lhs->timestamp_ == rhs->timestamp_) {
-      if (lhs->message_.IsNoteOff() && !rhs->message_.IsNoteOff()) {
-        return true;
+    // Filter out repetitive events
+    for (auto it = events.begin(); it != events.end();) {
+      const MidiMessage& message = (*it)->Message();
+      if (message.IsNoteOn() || message.IsNoteOff()) {
+        auto oit = std::find_if(it + 1, events.end(), [&message](const std::shared_ptr<const MidiMessageEvent>& event) {
+          return message.IsMatchingNote(event->Message());
+        });
+        
+        if (oit != events.end()) {
+          if (oit->get()->Message().IsNoteOn() != message.IsNoteOn()) {
+            // We can delete both since they offset eachother,
+            // delete the second item first
+            events.erase(oit);
+          }
+          it = events.erase(it);
+          continue;
+        }
       }
       
-      return false;
+      ++it;
     }
-    
-    return lhs->timestamp_ < rhs->timestamp_;
-  }
-  
-  bool operator()(const std::shared_ptr<MidiMessageEvent>& lhs, const int64_t& rhs)
-  {
-      return lhs->timestamp_ < rhs;
-  }
-  
-  bool operator()(const int64_t& lhs, const std::shared_ptr<MidiMessageEvent>& rhs)
-  {
-      return lhs > rhs->timestamp_;
-  }
-};
 
-class MidiBufferWriter {
-public:
-  void Reset()
-  {
-    buffer_.clear();
-  }
-  
-  void Write(const MidiMessage& message)
-  {
-    const std::vector<unsigned char>& data = message.Data();
-    buffer_.insert(buffer_.end(), data.begin(), data.end());
-  }
-  
-  const std::vector<unsigned char>& Buffer() const
-  {
-    return buffer_;
-  }
-  
-private:
-  std::vector<unsigned char> buffer_;
-};
-
-class MidiMessageSequence {
-public:
-  typedef std::vector<std::shared_ptr<const MidiMessageEvent>> EventList;
-  
-  std::shared_ptr<MidiMessageEvent> AddNoteEvent(int64_t timestamp, int channel, int note_num, int velocity, int64_t duration)
-  {
-    std::shared_ptr<MidiMessageEvent> note_off_event(new MidiMessageEvent(timestamp + duration, MidiMessage::NoteOff(channel, note_num, 0)));
-    std::shared_ptr<MidiMessageEvent> note_on_event(new MidiMessageEvent(timestamp, MidiMessage::NoteOn(channel, note_num, velocity), note_off_event));
-    
-    // Find the point it should be inserted which is where timestamp
-    Insert(note_on_event);
-    Insert(note_off_event);
-    return note_on_event;
-  }
-  
-  // Get all events (start, end)
-  EventList GetEventsInRange(int64_t start, int64_t end) const
-  {
-    std::vector<std::shared_ptr<const MidiMessageEvent>> events;
-    auto next_event = std::lower_bound(events_.begin(), events_.end(), start, MidiMessageEventCompare());
-    for (auto it = next_event; it < events_.end(); ++it) {
-      int64_t timestamp = (*it)->Timestamp();
-      if (timestamp <= end) {
-        events.push_back(*it);
-      } else {
-        break;
-      }
-    }
     return events;
   }
   
-  MidiMessageSequence Invert() const
+private:
+  int64_t position_;
+  int dir_;
+  MidiMessageSequence seq_;
+  MidiMessageSequence seq_inv_;
+};
+
+class TreeCompositionSectionBuilder {
+public:
+  TreeCompositionSectionBuilder(htree::RatioSourcePtr ratio_source, std::mt19937_64 rng)
+  :ratio_source_(ratio_source),
+   rng_(rng)
+  {}
+
+  void Reset()
   {
-    MidiMessageSequence inv_seq_;
-    int64_t duration = Duration();
-    for (auto it = events_.begin(); it != events_.end(); ++it) {
-      const MidiMessage& message = (*it)->Message();
-      if (message.IsNoteOn()) {
-        std::shared_ptr<const MidiMessageEvent> note_off = (*it)->NoteOffEvent();
-        if (note_off != nullptr) {
-          int64_t timestamp = duration - note_off->Timestamp();
-          inv_seq_.AddNoteEvent(timestamp, message.Channel(), message.NoteNumber(), message.NoteVelocity(), note_off->Timestamp() - (*it)->Timestamp());
-        }
-      }
+    trees_.clear();
+  }
+
+  void AddBlock(double ratio, int num_repeats, int64_t seed, int min_leaves, int max_leaves) noexcept(false)
+  {
+    std::uniform_int_distribution<> leaf_dist(min_leaves, max_leaves);
+    for (int i = 0; i < num_repeats; i++) {
+      int num_leaves = leaf_dist(rng_);
+      htree::RandomBasicGenerator generator(ratio_source_, ratio, num_leaves, seed);
+      trees_.push_back(generator.Generate());
     }
-    return inv_seq_;
+  }
+
+  std::vector<std::unique_ptr<htree::Tree>> Build()
+  {
+    std::vector<std::unique_ptr<htree::Tree>> trees(std::move(trees_));
+    return trees;
+  }
+
+private:
+  htree::RatioSourcePtr ratio_source_;
+  std::mt19937_64 rng_;
+  std::vector<std::unique_ptr<htree::Tree>> trees_;
+};
+
+class TreeCompositionSection {
+public:
+  TreeCompositionSection(std::vector<std::unique_ptr<htree::Tree>> trees, double timescale)
+  :trees_(std::move(trees))
+  {}
+  
+  double Length() const
+  {
+    double len = 0;
+    for (auto& tree : trees_) {
+      const htree::Ratios& ratios = tree->RatioSource()->Ratios();
+      len += ratios[tree->RatioIndexXY()];
+    }
+    return len;
+  }
+  
+private:
+  std::vector<std::unique_ptr<htree::Tree>> trees_;
+};
+
+enum RegionEventType {
+  kRegionEventTypeStart,
+  kRegionEventTypeEnd
+};
+
+
+struct RegionEvent {
+  RegionEvent(RegionEventType type, htree::NodeID id, double time, double vpos)
+  :type(type),
+   id(id),
+   time(time),
+   vpos(vpos)
+  {}
+  
+  RegionEventType type;
+  htree::NodeID id;
+  double time;
+  double vpos;
+};
+
+std::vector<RegionEvent> GetTreeRegionEvents(const htree::Tree& tree)
+{
+  // Simplify regions to start and end
+  std::vector<RegionEvent> events;
+  //const htree::Ratios& ratios = tree.RatioSource()->Ratios();
+  
+  // We know the dimensions of the tree
+  //double width = ratios[tree.RatioIndexXY()];
+  //double height = 1.0;
+  
+  htree::RegionIterator region_it(tree, htree::Vector(0, 0, 0), 1.0);
+  while (region_it.HasNext()) {
+    htree::NodeRegion node_region = region_it.Next();
+    htree::NodeID node_id = node_region.node->ID();
+    // If the node is a leaf, then we add it
+    if (node_region.node->Branch() == nullptr) {
+      const htree::AlignedBox& aligned_box = node_region.region.AlignedBox();
+      events.emplace_back(kRegionEventTypeStart, node_id, aligned_box.min().x(), aligned_box.min().y());
+      events.emplace_back(kRegionEventTypeEnd, node_id, aligned_box.max().x(), aligned_box.min().y());
+    }
+  }
+  
+  std::sort(events.begin(), events.end(), [](const RegionEvent& a, const RegionEvent& b) -> bool {
+    return a.time < b.time || (a.time == b.time && a.type != kRegionEventTypeStart);
+  });
+  
+  return events;
+}
+
+class TreeComposition {
+public:
+  TreeComposition()
+  :rng_(rd_())
+  {}
+  
+  void AddFreq(double freq)
+  {
+    freqs_.push_back(freq);
+  }
+  
+  void Init() {
+    for (int i = 0; i < 2; i++) {
+      sections_.push_back(CreateSection());
+    }
+    
+    scrubber_.SetSequence(BuildSequence());
+  }
+  
+  int64_t Position() const
+  {
+    return scrubber_.Position();
   }
   
   int64_t Duration() const
   {
-    if (events_.empty()) {
-      return 0;
+    return scrubber_.Duration();
+  }
+  
+  MidiMessageSequence::EventList Update(int64_t playhead)
+  {
+    return scrubber_.Update(playhead);
+  }
+  
+  void SetMidiTracks(const std::vector<MidiTrack>& tracks)
+  {
+    if (!tracks.empty()) {
+      scrubber_.SetSequence(tracks[0].Sequence());
+    }
+  }
+
+  void RefreshUnselectedSections(double selected_pos)
+  {
+    return;
+    if (sections_.empty()) {
+      return;
     }
     
-    return events_.back()->Timestamp();
+    // Figure out which section is selected
+    int selected = selected_pos * sections_.size();
+    
+    NSLog(@"selected index %d", selected);
+    
+    for (int i = 0; i < sections_.size(); ++i) {
+      if (i != selected) {
+        sections_[i] = CreateSection();
+      }
+    }
+    
+    scrubber_.SetSequence(BuildSequence());
   }
+  
+  MidiMessageSequence BuildSequence()
+  {
+    MidiMessageSequenceBuilder builder;
+    int64_t seq_offset = 0;
+    int count = 0;
+    for (const auto& section : sections_) {
+      int64_t before = seq_offset;
+      
+      seq_offset += AddSectionSequence(section, seq_offset, builder);
+      NSLog(@"built section %d from %d to %d", count, before, seq_offset);
+      builder.SetDuration(seq_offset);
+    }
+    return builder.Build();
+  }
+
   
 private:
-  void Insert(std::shared_ptr<MidiMessageEvent> event)
+  struct Section {
+    std::vector<std::unique_ptr<htree::Tree>> trees;
+    double freq;
+  };
+  
+  Section CreateSection()
   {
-    auto next_event = std::upper_bound(events_.begin(), events_.end(), event, MidiMessageEventCompare());
-    events_.insert(next_event, event);
+    htree::RatioSourcePtr ratio_source(new htree::golden::GoldenRatioSource());
+    TreeCompositionSectionBuilder builder(ratio_source, rng_);
+
+    // Block ratio
+    const double block_ratio = 2.0;
+    const int num_repeats = 8;
+    //const int64_t seed = rng_();
+    const int min_leaves = 4;
+    const int max_leaves = 10;
+    
+    // Create 4 sections
+    std::uniform_int_distribution<> freq_dist(0, (int)freqs_.size() - 1);
+    int64_t seed = rng_();
+    builder.AddBlock(block_ratio, num_repeats, seed, min_leaves, max_leaves);
+    double freq = freqs_[freq_dist(rng_)];
+    return { .trees = builder.Build(), .freq = freq};
   }
   
-  std::vector<std::shared_ptr<MidiMessageEvent>> events_;
+  int64_t AddSectionSequence(const Section& section, int64_t seq_offset, MidiMessageSequenceBuilder& builder)
+  {
+    const double timescale = 48000;
+    double offset = 0.0;
+    
+    //std::uniform_int_distribution<> choose_dist(0, 6);
+    
+    for (const auto& tree : section.trees) {
+      const htree::Ratios& ratios = tree->RatioSource()->Ratios();
+      double width = ratios[tree->RatioIndexXY()];
+      double height = 1.0;
+
+      std::map<htree::NodeID, int> active_voices;
+      std::map<int, htree::NodeID> used_notes;
+      
+      std::vector<RegionEvent> region_events = GetTreeRegionEvents(*tree.get());
+      for (auto it = region_events.begin(); it != region_events.end(); ++it) {
+        const RegionEvent& event = *it;
+        if (event.type == kRegionEventTypeEnd) {
+          auto it = active_voices.find(event.id);
+          if (it == active_voices.end()) {
+            // The voice never got activated because it never got a slot
+            continue;
+          }
+          
+          used_notes.erase(it->second);
+          active_voices.erase(it);
+        } else if (event.type == kRegionEventTypeStart) {
+          /*
+          if (active_voices.size() > 1) {
+            continue;
+          }
+          
+          if (choose_dist(rng_) != 0) {
+            continue;
+          }
+          */
+          
+          double ratio = 1.0 + event.vpos; // Ratio is the starting line from bottom
+          double voice_freq = section.freq * ratio;
+          int midi_index = (int)round(log(voice_freq/440.0)/log(2) * 12 + 69);
+          // See if the note is already in use, if so, use it, otherwise
+          // move up/down octaves until we find a slot
+          bool found = false;
+          for (int note_offset = 0; !found && note_offset < 4; note_offset++) {
+            // Alternates a note down/up down/up etc.
+            int note_dif = note_offset / 2 * ((note_offset & 1) ? -1 : 1);
+            for (int octave_offset = 1; octave_offset < 8; octave_offset++) {
+              // Alternates an octave down/up etc.
+              int octave_mult = octave_offset / 2  * ((octave_offset & 1) ? -1 : 1);
+              int octave_dif = octave_mult * 12;
+              int resolved = midi_index + note_dif + octave_dif;
+              if (resolved < 0 || resolved > 127) {
+                continue;
+              }
+
+              // Is it free?
+              if (used_notes.find(resolved) == used_notes.end()) {
+                found = true;
+                used_notes[resolved] = event.id;
+                active_voices[event.id] = resolved;
+                
+                // Absolute time
+                int64_t timestamp_on = seq_offset + (offset + event.time) * timescale;
+                int64_t timestamp_off = timestamp_on;
+                // Find the next off event
+                for (auto next_it = it + 1; next_it != region_events.end(); ++next_it) {
+                  if (next_it->id == event.id && next_it->type == kRegionEventTypeEnd) {
+                    timestamp_off = seq_offset + (offset + next_it->time) * timescale;
+                    break;
+                  }
+                }
+
+                builder.AddNoteEvent(timestamp_on, 0, resolved, 127, timestamp_off - timestamp_on);
+                break;
+              }
+            }
+          }
+        }
+      }
+      
+      offset += width;
+    }
+    
+    return offset * timescale;
+  }
+  
+  std::vector<Section> sections_;
+  std::random_device rd_;
+  std::mt19937_64 rng_;
+  std::vector<double> freqs_;
+  MidiSequenceScrubber scrubber_;
 };
 
 @interface SimulationComposition()
 {
   id<SimulationCompositionDelegate> delegate_;
-  
-  int64_t position_;
-  int dir_;
-  
-  bool notes_active_;
-  MidiBufferWriter buf_;
-  MidiMessageSequence seq_;
-  MidiMessageSequence inv_seq_;
+  TreeComposition comp_;
+  MockMidiDevice mock_device_;
 }
 
 @end
 
 @implementation SimulationComposition
 
-- (instancetype)initWithDelegate:(id<SimulationCompositionDelegate>)delegate
+- (instancetype)initWithDelegate:(id<SimulationCompositionDelegate>)delegate andFreqs:(NSArray *)freqs
 {
   if (self = [super init]) {
     delegate_ = delegate;
-    position_ = 0;
-    notes_active_ = false;
-    dir_ = 0;
-    
-    double ticks_per_sec = 44100.0;
-    
-    for (int i = 0; i < 4; i++) {
-      seq_.AddNoteEvent(i * ticks_per_sec, 0, 44 + i, 127, 1 * ticks_per_sec);
-    }
   
-    inv_seq_ = seq_.Invert();
+    for (NSNumber *freq in freqs) {
+      comp_.AddFreq([freq doubleValue]);
+    }
+    comp_.Init();
+    
+    mock_device_.SetChannel(0);
+   
+    [self sendMessage:MidiMessage::AllNotesOff(0)];
   }
   
   return self;
@@ -462,84 +454,40 @@ private:
 
 - (void)sendMessage:(const MidiMessage&)message
 {
+  mock_device_.HandleMidiMessage(message);
   const std::vector<unsigned char>& data = message.Data();
   [delegate_ sendMidiData:&data[0] ofSize:data.size()];
 }
 
-- (void)updatePosition:(double)position andVelocity:(double)velocity andValid:(bool)velocityValid
+- (void)refresh
 {
-  int64_t duration = seq_.Duration();
-  int64_t playhead = duration * position / (2.0 * M_PI);
-/*
-  if (!velocityValid) {
-    if (notes_active_) {
-      NSLog(@"clearing all notes");
-      notes_active_ = false;
-      // Its a reset, so clear any midi events
-      [self sendMessage:MidiMessage::AllNotesOff(0)];
-    }
-    
-    position_ = playhead;
-    dir_ = 0;
-  } else {
-  */
-    const MidiMessageSequence* seq = &seq_;
-    int dir = velocityValid ? (velocity < 0.0 ? -1 : 1) : dir_;
-    
-    if (playhead == position_ && dir == dir_) {
-      return;
-    }
-    
-    // If the direction changed then start from the current position
-    // otherwise the current position was already played so start
-    // one tick in.
-    int64_t start = dir == dir_ ? position_ + dir : position_;
-    int64_t end = playhead;
-    
-    position_ = playhead;
-    dir_ = dir;
-    
-    NSLog(@"Position %f %d", position, position_);
-    if (dir == -1) {
-      seq = &inv_seq_;
-      start = duration - start;
-      end = duration - end;
-    }
-    
-    MidiMessageSequence::EventList events;
-    
-    if (end < start) {
-      MidiMessageSequence::EventList end_events = seq->GetEventsInRange(start, duration);
-      MidiMessageSequence::EventList start_events = seq->GetEventsInRange(0, end);
-      events.insert(events.end(), end_events.begin(), end_events.end());
-      events.insert(events.end(), start_events.begin(), start_events.end());
-    } else {
-      //NSLog(@"Check %d %d", start, end);
-      MidiMessageSequence::EventList elapsed_events = seq->GetEventsInRange(start, end);
-      events.insert(events.end(), elapsed_events.begin(), elapsed_events.end());
-    }
-    
-    if (!events.empty()) {
-      notes_active_ = true;
-      for (auto& event : events) {
-        
-        //NSLog(@"got note event %d noteon:%d", event->Message().NoteNumber(), event->Message().IsNoteOn());
-        [self sendMessage:event->Message()];
-      }
-    }
-  //}
+  NSLog(@"Refresh %d %d", comp_.Position(), comp_.Duration());
+  double norm_pos = (double)comp_.Position() / comp_.Duration();
+  comp_.RefreshUnselectedSections(norm_pos);
 }
 
-- (void)flush
+- (void)loadMidiFile:(NSString *)path
 {
-/*
-  auto& buf = buf_.Buffer();
-  if (!buf.empty()) {
-    NSLog(@"flushing %d bytes", buf.size());
-    [delegate_ sendMidiData:&buf[0] ofSize:buf.size()];
-    buf_.Reset();
+  MidiFileSequenceReader reader([path cStringUsingEncoding:NSUTF8StringEncoding]);
+  auto tracks = reader.ReadAllTracks(48000);
+  for (const auto& track : tracks) {
+    NSLog(@"got a track of length %lld", track.Duration());
   }
-  */
+  comp_.SetMidiTracks(tracks);
+}
+
+- (void)updatePosition:(double)position andVelocity:(double)velocity andValid:(bool)velocityValid
+{
+  const int64_t duration = comp_.Duration();
+  const int64_t playhead = duration * position / (2.0 * M_PI);
+  //const int dir = velocityValid ? (velocity < 0.0 ? -1 : 1) : 0;
+  
+  const MidiMessageSequence::EventList events = comp_.Update(playhead);
+  if (!events.empty()) {
+    for (const auto& event : events) {
+      [self sendMessage:event->Message()];
+    }
+  }
 }
 
 
