@@ -604,6 +604,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     MultiChannelAudioTrackMixer *_avMixer;
     MixerInput *_avMix;
     SimulationComposition *_simComp;
+    MidiMixerInput *_midiMix;
     
     BOOL _targetSwapState;
     NSDate *_lastCompositionRefresh;
@@ -636,6 +637,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
             [NSNumber numberWithDouble: 196.0],
             [NSNumber numberWithDouble: 212.0],
             nil]];
+        _midiMix = [[MidiMixerInput alloc] initWithNumChannels:2];
 
         _grain = [[GrainController alloc] initWithPatch:_patch];
         _sampleLookup = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -1095,7 +1097,11 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
         }
         break;
       case kSimBodyTypeMidiChannel:
-        // TODO: midi channel
+        if (_midiMix != NULL) {
+          if ([_midiMix setVolume:body.parameterizedIntersection * 0.75 forChannel:mapping->midi_channel]) {
+            midiChanged = true;
+          }
+        }
         break;
       case kSimBodyTypeSample:
         {
@@ -1118,6 +1124,10 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
   
   if (avChanged && _avMixer != nil) {
     [_avMixer setMix:_avMix];
+  }
+  
+  if (midiChanged && _midiMix != nil) {
+    [_simComp setMix:_midiMix];
   }
 }
 

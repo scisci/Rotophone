@@ -8,6 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
+#ifdef __cplusplus
+class MidiOutCore;
+#else
+typedef void* MidiOutCore;
+#endif
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface AudioMidiSettingsManager : NSObject
@@ -17,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray *)listMidiPorts;
 - (Float64)sampleRate;
 - (void)sendMidiData:(const unsigned char *)data ofSize:(size_t)dataSize;
-
+- (MidiOutCore *)midiOutCore;
 @property (readwrite) int selectedMidiPort;
 
 

@@ -26,10 +26,94 @@ enum MidiCommand {
 enum MidiControlChange {
   kMidiControlChangeAllNotesOff = 0x7B,
   kMidiControlChangeAllSoundOff = 0x78,
+  kMidiControlChangeChannelVolume = 0x07
 };
 
 
+class MidiMessageBuilder {
+public:
+  
+  void SetRaw(int byte1, int byte2)
+  {
+    data_.clear();
+    data_.push_back(byte1);
+    data_.push_back(byte2);
+  }
+  
+  void SetRaw(int byte1, int byte2, int byte3)
+  {
+    data_.clear();
+    data_.push_back(byte1);
+    data_.push_back(byte2);
+    data_.push_back(byte3);
+  }
+  
+  void SetSysEx(unsigned char manufacturer_id) noexcept
+  {
+    data_.clear();
+    data_.push_back(0xF0);
+    data_.push_back(manufacturer_id);
+  }
+  
+  void Push(unsigned char byte)
+  {
+    data_.push_back(byte);
+  }
+  
+  void Push(const unsigned char *bytes, size_t data_size)
+  {
+    data_.insert(data_.end(), bytes, bytes + data_size);
+  }
+  
+  void EndSysEx()
+  {
+    data_.push_back(0xF7);
+  }
+  
+  void SetNoteOn(int channel, int note_num, int velocity) noexcept
+  {
+    SetRaw(kMidiCommandNoteOn | (channel & 0xF), note_num, velocity);
+  }
 
+  void SetNoteOff(int channel, int note_num, int velocity) noexcept
+  {
+    SetRaw(kMidiCommandNoteOff | (channel & 0xF), note_num, velocity);
+  }
+  
+  void SetControlChange(int channel, int control_num, int control_val) noexcept
+  {
+    SetRaw(kMidiCommandControlChange | (channel & 0xF), control_num, control_val);
+  }
+  
+  void SetProgramChange(int channel, int program_num) noexcept
+  {
+    SetRaw(kMidiCommandProgramChange | (channel & 0xF), program_num);
+  }
+  
+  void SetAllNotesOff(int channel) noexcept
+  {
+    SetControlChange(channel, kMidiControlChangeAllNotesOff, 0);
+  }
+  
+  void SetAllSoundOff(int channel) noexcept
+  {
+    SetControlChange(channel, kMidiControlChangeAllSoundOff, 0);
+  }
+  
+  void SetChannelVolume(int channel, int volume)
+  {
+    SetControlChange(channel, kMidiControlChangeChannelVolume, volume);
+  }
+  
+  const std::vector<unsigned char>& Data() const
+  {
+    return data_;
+  }
+  
+private:
+  friend class MidiMessage;
+  std::vector<unsigned char> data_;
+};
 
 
 class MidiMessage {
@@ -44,6 +128,10 @@ public:
   
   MidiMessage(int byte1, int byte2, int byte3) noexcept
   :data_({(unsigned char)byte1, (unsigned char)byte2, (unsigned char)byte3})
+  {}
+  
+  MidiMessage(MidiMessageBuilder&& builder)
+  :data_(std::move(builder.data_))
   {}
   
   const std::vector<unsigned char>& Data() const
@@ -195,9 +283,9 @@ private:
   std::map<int, int> active_notes_;
 };
 
-class SysExWriter {
+class SysExBuilder : public MidiMessageBuilder {
 public:
-  SysExWriter(){}
+  SysExBuilder(){}
   
   void Begin(unsigned char manufacturer_id) noexcept(false)
   {
@@ -296,7 +384,7 @@ struct MidiMessageEventCompare
   
   bool operator()(const int64_t& lhs, const std::shared_ptr<const MidiMessageEvent>& rhs)
   {
-      return lhs > rhs->timestamp_;
+      return lhs < rhs->timestamp_;
   }
 };
 
@@ -315,6 +403,11 @@ public:
   EventList GetEventsInRange(int64_t start, int64_t end) const
   {
     return MidiMessageSequence::GetEventsInRange(events_, start, end);
+  }
+  
+  std::pair<EventList::const_iterator, EventList::const_iterator> GetEventsInRangeIterator(int64_t start, int64_t end) const
+  {
+    return MidiMessageSequence::GetEventsInRangeIterator(events_, start, end);
   }
 
   int64_t Duration() const
@@ -355,7 +448,27 @@ private:
         break;
       }
     }
+    
+    auto iterators = MidiMessageSequence::GetEventsInRangeIterator(events, start, end);
+    std::size_t count = std::distance(iterators.first, iterators.second);
+    if (count != sub_events.size()) {
+      throw "invalid iterators";
+    }
+    
     return sub_events;
+  }
+  
+  static std::pair<EventList::const_iterator, EventList::const_iterator> GetEventsInRangeIterator(const EventList& events, int64_t start, int64_t end)
+  {
+    auto result = std::make_pair<EventList::const_iterator, EventList::const_iterator>(events.end(), events.end());
+    
+    auto next_event = std::lower_bound(events.begin(), events.end(), start, MidiMessageEventCompare());
+    if (next_event->get()->Timestamp() <= end) {
+      result.first = next_event;
+      auto last_event = std::upper_bound(next_event, events.end(), end, MidiMessageEventCompare());
+      result.second = last_event;
+    }
+    return result;
   }
   
   static int64_t GetDuration(const EventList& events)

@@ -7,7 +7,7 @@
 //
 
 #import "AudioMidiSettingsManager.h"
-#import "RtMidi.h"
+#import "MidiOutCore.hpp"
 #import <CoreAudio/CoreAudio.h>
 #import <AudioToolbox/AudioToolbox.h>
 
@@ -52,7 +52,7 @@ OSStatus GetDefaultInputDeviceSampleRate(Float64 *outSampleRate) {
 
 @interface AudioMidiSettingsManager()
 {
-  std::unique_ptr<RtMidiOut> _midiOut;
+  std::unique_ptr<MidiOutCore> _midiOut;
   Float64 _sampleRate;
 }
 
@@ -69,7 +69,7 @@ OSStatus GetDefaultInputDeviceSampleRate(Float64 *outSampleRate) {
   self = [super init];
   if (self != nil)
   {
-    _midiOut.reset(new RtMidiOut());
+    _midiOut.reset(new MidiOutCore());
     _selectedMidiPort = -1;
     
     GetDefaultInputDeviceSampleRate(&_sampleRate);
@@ -133,6 +133,11 @@ OSStatus GetDefaultInputDeviceSampleRate(Float64 *outSampleRate) {
   if (_selectedMidiPort > -1) {
     _midiOut->sendMessage(data, dataSize);
   }
+}
+
+- (MidiOutCore *)midiOutCore
+{
+  return _midiOut.get();
 }
 
 

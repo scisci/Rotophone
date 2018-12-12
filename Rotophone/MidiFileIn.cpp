@@ -324,6 +324,11 @@ unsigned long MidiFileIn :: getNextEvent( std::vector<unsigned char> *event, uns
     if ( !file_.read( (char *)&c, 1 ) ) goto error;
     event->push_back( c );
   }
+  
+  // If its a note on event with 0 velocity then read it as a note off
+  if (event->size() == 3 && (event->at(0) & 0xF0) == 0x90 && event->at(2) == 0) {
+    event->at(0) = 0x80 | (event->at(0) & 0x0F);
+  }
 
   if ( !usingTimeCode_ ) {
     if ( isTempoEvent ) {

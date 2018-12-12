@@ -7,8 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MultiChannelAudioTrackMixer.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
+@interface MidiMixerInput : NSObject
+- (instancetype)initWithNumChannels:(unsigned int)numChannels;
+- (unsigned int)numChannels;
+- (bool)setVolume:(float)volume forChannel:(unsigned int)channel;
+- (void)copyMix:(MixerInput *)mixerInput;
+
+@end
+
 
 @protocol SimulationCompositionDelegate
 
@@ -22,6 +32,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)loadMidiFile:(NSString *)path;
 - (void)updatePosition:(double)position andVelocity:(double)velocity andValid:(bool)velocityValid;
 - (void)refresh;
+
+- (void)setMix:(MidiMixerInput *)mixerInput;
+
 @end
 
 NS_ASSUME_NONNULL_END

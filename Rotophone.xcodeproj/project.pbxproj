@@ -54,6 +54,7 @@
 		4BA2ECA521AB977500663DF4 /* AudioMidiViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4BA2ECA321AB977500663DF4 /* AudioMidiViewController.mm */; };
 		4BA2ECA621AB977500663DF4 /* AudioMidiViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BA2ECA421AB977500663DF4 /* AudioMidiViewController.xib */; };
 		4BA2ECA921AB97B800663DF4 /* AudioMidiWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BA2ECA821AB97B800663DF4 /* AudioMidiWindowController.m */; };
+		4BA82A4921BF71440090D57A /* MidiOutCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4BA82A4721BF71440090D57A /* MidiOutCore.cpp */; };
 		4BAD3C8021ADB7CC0060B02D /* SimulationComposition.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4BAD3C7F21ADB7CC0060B02D /* SimulationComposition.mm */; };
 		4BADEA531EF5A4A8003CF739 /* gpc.c in Sources */ = {isa = PBXBuildFile; fileRef = 4BADEA4F1EF5A4A8003CF739 /* gpc.c */; };
 		4BADEA541EF5A4A8003CF739 /* GPCPolygon.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BADEA521EF5A4A8003CF739 /* GPCPolygon.m */; };
@@ -266,6 +267,8 @@
 		4BA2ECA421AB977500663DF4 /* AudioMidiViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AudioMidiViewController.xib; sourceTree = "<group>"; };
 		4BA2ECA721AB97B800663DF4 /* AudioMidiWindowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioMidiWindowController.h; sourceTree = "<group>"; };
 		4BA2ECA821AB97B800663DF4 /* AudioMidiWindowController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioMidiWindowController.m; sourceTree = "<group>"; };
+		4BA82A4721BF71440090D57A /* MidiOutCore.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MidiOutCore.cpp; sourceTree = "<group>"; };
+		4BA82A4821BF71440090D57A /* MidiOutCore.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MidiOutCore.hpp; sourceTree = "<group>"; };
 		4BAD3C7E21ADB7CC0060B02D /* SimulationComposition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimulationComposition.h; sourceTree = "<group>"; };
 		4BAD3C7F21ADB7CC0060B02D /* SimulationComposition.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = SimulationComposition.mm; sourceTree = "<group>"; };
 		4BADEA4F1EF5A4A8003CF739 /* gpc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gpc.c; sourceTree = "<group>"; };
@@ -463,8 +466,10 @@
 				4BAD3C7E21ADB7CC0060B02D /* SimulationComposition.h */,
 				4BAD3C7F21ADB7CC0060B02D /* SimulationComposition.mm */,
 				4BE9F2EA21BA375500A5EAA4 /* MidiCore.hpp */,
-				4BE9F2ED21BA37E400A5EAA4 /* MidiDeviceJuno106.hpp */,
 				4BE9F2EB21BA378200A5EAA4 /* MidiCore.cpp */,
+				4BE9F2ED21BA37E400A5EAA4 /* MidiDeviceJuno106.hpp */,
+				4BA82A4821BF71440090D57A /* MidiOutCore.hpp */,
+				4BA82A4721BF71440090D57A /* MidiOutCore.cpp */,
 				4BE9F2F021BA3D1600A5EAA4 /* MidiFileSequenceReader.cpp */,
 				4BE9F2F121BA3D1600A5EAA4 /* MidiFileSequenceReader.hpp */,
 				4BE9F2DA21BA363A00A5EAA4 /* MidiFileIn.hpp */,
@@ -756,6 +761,7 @@
 				4B60BA4E1EBD9DCF000FC8A5 /* ORSSerialPort.m in Sources */,
 				4B0FC7FF1EE5E365003CACD5 /* SerialPortDevice.m in Sources */,
 				4BBE460F1EBC497100276A8A /* RootView.m in Sources */,
+				4BA82A4921BF71440090D57A /* MidiOutCore.cpp in Sources */,
 				4B3B91511EC4058F005C0A1A /* SideBarViewController.m in Sources */,
 				4BCF708C1EDD217C001E1971 /* MainWindowController.m in Sources */,
 				4BBE45F31EBC473000276A8A /* main.m in Sources */,
@@ -912,7 +918,7 @@
 				INFOPLIST_FILE = Rotophone/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-Xlinker",
@@ -942,7 +948,7 @@
 				INFOPLIST_FILE = Rotophone/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "";
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-Xlinker",
