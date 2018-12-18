@@ -10,7 +10,7 @@
 #define MidiOutCore_hpp
 
 #include <string>
-
+#include "MidiCore.hpp"
 
 // OS-X CoreMIDI header files.
 #include <CoreMIDI/CoreMIDI.h>
@@ -31,6 +31,8 @@ class MidiOutCore
   std::string getPortName( unsigned int portNumber );
   void sendMessage( const unsigned char *message, size_t size );
   void SendPacketList(MIDIPacketList *packet_list);
+  static MIDIPacket* PacketListAddBuffer(MIDIPacketList *pktlist, ByteCount listSize, MIDIPacket *curPacket, MIDITimeStamp time, const MidiBufferBuilder& buffer);
+  
   static MIDIPacket* PacketListAdd(MIDIPacketList *pktlist, ByteCount listSize, MIDIPacket *curPacket, MIDITimeStamp time, ByteCount nData, const Byte *data);
   static void PacketListMerge(MIDIPacketList *dst, ByteCount dst_size, MIDIPacketList *lhs, MIDIPacketList *rhs);
 private:

@@ -30,8 +30,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithDelegate:(id<SimulationCompositionDelegate>)delegate andFreqs:(NSArray *)freqs;
 - (void)loadMidiFile:(NSString *)path;
+- (void)resetMidiPrograms;
 - (void)updatePosition:(double)position andVelocity:(double)velocity andValid:(bool)velocityValid;
 - (void)refresh;
+
+
 
 - (void)setMix:(MidiMixerInput *)mixerInput;
 

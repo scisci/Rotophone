@@ -14,6 +14,7 @@
 #include <algorithm>
 
 enum MidiCommand {
+  
   kMidiCommandNoteOff = 0x80,
   kMidiCommandNoteOn = 0x90,
   kMidiCommandAftertouch = 0xA0,
@@ -26,100 +27,23 @@ enum MidiCommand {
 enum MidiControlChange {
   kMidiControlChangeAllNotesOff = 0x7B,
   kMidiControlChangeAllSoundOff = 0x78,
-  kMidiControlChangeChannelVolume = 0x07
+  kMidiControlChangeChannelVolume = 0x07,
+  kMidiControlChangeBankMSBChange = 0x00,
+  kMidiControlChangeBankLSBChange = 0x20,
 };
-
-
-class MidiMessageBuilder {
-public:
-  
-  void SetRaw(int byte1, int byte2)
-  {
-    data_.clear();
-    data_.push_back(byte1);
-    data_.push_back(byte2);
-  }
-  
-  void SetRaw(int byte1, int byte2, int byte3)
-  {
-    data_.clear();
-    data_.push_back(byte1);
-    data_.push_back(byte2);
-    data_.push_back(byte3);
-  }
-  
-  void SetSysEx(unsigned char manufacturer_id) noexcept
-  {
-    data_.clear();
-    data_.push_back(0xF0);
-    data_.push_back(manufacturer_id);
-  }
-  
-  void Push(unsigned char byte)
-  {
-    data_.push_back(byte);
-  }
-  
-  void Push(const unsigned char *bytes, size_t data_size)
-  {
-    data_.insert(data_.end(), bytes, bytes + data_size);
-  }
-  
-  void EndSysEx()
-  {
-    data_.push_back(0xF7);
-  }
-  
-  void SetNoteOn(int channel, int note_num, int velocity) noexcept
-  {
-    SetRaw(kMidiCommandNoteOn | (channel & 0xF), note_num, velocity);
-  }
-
-  void SetNoteOff(int channel, int note_num, int velocity) noexcept
-  {
-    SetRaw(kMidiCommandNoteOff | (channel & 0xF), note_num, velocity);
-  }
-  
-  void SetControlChange(int channel, int control_num, int control_val) noexcept
-  {
-    SetRaw(kMidiCommandControlChange | (channel & 0xF), control_num, control_val);
-  }
-  
-  void SetProgramChange(int channel, int program_num) noexcept
-  {
-    SetRaw(kMidiCommandProgramChange | (channel & 0xF), program_num);
-  }
-  
-  void SetAllNotesOff(int channel) noexcept
-  {
-    SetControlChange(channel, kMidiControlChangeAllNotesOff, 0);
-  }
-  
-  void SetAllSoundOff(int channel) noexcept
-  {
-    SetControlChange(channel, kMidiControlChangeAllSoundOff, 0);
-  }
-  
-  void SetChannelVolume(int channel, int volume)
-  {
-    SetControlChange(channel, kMidiControlChangeChannelVolume, volume);
-  }
-  
-  const std::vector<unsigned char>& Data() const
-  {
-    return data_;
-  }
-  
-private:
-  friend class MidiMessage;
-  std::vector<unsigned char> data_;
-};
-
 
 class MidiMessage {
 public:
   MidiMessage(const std::vector<unsigned char>& data)
   :data_(data)
+  {}
+  
+  MidiMessage(const unsigned char *data, size_t data_size)
+  :data_(data, data + data_size)
+  {}
+  
+  MidiMessage(const std::vector<unsigned char>&& data)
+  :data_(std::move(data))
   {}
   
   MidiMessage(int byte1, int byte2) noexcept
@@ -128,10 +52,6 @@ public:
   
   MidiMessage(int byte1, int byte2, int byte3) noexcept
   :data_({(unsigned char)byte1, (unsigned char)byte2, (unsigned char)byte3})
-  {}
-  
-  MidiMessage(MidiMessageBuilder&& builder)
-  :data_(std::move(builder.data_))
   {}
   
   const std::vector<unsigned char>& Data() const
@@ -234,6 +154,183 @@ private:
   std::vector<unsigned char> data_;
 };
 
+
+class MidiBufferBuilder {
+public:
+  typedef std::vector<unsigned char> MidiBuffer;
+  
+  size_t MessageCount() const
+  {
+    return offsets_.size();
+  }
+  
+  std::pair<const unsigned char *, size_t> MessageData(size_t index) const
+  {
+    const size_t offset = offsets_[index];
+    const size_t next_offset = index == offsets_.size() - 1 ? data_.size() : offsets_[index + 1];
+    return std::make_pair<const unsigned char *, size_t>(&data_[offset], next_offset - offset);
+  }
+  /*
+  MidiMessage NextMessage() noexcept(false)
+  {
+    if (offsets_.empty()) {
+      throw "No messages";
+    }
+    
+    // If there is only 1 message then don't reallocate
+    if (offsets_.size() == 1) {
+      offsets_.clear();
+      return MidiMessage(std::move(data_));
+    }
+    
+    size_t offset = offsets_[1];
+    MidiMessage result(&data_[0], offset);
+    data_.erase(data_.begin(), data_.begin() + offset);
+    for (int i = 1; i < offsets_.size(); ++i) {
+      offsets_[i - 1] = offsets_[i] - offset;
+    }
+    offsets_.resize(offsets_.size() - 1);
+    return result;
+  }
+  */
+  
+
+  void SetSysEx(unsigned char manufacturer_id) noexcept
+  {
+    ClearAndStartMessage();
+    data_.push_back(0xF0);
+    data_.push_back(manufacturer_id);
+  }
+  
+  void Push(unsigned char byte)
+  {
+    data_.push_back(byte);
+  }
+  
+  void Push(const unsigned char *bytes, size_t data_size)
+  {
+    data_.insert(data_.end(), bytes, bytes + data_size);
+  }
+  
+  void EndSysEx()
+  {
+    data_.push_back(0xF7);
+  }
+  
+  void SetNoteOn(int channel, int note_num, int velocity) noexcept
+  {
+    ClearAndStartMessage();
+    MidiBufferBuilder::PushNoteOn(&data_, channel, note_num, velocity);
+  }
+
+  void SetNoteOff(int channel, int note_num, int velocity) noexcept
+  {
+    ClearAndStartMessage();
+    MidiBufferBuilder::PushNoteOff(&data_, channel, note_num, velocity);
+  }
+  
+  void SetControlChange(int channel, int control_num, int control_val) noexcept
+  {
+    ClearAndStartMessage();
+    MidiBufferBuilder::PushControlChange(&data_, channel, control_num, control_val);
+  }
+  
+  void SetProgramChange(int channel, int program_num) noexcept
+  {
+    ClearAndStartMessage();
+    MidiBufferBuilder::PushProgramChange(&data_, channel, program_num);
+  }
+  
+  void SetProgramChange(int channel, int program_num, int bank_msb, int bank_lsb)
+  {
+    ClearAndStartMessage();
+    MidiBufferBuilder::PushControlChange(&data_, channel, kMidiControlChangeBankMSBChange, bank_msb);
+    StartMessage();
+    MidiBufferBuilder::PushControlChange(&data_, channel, kMidiControlChangeBankLSBChange, bank_lsb);
+    StartMessage();
+    MidiBufferBuilder::PushProgramChange(&data_, channel, program_num);
+  }
+  
+  void SetAllNotesOff(int channel) noexcept
+  {
+    SetControlChange(channel, kMidiControlChangeAllNotesOff, 0);
+  }
+  
+  void SetAllSoundOff(int channel) noexcept
+  {
+    SetControlChange(channel, kMidiControlChangeAllSoundOff, 0);
+  }
+  
+  void SetChannelVolume(int channel, int volume)
+  {
+    SetControlChange(channel, kMidiControlChangeChannelVolume, volume);
+  }
+  
+  const MidiBuffer& Data() const
+  {
+    return data_;
+  }
+  
+  static void PushRaw(MidiBuffer* buffer, int byte1, int byte2)
+  {
+    buffer->push_back(byte1);
+    buffer->push_back(byte2);
+  }
+  
+  static void PushRaw(MidiBuffer* buffer, int byte1, int byte2, int byte3)
+  {
+    buffer->push_back(byte1);
+    buffer->push_back(byte2);
+    buffer->push_back(byte3);
+  }
+  
+  static void PushNoteOn(MidiBuffer* buffer, int channel, int note_num, int velocity)
+  {
+    MidiBufferBuilder::PushRaw(buffer, kMidiCommandNoteOn | (channel & 0xF), note_num, velocity);
+  }
+  
+  static void PushNoteOff(MidiBuffer* buffer, int channel, int note_num, int velocity)
+  {
+    MidiBufferBuilder::PushRaw(buffer, kMidiCommandNoteOff | (channel & 0xF), note_num, velocity);
+  }
+  
+  static void PushControlChange(MidiBuffer* buffer, int channel, int control_num, int control_val)
+  {
+    MidiBufferBuilder::PushRaw(buffer, kMidiCommandControlChange | (channel & 0xF), control_num, control_val);
+  }
+  
+  static void PushProgramChange(MidiBuffer* buffer, int channel, int program_num)
+  {
+    MidiBufferBuilder::PushRaw(buffer, kMidiCommandProgramChange | (channel & 0xF), program_num);
+  }
+  
+
+private:
+  void StartMessage()
+  {
+    offsets_.push_back(data_.size());
+  }
+  
+  void ClearMessages()
+  {
+    data_.clear();
+    offsets_.clear();
+  }
+  
+  void ClearAndStartMessage()
+  {
+    data_.clear();
+    offsets_.clear();
+    offsets_.push_back(data_.size());
+  }
+  
+  MidiBuffer data_;
+  std::vector<size_t> offsets_;
+};
+
+
+
+
 class MockMidiDevice {
 public:
   MockMidiDevice()
@@ -283,7 +380,7 @@ private:
   std::map<int, int> active_notes_;
 };
 
-class SysExBuilder : public MidiMessageBuilder {
+class SysExBuilder {
 public:
   SysExBuilder(){}
   

@@ -41,6 +41,7 @@
 
 - (id)initWithPatch:(PdFile *)patch;
 - (void)setAVMixer:(MultiChannelAudioTrackMixer *)mixer;
+- (void)resetMidiPrograms;
 - (void)loadMidiResource:(URLResource *)resource;
 - (void)addMicrophone:(NSObject<MicrophoneProxy> *)proxy;
 - (void)addBody:(BodyEntity *)entity;

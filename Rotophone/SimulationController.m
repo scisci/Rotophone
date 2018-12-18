@@ -601,6 +601,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     NSTimer* _targetDebounceTimer;
     NSDictionary* _sampleLookup;
     GrainController* _grain;
+    BOOL _grainEnabled;
     MultiChannelAudioTrackMixer *_avMixer;
     MixerInput *_avMix;
     SimulationComposition *_simComp;
@@ -632,6 +633,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
         _currentTarget = NULL;
         _avMixer = NULL;
         _avMix = NULL;
+        _grainEnabled = YES;
         _simComp = [[SimulationComposition alloc] initWithDelegate:self andFreqs:[NSArray arrayWithObjects: [NSNumber numberWithDouble: 77.78],
             [NSNumber numberWithDouble: 98.0],
             [NSNumber numberWithDouble: 196.0],
@@ -842,13 +844,25 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
             [self updateCurrentTarget:nil];
         }
     } else if (_targetSwapState == 1) {
-        float nextVolume = _grain.volume + (1 - _grain.volume) * 0.4;
-        if (1 - _grain.volume < 0.05) {
-            nextVolume = 1;
+        float nextVolume = _grain.volume;
+      
+        BOOL done = NO;
+        if (_grainEnabled) {
+          nextVolume = _grain.volume + (1 - _grain.volume) * 0.4;
+          if (1 - _grain.volume < 0.05) {
+              nextVolume = 1;
+              done = YES;
+          }
+        } else {
+          nextVolume = _grain.volume * 0.6;
+          if (nextVolume < 0.05) {
+              nextVolume = 0;
+              done = YES;
+          }
         }
-        
+
         [_grain setVolumeParam:nextVolume];
-        if (nextVolume == 1) {
+        if (done) {
             _targetSwapState = 2;
             [self updateCurrentTarget:nil];
         }
@@ -1017,7 +1031,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
           // Find the object that is closest to the microphone angle
           // this only matters for sample objects
           struct SimBodyMapping* mapping = [body mapping];
-          if (mapping->type == kSimBodyTypeSample) {
+          if (true || mapping->type == kSimBodyTypeSample) {
             float distMin = (body->target.angleMin - _microphone.microphoneShape.microphoneRotation);
             float distMax = (body->target.angleMax - _microphone.microphoneShape.microphoneRotation);
             if (distMin > M_PI) {
@@ -1058,6 +1072,8 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
         
         if (maxTarget != _nextTarget) {
           _nextTarget = maxTarget;
+          struct SimBodyMapping* mapping = [_nextTarget mapping];
+          _grainEnabled = mapping->type == kSimBodyTypeSample;
           if (_targetDebounceTimer != nil) {
             [_targetDebounceTimer invalidate];
           }
@@ -1082,7 +1098,10 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     
 }
 
-
+- (void)resetMidiPrograms
+{
+  [_simComp resetMidiPrograms];
+}
 
 - (void) updatePD {
   bool avChanged = false;
@@ -1092,7 +1111,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
     switch (mapping->type) {
       case kSimBodyTypeVideoChannel:
         if (_avMix != NULL) {
-          [_avMix setVolume:body.parameterizedIntersection * 0.75 forChannel:mapping->video_channel];
+          [_avMix setVolume:body.parameterizedIntersection * 0.5 forChannel:mapping->video_channel];
           avChanged = true;
         }
         break;
@@ -1105,7 +1124,6 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
         break;
       case kSimBodyTypeSample:
         {
-        /*
           NSString *paramName = [NSString stringWithFormat:@"%d-%@", _patch.dollarZero, body.body.name];
           NSString *panName = [NSString stringWithFormat:@"%d-%@_pan", _patch.dollarZero, body.body.name];
           NSString *f1Name = [NSString stringWithFormat:@"%d-%@_f1", _patch.dollarZero, body.body.name];
@@ -1116,7 +1134,7 @@ static void initPolyWithPoints(gpc_polygon* poly, NSPoint *points, int numPoints
           result = [PdBase sendFloat:[body freq1Param] toReceiver:f1Name];
           result = [PdBase sendFloat:[body freq2Param] toReceiver:f2Name];
           result = [PdBase sendFloat:[body freq3Param] toReceiver:f3Name];
-          */
+      
         }
         break;
     }

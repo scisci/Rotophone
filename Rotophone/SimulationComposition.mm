@@ -23,6 +23,10 @@
 #include "MidiOutCore.hpp"
 #include "MidiFileSequenceReader.hpp"
 #include "MidiDeviceJuno106.hpp"
+#include "MidiDeviceYamahaXG.hpp"
+
+Juno106Patch my_patch(0);
+
 
 @interface MidiMixerInput() {
   unsigned int _numChannels;
@@ -294,9 +298,10 @@ std::vector<RegionEvent> GetTreeRegionEvents(const htree::Tree& tree)
 const size_t kMidiDataBufferSize = 2048;
 struct MidiSharedData {
   std::mutex lock;
+  bool reset;
   MidiMessageSequence seq;
   Byte buffer[kMidiDataBufferSize];
-  MidiMessageBuilder builder;
+  MidiBufferBuilder builder;
   Juno106SysExBuilder juno;
   unsigned char volumes[16];
   unsigned char last_volumes[16];
@@ -320,16 +325,34 @@ static OSStatus GraphRenderNotify (  void *              inRefCon,
       ByteCount listSize = sizeof(data->buffer);
       MIDIPacketList *packet_list = (MIDIPacketList*)data->buffer;
       
-
       unsigned char volumes[16];
       
       
       // Render out the current sequence into the buffer packet list
       data->lock.lock();
+      bool reset = data->reset;
+      data->reset = false;
+      
       // Whiel locked lets copy in the volumes
       memcpy(&volumes[0], &data->volumes[0], sizeof(volumes));
       
       MIDIPacket *seq_packet = MIDIPacketListInit(packet_list);
+      
+      if (reset) {
+        // Select the proper programs
+        
+        
+        data->builder.SetAllNotesOff(1);
+        seq_packet = MidiOutCore::PacketListAddBuffer(packet_list, listSize, seq_packet, 0, data->builder);
+        data->builder.SetProgramChange(1, 64 + 8 * (7-1) + (8-1.));
+        seq_packet = MidiOutCore::PacketListAddBuffer(packet_list, listSize, seq_packet, 0, data->builder);
+        
+        const XGVoice& voice = kXGGtDistGtr2;
+        data->builder.SetAllNotesOff(0);
+        seq_packet = MidiOutCore::PacketListAddBuffer(packet_list, listSize, seq_packet, 0, data->builder);
+        data->builder.SetProgramChange(0, voice.program_num, 0, voice.bank_num);
+        seq_packet = MidiOutCore::PacketListAddBuffer(packet_list, listSize, seq_packet, 0, data->builder);
+      }
       
       int64_t duration = data->seq.Duration();
       if (duration > 0) {
@@ -377,18 +400,18 @@ static OSStatus GraphRenderNotify (  void *              inRefCon,
             double scale = num_points <= 1 ? 1 : ((double)s / (num_points - 1));
             int64_t frame = inNumberFrames * position;
             unsigned char next_vol = data->last_volumes[i] + ((double)volumes[i] - data->last_volumes[i]) * scale;
-            MidiMessageBuilder* builder = nullptr;
+            MidiBufferBuilder* builder = nullptr;
             
             if (i == 0) {
               builder = &data->builder;
               data->builder.SetChannelVolume(i, next_vol);
             } else if (i == 1) {
               builder = &data->juno;
-              data->juno.ControlChange(i, kJuno106ControlVCFFreq, next_vol);
+              data->juno.SetControlChange(i, kJuno106ControlVCFFreq, next_vol);
             }
             
             if (builder != nullptr) {
-              ctrl_packet = MIDIPacketListAdd(packet_list, kMidiDataBufferSize, ctrl_packet, frame, builder->Data().size(), &builder->Data()[0]);
+              seq_packet = MidiOutCore::PacketListAddBuffer(packet_list, listSize, seq_packet, 0, *builder);
             }
           }
           data->midi_out->SendPacketList(packet_list);
@@ -424,11 +447,53 @@ public:
   }
   
   void Init(MidiOutCore *midi_out) {
+  /*
+    kJuno106ControlLFORate = 0x00,
+  kJuno106ControlLFODelayTime = 0x01,
+  kJuno106ControlDCOLFO = 0x02,
+  kJuno106ControlDCOPWM = 0x03,
+  kJuno106ControlDCONoise = 0x04,
+  kJuno106ControlVCFFreq = 0x05,
+  kJuno106ControlVCFRes = 0x06,
+  kJuno106ControlVCFEnv = 0x07,
+  kJuno106ControlVCFLFO = 0x08,
+  kJuno106ControlVCFKybd = 0x09,
+  kJuno106ControlVCALevel = 0x0A,
+  kJuno106ControlEnvAttack = 0x0B,
+  kJuno106ControlEnvDecay = 0x0C,
+  kJuno106ControlEnvSustain = 0x0D,
+  kJuno106ControlEnvRelease = 0x0E,
+  kJuno106ControlDCOSub = 0x0F,
+  kJuno106ControlSwitch1 = 0x10,
+  kJuno106ControlSwitch2 = 0x11,
+};
+*/
+    my_patch.values[kJuno106ControlLFORate] = 0x38;
+    my_patch.values[kJuno106ControlLFODelayTime] = 0x43;
+    my_patch.values[kJuno106ControlDCOLFO] = 0x06;
+    my_patch.values[kJuno106ControlDCOPWM] = 0x09;
+    my_patch.values[kJuno106ControlDCONoise] = 0x3D;
+    my_patch.values[kJuno106ControlVCFFreq] = 0x67;
+    my_patch.values[kJuno106ControlVCFRes] = 0x00;
+    my_patch.values[kJuno106ControlVCFEnv] = 0x1E;
+    my_patch.values[kJuno106ControlVCFLFO] = 0x00;
+    my_patch.values[kJuno106ControlVCFKybd] = 0x40;
+    my_patch.values[kJuno106ControlVCALevel] = 0x34;
+    my_patch.values[kJuno106ControlEnvAttack] = 0x00;
+    my_patch.values[kJuno106ControlEnvDecay] = 0x1C;
+    my_patch.values[kJuno106ControlEnvSustain] = 0x4C;
+    my_patch.values[kJuno106ControlEnvRelease] = 0x32;
+    my_patch.values[kJuno106ControlDCOSub] = 0x7F;
+    my_patch.values[kJuno106ControlSwitch1] = 0x2A;
+    my_patch.values[kJuno106ControlSwitch2] = 0x1A;
+    
+
     for (int i = 0; i < 16; i++) {
       midi_data_.volumes[i] = 0;
       midi_data_.last_volumes[i] = 0;
     }
     midi_data_.midi_out = midi_out;
+    midi_data_.reset = true;
     
     AUNode out_node = NULL;
     AudioComponentDescription out_desc{ kAudioUnitType_Output, kAudioUnitSubType_DefaultOutput, kAudioUnitManufacturer_Apple, 0, 0};
@@ -676,11 +741,18 @@ private:
 - (void)loadMidiFile:(NSString *)path
 {
   MidiFileSequenceReader reader([path cStringUsingEncoding:NSUTF8StringEncoding]);
-  auto tracks = reader.ReadAllTracks(48000);
+  auto tracks = reader.ReadAllTracks([AudioMidiSettingsManager.sharedManager sampleRate]);
   for (const auto& track : tracks) {
     NSLog(@"got a track of length %lld", track.Duration());
   }
   comp_.SetMidiTracks(tracks);
+}
+
+- (void)resetMidiPrograms
+{
+  MidiSharedData* data = comp_.Storage();
+  std::lock_guard<std::mutex> lock(data->lock);
+  data->reset = true;
 }
 
 - (void)updatePosition:(double)position andVelocity:(double)velocity andValid:(bool)velocityValid
@@ -710,9 +782,8 @@ private:
   }
   
   MidiSharedData* data = comp_.Storage();
-  data->lock.lock();
+  std::lock_guard<std::mutex> lock(data->lock);
   [mixerInput copyVolumes:&data->volumes[0] forNumChannels:[mixerInput numChannels]];
-  data->lock.unlock();
 }
 
 

@@ -197,6 +197,7 @@
 		4B0FC7F81EE1CC6A003CACD5 /* MicrophoneKeepAlive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MicrophoneKeepAlive.m; sourceTree = "<group>"; };
 		4B0FC7FD1EE5E365003CACD5 /* SerialPortDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SerialPortDevice.h; sourceTree = "<group>"; };
 		4B0FC7FE1EE5E365003CACD5 /* SerialPortDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SerialPortDevice.m; sourceTree = "<group>"; };
+		4B209A4321C32F3B0090DF3B /* MidiDeviceYamahaXG.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MidiDeviceYamahaXG.hpp; sourceTree = "<group>"; };
 		4B2567051EBCC0D000BCE2B8 /* Resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Resources; sourceTree = "<group>"; };
 		4B2FD1EE21A60CB7009FA1A0 /* SandboxFileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SandboxFileManager.h; sourceTree = "<group>"; };
 		4B2FD1F021A60CB7009FA1A0 /* MultiChannelAudioTrackMixer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiChannelAudioTrackMixer.m; sourceTree = "<group>"; };
@@ -468,6 +469,7 @@
 				4BE9F2EA21BA375500A5EAA4 /* MidiCore.hpp */,
 				4BE9F2EB21BA378200A5EAA4 /* MidiCore.cpp */,
 				4BE9F2ED21BA37E400A5EAA4 /* MidiDeviceJuno106.hpp */,
+				4B209A4321C32F3B0090DF3B /* MidiDeviceYamahaXG.hpp */,
 				4BA82A4821BF71440090D57A /* MidiOutCore.hpp */,
 				4BA82A4721BF71440090D57A /* MidiOutCore.cpp */,
 				4BE9F2F021BA3D1600A5EAA4 /* MidiFileSequenceReader.cpp */,

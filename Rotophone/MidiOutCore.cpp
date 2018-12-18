@@ -305,6 +305,17 @@ MIDIPacket* MidiOutCore :: PacketListAdd(MIDIPacketList *pktlist, ByteCount list
   return packet;
 }
 
+MIDIPacket* MidiOutCore :: PacketListAddBuffer(MIDIPacketList *pktlist, ByteCount listSize, MIDIPacket *packet, MIDITimeStamp time, const MidiBufferBuilder& buffer)
+{
+  size_t count = buffer.MessageCount();
+  for (int i = 0; i < count; ++i) {
+    auto data = buffer.MessageData(i);
+    packet = MidiOutCore::PacketListAdd(pktlist, listSize, packet, time, data.second, data.first);
+  }
+  
+  return packet;
+}
+
 void MidiOutCore::SendPacketList(MIDIPacketList *packet_list)
 {
   // Send to any destinations that may have connected to us.

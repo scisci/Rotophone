@@ -80,12 +80,12 @@ public:
   unsigned char values[18];
 };
 
-class Juno106SysExBuilder : public MidiMessageBuilder {
+class Juno106SysExBuilder : public MidiBufferBuilder {
 public:
   Juno106SysExBuilder()
-  :MidiMessageBuilder() {}
+  :MidiBufferBuilder() {}
   
-  void ControlChange(int channel, Juno106ControlNum control_num, int control_value)
+  void SetControlChange(int channel, Juno106ControlNum control_num, int control_value)
   {
     SetSysEx(0x41);
     Push(0x32); // Control change
@@ -95,7 +95,14 @@ public:
     EndSysEx();
   }
   
-  void PatchChange(int channel, int patch) noexcept(false)
+  void SetEachPatchChange(int channel, const Juno106Patch& patch)
+  {
+    for (int i = 0; i < 18; ++i) {
+      
+    }
+  }
+  
+  void SetPatchChange(int channel, int patch) noexcept(false)
   {
     SetSysEx(0x41);
     Push(0x30);
@@ -104,7 +111,7 @@ public:
     EndSysEx();
   }
   
-  void ManualPatchChange(int channel, const Juno106Patch& patch) noexcept(false)
+  void SetManualPatchChange(int channel, const Juno106Patch& patch) noexcept(false)
   {
     SetSysEx(0x41);
     Push(0x31);

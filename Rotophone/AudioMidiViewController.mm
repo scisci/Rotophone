@@ -33,13 +33,6 @@ static void *SelectedPortKVOContext = &SelectedPortKVOContext;
                    options:(NSKeyValueObservingOptionNew |
                             NSKeyValueObservingOptionOld)
                    context:SelectedPortKVOContext];
-  /*
-    [[MIKMIDIDeviceManager sharedDeviceManager] addObserver:self
-                forKeyPath:@"availableDevices"
-                   options:(NSKeyValueObservingOptionNew |
-                            NSKeyValueObservingOptionOld)
-                   context:AvailablePortsKVOContext];
-  */
 
     [self handlePortsChanged];
     [self handleSelectedPortChanged];
@@ -48,8 +41,6 @@ static void *SelectedPortKVOContext = &SelectedPortKVOContext;
 - (void)dealloc
 {
   [[AudioMidiSettingsManager sharedManager] removeObserver:self forKeyPath:@"selectedMidiPort"];
-  
-  //[[MIKMIDIDeviceManager sharedDeviceManager] removeObserver:self forKeyPath:@"availableDevices"];
 }
 
 - (IBAction)popupButtonSelectionDidChange:(id)sender {
@@ -58,6 +49,12 @@ static void *SelectedPortKVOContext = &SelectedPortKVOContext;
   if (selectedIndex != AudioMidiSettingsManager.sharedManager.selectedMidiPort) {
     AudioMidiSettingsManager.sharedManager.selectedMidiPort = selectedIndex;
   }
+}
+- (IBAction)resetMidiProgramButtonWasPressed:(id)sender {
+  
+  [[NSNotificationCenter defaultCenter]
+        postNotificationName:@"ResetMidiProgram"
+        object:self];
 }
 
 - (void)handlePortsChanged

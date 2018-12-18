@@ -160,9 +160,19 @@ static void *RawSerialKVOContext = &RawSerialKVOContext;
         // lynch.aif
         // horns.wav
         // bell.aif
-        [self loadSampleBank:[NSArray arrayWithObjects:@"bell.aif", @"horns.wav", @"rocks1.wav", @"rocks.wav", @"glass.wav", @"pottery.aif", @"horns.wav", @"whale2.wav", nil]];
+        [self loadSampleBank:[NSArray arrayWithObjects:@"bell.aif", @"auchalong.wav", @"rocks1.wav", @"rocks.wav", @"birds.aif", @"machine.wav", @"horns.wav", @"whale2.wav", nil]];
+      
+        [[NSNotificationCenter defaultCenter] addObserver:self
+        selector:@selector(handleResetMidiProgram:)
+        name:@"ResetMidiProgram"
+        object:nil];
     }
     return self;
+}
+
+- (void)handleResetMidiProgram:(id)sender
+{
+  [_simulationController resetMidiPrograms];
 }
 
 - (void)loadSampleBank:(NSArray *)paths {
@@ -250,7 +260,7 @@ static void *RawSerialKVOContext = &RawSerialKVOContext;
         [_simulationController loadMidiResource: resource];
       }
     }];
-    
+   
     
     _mainWindowController.mainViewController.toolViewController.delegate = self;
    
